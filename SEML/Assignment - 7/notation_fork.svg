@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arrow_f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+  <!-- Incoming Arrow from Top -->
+  <line x1="90" y1="18" x2="90" y2="60" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_f)"/>
+  
+  <!-- Thick Horizontal Bar -->
+  <rect x="25" y="68" width="130" height="8" rx="2" fill="#0f172a"/>
+  
+  <!-- Outgoing Parallel Arrows -->
+  <line x1="50" y1="76" x2="50" y2="128" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_f)"/>
+  <line x1="130" y1="76" x2="130" y2="128" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_f)"/>
+  
+  <!-- Bold Centered Label -->
+  <text x="90" y="162" font-size="20" font-weight="bold" fill="#0f172a" text-anchor="middle">Fork</text>
+</svg>

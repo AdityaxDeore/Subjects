@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assignment No.1 - DAA</title>
+  
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      color: #000;
+      background: #e5e7eb;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 8.5in;
+      margin: 0 auto;
+      background: #ffffff;
+    }
+
+    /* Screen Preview: Kept exactly as the template with 0.8in padding for beautiful margins */
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.8in;
+      background: #ffffff;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    /* Print settings: Specifically set padding to 0.2in as you requested for printing */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0;
+        box-shadow: none;
+      }
+      .page {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 0.2in;
+        box-shadow: none;
+        border: none;
+        page-break-after: always;
+      }
+    }
+
+    /* Cover Page Table Styles */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .cover-table td {
+      border: 1px solid #000;
+      padding: 8px 12px;
+    }
+
+    .cover-table .college-info {
+      text-align: center;
+      font-weight: bold;
+      font-size: 16pt;
+      line-height: 1.4;
+    }
+
+    .cover-table .row-centered {
+      text-align: center;
+      font-weight: bold;
+      font-size: 14pt;
+    }
+
+    .cover-table .row-left {
+      text-align: left;
+      font-weight: bold;
+      font-size: 14pt;
+    }
+
+    .logo-container {
+      text-align: center;
+      width: 18%;
+      padding: 5px !important;
+    }
+
+    .logo-container img {
+      max-width: 100px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Section Styles */
+    h2 {
+      font-family: Arial, sans-serif;
+      font-size: 16pt;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #000;
+    }
+
+    h3 {
+      font-family: Arial, sans-serif;
+      font-size: 14pt;
+      margin-top: 18px;
+      margin-bottom: 10px;
+      color: #000;
+    }
+
+    p {
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+    }
+    
+    ol {
+      margin-left: 25px;
+      margin-bottom: 15px;
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+    }
+
+    ol li {
+      margin-bottom: 8px;
+    }
+    
+    li {
+      margin-bottom: 8px;
+    }
+
+    table.styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+      font-size: 11pt;
+    }
+    table.styled-table th, table.styled-table td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: left;
+    }
+    table.styled-table th {
+      background-color: #f2f2f2;
+    }
+
+    pre {
+      background-color: #f8f9fa;
+      border: 1px solid #ccc;
+      padding: 10px;
+      overflow-x: auto;
+      font-size: 10pt;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+    
+    .page:focus-within {
+      outline: 2px dashed #4299e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+    
+    <!-- PAGE 1 -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust's<br>
+            Pimpri Chinchwad college of Engineering
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-centered">
+            Assignment No.1
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Course:- Design & Analysis of Algorithms Laboratory (BIT25PC04)
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Name:- Aditya Chandrajit Deore
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            PRN:- 124B1F116
+          </td>
+        </tr>
+      </table>
+
+      <h2>1. Assignment Overview</h2>
+      <p>
+        This assignment explores the Greedy Strategy which is a fundamental algorithmic paradigm that builds up a solution piece by piece, always choosing the next piece that offers the most obvious and immediate benefit. Specifically, we focus on the Fractional Knapsack Problem, where we evaluate and sort items based on their optimal return or value-to-weight ratio to maximize total profit under strict constraints.
+      </p>
+
+      <h2>2. Aim</h2>
+      <p>
+        To successfully implement the Fractional Knapsack Algorithm using a greedy approach. This algorithm will be applied to simulate the optimization of cargo loading for a Mars Space Mission, selecting vital items based on their priority and divisibility to maximize overall mission success without exceeding spacecraft limitations.
+      </p>
+
+      <h2>3. Problem Statement</h2>
+      <p>
+        A space agency is preparing a critical cargo spacecraft for a resupply mission to a Mars Research Station. The spacecraft has a strict payload capacity of W kilograms, making it mathematically impossible to transport every single cargo item available on the launch pad. Each cargo item is associated with a specific weight and a mission value representing its importance to the crew's survival and mission success.
+      </p>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="page">
+      <p>
+        The primary objective is to determine the optimal mathematical set of cargo items that maximizes the total mission value. Because certain life-support resources such as medical oxygen, drinking water, rocket fuel, and laboratory chemicals can be transported in partial quantities, the Fractional Knapsack Algorithm is the perfect approach. 
+      </p>
+      
+      <h2>4. Primary Objectives</h2>
+      <ul>
+        <li>To study and implement the Fractional Knapsack Algorithm utilizing a greedy approach.</li>
+        <li>To calculate the critical value-to-weight ratio for each cargo item to determine its absolute priority.</li>
+        <li>To systematically sort and load cargo items to maximize the total mission value within strict payload parameters.</li>
+        <li>To load complete cargo items whenever possible, and intelligently compute the fraction of the next suitable item when capacity runs low.</li>
+        <li>To demonstrate how theoretical greedy algorithms map directly to high-stakes space mission cargo optimization.</li>
+      </ul>
+
+      <h2>5. Introduction & Theory</h2>
+      <p>
+        The Knapsack Problem is a highly studied combinatorial optimization problem. Imagine you have a knapsack or a spacecraft with a fixed carrying capacity, and you must choose from a set of items, each with a specific weight and value. The goal is to pack the knapsack such that the total value is as large as possible. 
+      </p>
+      
+      <h3>Types of Knapsack Problems</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Algorithm Type</th>
+            <th>Core Description</th>
+            <th>Optimal Strategy Used</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Fractional Knapsack</td>
+            <td>Items are highly divisible like liquids or powders. You can take a fraction of an item.</td>
+            <td>Greedy Algorithm</td>
+          </tr>
+          <tr>
+            <td>0/1 Knapsack</td>
+            <td>Items are indivisible like computers. You must take the whole item or leave it.</td>
+            <td>Dynamic Programming</td>
+          </tr>
+          <tr>
+            <td>Bounded Knapsack</td>
+            <td>Items can be selected, but only up to a strictly limited maximum quantity.</td>
+            <td>Dynamic Programming</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGE 3 -->
+    <div class="page">
+      <h3>Fractional vs. 0/1 Knapsack: A Closer Look</h3>
+      <p>
+        The key differentiator is divisibility. In the Fractional variant, because we can divide items, we can simply sort all items by their value-to-weight ratio and greedily consume them from highest ratio to lowest. This guarantees an optimal mathematical solution. In the 0/1 variant, greedily taking the highest ratio item might leave awkward empty gaps in the knapsack that cannot be filled, making the greedy approach fail.
+      </p>
+
+      <h3>Mathematical Representation</h3>
+      <p>The problem can be modeled mathematically as a linear programming constraint:</p>
+      
+      <p>Objective Function (Maximize Value):</p>
+      <div style="text-align: center; font-size: 1.15em; margin: 15px 0;">
+        \[ \text{Maximize } Z = \sum_{i=1}^{n} (v_i \cdot x_i) \]
+      </div>
+
+      <p>Subject to Capacity Constraints:</p>
+      <div style="text-align: center; font-size: 1.15em; margin: 15px 0;">
+        \[ \sum_{i=1}^{n} (w_i \cdot x_i) \leq W \]
+      </div>
+
+      <p>Variables (Fractions allowed):</p>
+      <div style="text-align: center; font-size: 1.15em; margin: 15px 0;">
+        \[ 0 \leq x_i \leq 1 \quad (\text{for all } i = 1, 2, \dots, n) \]
+      </div>
+
+      <h3>Real-World Applications</h3>
+      <ul>
+        <li>Satellite payload planning and spacecraft launch loadouts in Aerospace.</li>
+        <li>Allocating fractional CPU and Memory resources to server nodes in Cloud Computing.</li>
+        <li>Stock portfolio optimization and fractional investment distributions in Finance.</li>
+        <li>Loading delivery trucks with bulk goods like grains or liquids in Logistics.</li>
+      </ul>
+
+      <h2>6. Example: Fractional Knapsack Optimization</h2>
+      <p>To fully grasp the algorithm, consider a knapsack with a maximum capacity of 15 kg.</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Value ($)</th>
+            <th>Weight (kg)</th>
+            <th>Ratio (V/W)</th>
+            <th>Priority Rank</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>C</td><td>$50</td><td>2 kg</td><td>25.0</td><td>1st (Highest)</td></tr>
+          <tr><td>B</td><td>$150</td><td>7 kg</td><td>21.4</td><td>2nd</td></tr>
+          <tr><td>A</td><td>$100</td><td>5 kg</td><td>20.0</td><td>3rd (Tie)</td></tr>
+          <tr><td>D</td><td>$200</td><td>10 kg</td><td>20.0</td><td>3rd (Tie)</td></tr>
+          <tr><td>E</td><td>$30</td><td>3 kg</td><td>10.0</td><td>5th (Lowest)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGE 4 -->
+    <div class="page">
+      <h3>Step-by-Step Greedy Execution</h3>
+      <ol>
+        <li>Initial State: Remaining Capacity = 15 kg, Total Value = 0.</li>
+        <li>Load Item C: Weight is 2 kg. 2 &lt; 15, so add fully. Remaining = 13 kg, Value = 50.</li>
+        <li>Load Item B: Weight is 7 kg. 7 &lt; 13, so add fully. Remaining = 6 kg, Value = 50 + 150 = 200.</li>
+        <li>Load Item A: Weight is 5 kg. 5 &lt; 6, so add fully. Remaining = 1 kg, Value = 200 + 100 = 300.</li>
+        <li>Load Item D (Fractional): Item D weighs 10 kg, but only 1 kg remains. We take exactly 1/10th of item D. Value increase = (1/10) * 200 = 20. Remaining = 0 kg, Total Value = 320.</li>
+        <li>Conclusion: The knapsack is fully packed at 15 kg, yielding an optimal max value of 320.</li>
+      </ol>
+      
+      <h2>7. Java Implementation</h2>
+<pre><code>class Item {  
+    String name;    
+    int value;    
+    int weight;    
+    boolean divisible;  
+    
+    Item(String name, int value, int weight, boolean divisible) {        
+        this.name = name;        
+        this.value = value;        
+        this.weight = weight;        
+        this.divisible = divisible;    
+    }
+}  
+
+public class MarsFractionalKnapsack {  
+    public static void fractionalKnapsack(Item arr[], int capacity) {  
+        int n = arr.length;  
+        // Sort items by Value/Weight Ratio in descending order
+        for (int i = 0; i &lt; n - 1; i++) {  
+            for (int j = i + 1; j &lt; n; j++) {  
+                double ratio1 = (double) arr[i].value / arr[i].weight;                
+                double ratio2 = (double) arr[j].value / arr[j].weight;  
+                if (ratio2 &gt; ratio1) {  
+                    Item temp = arr[i];                    
+                    arr[i] = arr[j];                    
+                    arr[j] = temp;                
+                }            
+            }        
+        }</code></pre>
+    </div>
+
+    <!-- PAGE 5 -->
+    <div class="page">
+<pre><code>        int currentWeight = 0;        
+        double totalValue = 0;  
+        System.out.println("\n===== MARS SPACE MISSION CARGO OPTIMIZATION =====");        
+        System.out.println("Maximum Payload : " + capacity + " kg\n");  
+        System.out.printf("%-30s %-15s %-10s\n", "Cargo Item", "Loaded", "Priority");        
+        System.out.println("--------------------------------------------------------------");        
+        for (int i = 0; i &lt; n; i++) {  
+            if (currentWeight + arr[i].weight &lt;= capacity) {  
+                currentWeight = currentWeight + arr[i].weight;                
+                totalValue = totalValue + arr[i].value;  
+                System.out.printf("%-30s %-15s %.2f\n", arr[i].name, "100%", (double) arr[i].value / arr[i].weight);  
+            } else {  
+                int remaining = capacity - currentWeight;  
+                if (remaining &gt; 0 &amp;&amp; arr[i].divisible) {  
+                    double fraction = (double) remaining / arr[i].weight;  
+                    totalValue = totalValue + arr[i].value * fraction;  
+                    currentWeight = capacity;  
+                    System.out.printf("%-30s %-15s %.2f\n", arr[i].name, String.format("%.2f%%", fraction * 100), (double) arr[i].value / arr[i].weight);                
+                }  
+                break;          
+            }        
+        }  
+        System.out.println("--------------------------------------------------------------");        
+        System.out.println("Payload Used        : " + currentWeight + " kg");        
+        System.out.println("Remaining Capacity  : " + (capacity - currentWeight) + " kg");        
+        System.out.printf("Total Mission Value : %.2f\n", totalValue);    
+    }  
+    
+    public static void main(String args[]) {  
+        int capacity = 120;  
+        Item arr[] = {  
+                new Item("Oxygen Tanks", 500, 20, true),                
+                new Item("Medical Oxygen", 360, 15, true),                
+                new Item("Drinking Water", 400, 20, true),                
+                new Item("Rocket Fuel", 800, 50, true),                
+                new Item("Food Rations", 300, 20, true),                
+                new Item("Laboratory Chemicals", 280, 18, true), 
+                new Item("Medical Kit", 260, 25, false),                
+                new Item("Scientific Instrument", 350, 35, false)
+        };  
+        fractionalKnapsack(arr, capacity);    
+    }
+}</code></pre>
+    </div>
+
+    <!-- PAGE 6 -->
+    <div class="page">
+      <h2>8. Program Output</h2>
+      <p style="padding: 15px; border: 2px dashed #000; text-align: center; color: #000;">
+        <em>(Click here and press Ctrl+V to paste your Output screenshot directly)</em>
+      </p>
+      
+      <h2>9. Implementation Details</h2>
+      <p>
+        The logic operates on a strict greedy principle. Each cargo item is initialized with a mission value and a physical weight. The algorithm computes the value-to-weight ratio for every item, functioning as an efficiency metric. Using a Bubble Sort algorithm, items are ordered descending by this metric. The loop then continuously adds the most efficient items to the payload. If an item breaches the maximum capacity, and the divisible flag is true, a fractional percentage is calculated and added to perfectly cap the spacecraft at 100 percent payload capacity.
+      </p>
+      
+      <h2>10. Time & Space Complexity Analysis</h2>
+      <ul>
+        <li>Time Complexity is O(n²). While the ratio calculation and cargo selection are linear, the implementation utilizes Bubble Sort to sort the items, which dominates the time complexity.</li>
+        <li>Space Complexity is O(1) auxiliary space. Sorting is done in-place without the need for additional data structures, making it extremely memory efficient.</li>
+      </ul>
+
+      <h2>11. Comparison of Sorting Algorithms</h2>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Sorting Algorithm</th>
+            <th>Time Complexity</th>
+            <th>Suitability for Knapsack</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Bubble Sort (Implemented)</td>
+            <td>O(n²)</td>
+            <td>Good for small lists, easy to code, but scales poorly.</td>
+          </tr>
+          <tr>
+            <td>Merge Sort</td>
+            <td>O(n log n)</td>
+            <td>Highly recommended for large production datasets.</td>
+          </tr>
+          <tr>
+            <td>Quick Sort</td>
+            <td>O(n log n)</td>
+            <td>Very fast in practice, standard in most library functions.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGE 7 -->
+    <div class="page">
+      <h2>12. Algorithmic Advantages</h2>
+      <ul>
+        <li>Guaranteed Optimality. Unlike some greedy applications, the greedy strategy for the Fractional Knapsack guarantees the mathematically optimal maximum value.</li>
+        <li>High Efficiency. The algorithm is incredibly fast and operates with virtually zero memory overhead.</li>
+        <li>Real-world Flexibility. Perfectly models logistics scenarios where goods like liquids and raw materials can be split dynamically.</li>
+      </ul>
+      
+      <h2>13. Limitations & Constraints</h2>
+      <ul>
+        <li>Strict Divisibility Rule. The entire logic fails if items cannot be divided for example you cannot load half of a laptop. For scenarios like this, Dynamic Programming is strictly required.</li>
+        <li>Bubble Sort Bottleneck. The current implementation uses an O(n²) sort, which will slow down significantly if computing thousands of cargo items simultaneously.</li>
+      </ul>
+
+      <h2>14. Final Result</h2>
+      <p>
+        The Fractional Knapsack Algorithm successfully processed the item array, isolating the most valuable cargo based on efficiency ratios. The spacecraft's available payload capacity of 120 kg was fully and optimally utilized without overflow. The highest-ratio items were loaded whole, and a precise fraction of the final item was loaded to bridge the remaining capacity, yielding the maximum possible mission value securely.
+      </p>
+
+      <h2>15. Conclusion</h2>
+      <p>
+        By simulating a Mars Space Mission resupply, this assignment effectively demonstrated the sheer power and simplicity of the Greedy algorithmic paradigm. Through systematic sorting and fractional division, the algorithm maximized mission value while firmly respecting hardware constraints. This proves that greedy strategies are not only computationally inexpensive but are absolutely vital for complex resource allocation and modern logistics.
+      </p>
+    </div>
+
+  </div>
+</body>
+</html>

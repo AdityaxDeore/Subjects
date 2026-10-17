@@ -1,0 +1,1921 @@
+{
+    "_type": "Project",
+    "_id": "AAAAAE76F3CD4A2054",
+    "name": "Assignment_5_UML",
+    "ownedElements": [
+        {
+            "_type": "UMLModel",
+            "_id": "AAAAA39F4A7156C044",
+            "name": "OpenOceanCleanupModel",
+            "ownedElements": [
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA4C97D39742BD4",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "User",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA2C95BFC062804",
+                            "_parent": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            },
+                            "name": "userId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAB3055FCCDB834",
+                            "_parent": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            },
+                            "name": "name",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA0594773A234C4",
+                            "_parent": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            },
+                            "name": "email",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAA9D104FFC5BD4",
+                            "_parent": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            },
+                            "name": "password",
+                            "type": "String",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA4D35F0A23FA64",
+                            "_parent": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            },
+                            "name": "login",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA56811F408DEC4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA5383196A4BD84",
+                            "_parent": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            },
+                            "name": "logout",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA1E1C747491CF4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA1C91DDAFE0074",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Player",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAD860628D79044",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "name": "coins",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA144707AC47DC4",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "name": "score",
+                            "type": "int",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAADBCCA028470C4",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "name": "startGame",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAF3C1D48E7B8F4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA6C31DA82ED744",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "name": "exploreOcean",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA00983365D0704",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAA8079AA6E8EE4",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "name": "collectWaste",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA03FBBDFBCA114",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA02D3B6AC6F1E4",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "name": "sellWaste",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAB1F1403AABC04",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAA5BF754512834",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "name": "purchaseBoat",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAD4BD1E1D71E54",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA4E1D6C1190194",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "name": "rescueMarineLife",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA57705676C7544",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLGeneralization",
+                            "_id": "AAAAA2AC402ED79A64",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "source": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "target": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA969E9DDBD0704",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAEC0C054829634",
+                                "reference": {
+                                    "$ref": "AAAAA1C91DDAFE0074"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAB5E00E61796E4",
+                                "reference": {
+                                    "$ref": "AAAAA7946A2977CE34"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA97933FA89F084",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAADF03FA7FD7914",
+                                "reference": {
+                                    "$ref": "AAAAA1C91DDAFE0074"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA699C3D1CE6EB4",
+                                "reference": {
+                                    "$ref": "AAAAAC4B90A9230D84"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA7D4B0E7832D84",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAA38515E32E0F4",
+                                "reference": {
+                                    "$ref": "AAAAA1C91DDAFE0074"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA0B0023DEAA9F4",
+                                "reference": {
+                                    "$ref": "AAAAA8CFC6075CB534"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA0F2D7845F3184",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA441658503FE34",
+                                "reference": {
+                                    "$ref": "AAAAA1C91DDAFE0074"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA11AE0C060F1D4",
+                                "reference": {
+                                    "$ref": "AAAAAC7DE6A58FDA94"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA7F4A6580FEE24",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA9BE91FE467F44",
+                                "reference": {
+                                    "$ref": "AAAAA1C91DDAFE0074"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "composite"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAADF3F7706BF524",
+                                "reference": {
+                                    "$ref": "AAAAA7E03F2F29BB34"
+                                },
+                                "multiplicity": "1"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA0A8FCE2602004",
+                            "_parent": {
+                                "$ref": "AAAAA1C91DDAFE0074"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA01D3213AFC5F4",
+                                "reference": {
+                                    "$ref": "AAAAA1C91DDAFE0074"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "composite"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA1ED9B4143C694",
+                                "reference": {
+                                    "$ref": "AAAAAF29D2F4284FE4"
+                                },
+                                "multiplicity": "1"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAACEE1244458684",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Administrator",
+                    "attributes": [],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAF03FDE25ED9B4",
+                            "_parent": {
+                                "$ref": "AAAAACEE1244458684"
+                            },
+                            "name": "managePlayers",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA0ED6907E04D34",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA7093B8C2CADC4",
+                            "_parent": {
+                                "$ref": "AAAAACEE1244458684"
+                            },
+                            "name": "manageLeaderboard",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAABF39135189E34",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAB2D1E05DF8594",
+                            "_parent": {
+                                "$ref": "AAAAACEE1244458684"
+                            },
+                            "name": "viewReports",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAFF796016858A4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLGeneralization",
+                            "_id": "AAAAA421D889E42944",
+                            "_parent": {
+                                "$ref": "AAAAACEE1244458684"
+                            },
+                            "source": {
+                                "$ref": "AAAAACEE1244458684"
+                            },
+                            "target": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA1A0C31DE2D264",
+                            "_parent": {
+                                "$ref": "AAAAACEE1244458684"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA5F19C6F603E64",
+                                "reference": {
+                                    "$ref": "AAAAACEE1244458684"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAAA56266009494",
+                                "reference": {
+                                    "$ref": "AAAAA442A84C77B704"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAAE60517773D814",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Developer",
+                    "attributes": [],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA67A47482C2924",
+                            "_parent": {
+                                "$ref": "AAAAAE60517773D814"
+                            },
+                            "name": "addNewFeature",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA246749FB38024",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAC87AF891908F4",
+                            "_parent": {
+                                "$ref": "AAAAAE60517773D814"
+                            },
+                            "name": "deployUpdate",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAD72C138F78614",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA88E5E77C9F454",
+                            "_parent": {
+                                "$ref": "AAAAAE60517773D814"
+                            },
+                            "name": "fixBug",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAC5CCB608EE7F4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLGeneralization",
+                            "_id": "AAAAA40DC3A2015814",
+                            "_parent": {
+                                "$ref": "AAAAAE60517773D814"
+                            },
+                            "source": {
+                                "$ref": "AAAAAE60517773D814"
+                            },
+                            "target": {
+                                "$ref": "AAAAA4C97D39742BD4"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA41FD576F6DC54",
+                            "_parent": {
+                                "$ref": "AAAAAE60517773D814"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA5E9708B023B14",
+                                "reference": {
+                                    "$ref": "AAAAAE60517773D814"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA7A63EAAA87FB4",
+                                "reference": {
+                                    "$ref": "AAAAA60EE1A1C71284"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA6BC349B4802D4",
+                            "_parent": {
+                                "$ref": "AAAAAE60517773D814"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA2668C09C3C4E4",
+                                "reference": {
+                                    "$ref": "AAAAAE60517773D814"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAFD6BC2C0EC304",
+                                "reference": {
+                                    "$ref": "AAAAAE3965BD2F8404"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA2FCC1446C5534",
+                            "_parent": {
+                                "$ref": "AAAAAE60517773D814"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA7DA1A21AA5ED4",
+                                "reference": {
+                                    "$ref": "AAAAAE60517773D814"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA919A9E7FE86D4",
+                                "reference": {
+                                    "$ref": "AAAAAC2E6FDEC6CF84"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA7946A2977CE34",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Game",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAB4F32F3C74BD4",
+                            "_parent": {
+                                "$ref": "AAAAA7946A2977CE34"
+                            },
+                            "name": "gameId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA6DC37E1054854",
+                            "_parent": {
+                                "$ref": "AAAAA7946A2977CE34"
+                            },
+                            "name": "status",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA9A5B9F34D61C4",
+                            "_parent": {
+                                "$ref": "AAAAA7946A2977CE34"
+                            },
+                            "name": "startTime",
+                            "type": "DateTime",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAB240BDFA143E4",
+                            "_parent": {
+                                "$ref": "AAAAA7946A2977CE34"
+                            },
+                            "name": "endTime",
+                            "type": "DateTime",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA088052EE1A644",
+                            "_parent": {
+                                "$ref": "AAAAA7946A2977CE34"
+                            },
+                            "name": "startGame",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA213CBACEFFB54",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAE747B492EEB74",
+                            "_parent": {
+                                "$ref": "AAAAA7946A2977CE34"
+                            },
+                            "name": "endGame",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA5217C508DDDA4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAADA3DC1BDCF064",
+                            "_parent": {
+                                "$ref": "AAAAA7946A2977CE34"
+                            },
+                            "name": "updateScore",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA0E74EAB5C4654",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAAF5A79BE690E84",
+                            "_parent": {
+                                "$ref": "AAAAA7946A2977CE34"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA07DF046960484",
+                                "reference": {
+                                    "$ref": "AAAAA7946A2977CE34"
+                                },
+                                "multiplicity": "0..*",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAF5CFC653576D4",
+                                "reference": {
+                                    "$ref": "AAAAA6BE27DE293934"
+                                },
+                                "multiplicity": "1"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA6BE27DE293934",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Ocean",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAB80D9FBA24274",
+                            "_parent": {
+                                "$ref": "AAAAA6BE27DE293934"
+                            },
+                            "name": "oceanId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA0ED4EA7B44B84",
+                            "_parent": {
+                                "$ref": "AAAAA6BE27DE293934"
+                            },
+                            "name": "name",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA3D14652D59CC4",
+                            "_parent": {
+                                "$ref": "AAAAA6BE27DE293934"
+                            },
+                            "name": "pollutionLevel",
+                            "type": "float",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA90ED46E23A044",
+                            "_parent": {
+                                "$ref": "AAAAA6BE27DE293934"
+                            },
+                            "name": "explore",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA705D3A8D8EAF4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAE792529EF4564",
+                            "_parent": {
+                                "$ref": "AAAAA6BE27DE293934"
+                            },
+                            "name": "updatePollution",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAADE73C36405B74",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA86E2DD5B4A124",
+                            "_parent": {
+                                "$ref": "AAAAA6BE27DE293934"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAEB80136C8B414",
+                                "reference": {
+                                    "$ref": "AAAAA6BE27DE293934"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "shared"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA401090357DEF4",
+                                "reference": {
+                                    "$ref": "AAAAA44C44A6B95854"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        },
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAAE89F235F48744",
+                            "_parent": {
+                                "$ref": "AAAAA6BE27DE293934"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA338902C20C7A4",
+                                "reference": {
+                                    "$ref": "AAAAA6BE27DE293934"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "shared"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAADE437C980B4B4",
+                                "reference": {
+                                    "$ref": "AAAAA200CBBA0F6284"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAAC4B90A9230D84",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Boat",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA556D5630E98C4",
+                            "_parent": {
+                                "$ref": "AAAAAC4B90A9230D84"
+                            },
+                            "name": "boatId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA4B51B5A10BE74",
+                            "_parent": {
+                                "$ref": "AAAAAC4B90A9230D84"
+                            },
+                            "name": "boatType",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA6CE80EC1B8FD4",
+                            "_parent": {
+                                "$ref": "AAAAAC4B90A9230D84"
+                            },
+                            "name": "speed",
+                            "type": "float",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAFD43089C61454",
+                            "_parent": {
+                                "$ref": "AAAAAC4B90A9230D84"
+                            },
+                            "name": "price",
+                            "type": "int",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA8A4F9FE45EFB4",
+                            "_parent": {
+                                "$ref": "AAAAAC4B90A9230D84"
+                            },
+                            "name": "move",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA46C378A70DA74",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA0E1EEEEF620C4",
+                            "_parent": {
+                                "$ref": "AAAAAC4B90A9230D84"
+                            },
+                            "name": "control",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAEE4F6BE0FA134",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA44C44A6B95854",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Waste",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA97E4B1367E764",
+                            "_parent": {
+                                "$ref": "AAAAA44C44A6B95854"
+                            },
+                            "name": "wasteId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA57F742840D8E4",
+                            "_parent": {
+                                "$ref": "AAAAA44C44A6B95854"
+                            },
+                            "name": "wasteType",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA53A9156530A04",
+                            "_parent": {
+                                "$ref": "AAAAA44C44A6B95854"
+                            },
+                            "name": "value",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA0696A90CFD724",
+                            "_parent": {
+                                "$ref": "AAAAA44C44A6B95854"
+                            },
+                            "name": "status",
+                            "type": "String",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAC6C5691262DC4",
+                            "_parent": {
+                                "$ref": "AAAAA44C44A6B95854"
+                            },
+                            "name": "collect",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA117C4D04D0C14",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA3FBE7229F2B14",
+                            "_parent": {
+                                "$ref": "AAAAA44C44A6B95854"
+                            },
+                            "name": "calculateValue",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAE9B58A61FCE64",
+                                    "type": "int",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA200CBBA0F6284",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "MarineLife",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA4CCE86342CDF4",
+                            "_parent": {
+                                "$ref": "AAAAA200CBBA0F6284"
+                            },
+                            "name": "lifeId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA1066FF5CDDEB4",
+                            "_parent": {
+                                "$ref": "AAAAA200CBBA0F6284"
+                            },
+                            "name": "species",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAFDACDA2B78E24",
+                            "_parent": {
+                                "$ref": "AAAAA200CBBA0F6284"
+                            },
+                            "name": "health",
+                            "type": "int",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA994A687E45F84",
+                            "_parent": {
+                                "$ref": "AAAAA200CBBA0F6284"
+                            },
+                            "name": "rescue",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAF5A49EAEC1254",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA7F5EE8BFFD804",
+                            "_parent": {
+                                "$ref": "AAAAA200CBBA0F6284"
+                            },
+                            "name": "updateHealth",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA7BAC4E46A4BE4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA8CFC6075CB534",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "WasteCollection",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA003872534EC74",
+                            "_parent": {
+                                "$ref": "AAAAA8CFC6075CB534"
+                            },
+                            "name": "collectionId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAEC71B566FC394",
+                            "_parent": {
+                                "$ref": "AAAAA8CFC6075CB534"
+                            },
+                            "name": "collectionDate",
+                            "type": "DateTime",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA90D202C74CE64",
+                            "_parent": {
+                                "$ref": "AAAAA8CFC6075CB534"
+                            },
+                            "name": "quantity",
+                            "type": "int",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA95F3CC593C0C4",
+                            "_parent": {
+                                "$ref": "AAAAA8CFC6075CB534"
+                            },
+                            "name": "recordCollection",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA7B1315B8876C4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA800CE735C4434",
+                            "_parent": {
+                                "$ref": "AAAAA8CFC6075CB534"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAD026554A9DF24",
+                                "reference": {
+                                    "$ref": "AAAAA8CFC6075CB534"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA8479DFCA8B6F4",
+                                "reference": {
+                                    "$ref": "AAAAA44C44A6B95854"
+                                },
+                                "multiplicity": "1..*"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAAC7DE6A58FDA94",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "WasteSale",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAEBA2A70EBD844",
+                            "_parent": {
+                                "$ref": "AAAAAC7DE6A58FDA94"
+                            },
+                            "name": "saleId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAABDB3822214C44",
+                            "_parent": {
+                                "$ref": "AAAAAC7DE6A58FDA94"
+                            },
+                            "name": "saleDate",
+                            "type": "DateTime",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA596520B14A314",
+                            "_parent": {
+                                "$ref": "AAAAAC7DE6A58FDA94"
+                            },
+                            "name": "totalCoins",
+                            "type": "int",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA8C28BF5D27924",
+                            "_parent": {
+                                "$ref": "AAAAAC7DE6A58FDA94"
+                            },
+                            "name": "sellWaste",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAA318988DD1AB4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAABD1B2CC164204",
+                            "_parent": {
+                                "$ref": "AAAAAC7DE6A58FDA94"
+                            },
+                            "name": "calculateCoins",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAABF5696018B2C4",
+                                    "type": "int",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA007D267BB26D4",
+                            "_parent": {
+                                "$ref": "AAAAAC7DE6A58FDA94"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA49655D29C6894",
+                                "reference": {
+                                    "$ref": "AAAAAC7DE6A58FDA94"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAF8A8A101BC834",
+                                "reference": {
+                                    "$ref": "AAAAA44C44A6B95854"
+                                },
+                                "multiplicity": "1..*"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAAF29D2F4284FE4",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "CoinWallet",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA973B8961B4074",
+                            "_parent": {
+                                "$ref": "AAAAAF29D2F4284FE4"
+                            },
+                            "name": "walletId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA530367E064AC4",
+                            "_parent": {
+                                "$ref": "AAAAAF29D2F4284FE4"
+                            },
+                            "name": "balance",
+                            "type": "int",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAFB25217CE3BD4",
+                            "_parent": {
+                                "$ref": "AAAAAF29D2F4284FE4"
+                            },
+                            "name": "addCoins",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA96A962ADCCA54",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA1255309C8CE84",
+                            "_parent": {
+                                "$ref": "AAAAAF29D2F4284FE4"
+                            },
+                            "name": "deductCoins",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA1360D4FF6FDC4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAAB5F47B23FE284",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Leaderboard",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA4F2E2FC286304",
+                            "_parent": {
+                                "$ref": "AAAAAB5F47B23FE284"
+                            },
+                            "name": "leaderboardId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA5027B04E9EE64",
+                            "_parent": {
+                                "$ref": "AAAAAB5F47B23FE284"
+                            },
+                            "name": "lastUpdated",
+                            "type": "DateTime",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAFA5406FA8FDB4",
+                            "_parent": {
+                                "$ref": "AAAAAB5F47B23FE284"
+                            },
+                            "name": "updateRankings",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA71511DC435E94",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        },
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA0E3E6BD8C7194",
+                            "_parent": {
+                                "$ref": "AAAAAB5F47B23FE284"
+                            },
+                            "name": "displayLeaderboard",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAB6BBD3B5F38E4",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAA9B077B0511604",
+                            "_parent": {
+                                "$ref": "AAAAAB5F47B23FE284"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA842F1ABD291D4",
+                                "reference": {
+                                    "$ref": "AAAAAB5F47B23FE284"
+                                },
+                                "multiplicity": "1",
+                                "aggregation": "composite"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA16C06A3231C94",
+                                "reference": {
+                                    "$ref": "AAAAAFDC5FBF5BF7C4"
+                                },
+                                "multiplicity": "0..*"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAAFDC5FBF5BF7C4",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "LeaderboardEntry",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA67540967CC504",
+                            "_parent": {
+                                "$ref": "AAAAAFDC5FBF5BF7C4"
+                            },
+                            "name": "entryId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAC0A8AD29AB414",
+                            "_parent": {
+                                "$ref": "AAAAAFDC5FBF5BF7C4"
+                            },
+                            "name": "rank",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA682A00987AF94",
+                            "_parent": {
+                                "$ref": "AAAAAFDC5FBF5BF7C4"
+                            },
+                            "name": "score",
+                            "type": "int",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA09F4FBFD3A814",
+                            "_parent": {
+                                "$ref": "AAAAAFDC5FBF5BF7C4"
+                            },
+                            "name": "updateRank",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAB154E3FECF584",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": [
+                        {
+                            "_type": "UMLAssociation",
+                            "_id": "AAAAAAC69B48AE70C4",
+                            "_parent": {
+                                "$ref": "AAAAAFDC5FBF5BF7C4"
+                            },
+                            "end1": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAA21845C77EB8C4",
+                                "reference": {
+                                    "$ref": "AAAAAFDC5FBF5BF7C4"
+                                },
+                                "multiplicity": "0..*",
+                                "aggregation": "none"
+                            },
+                            "end2": {
+                                "_type": "UMLAssociationEnd",
+                                "_id": "AAAAAAED2FCCE89874",
+                                "reference": {
+                                    "$ref": "AAAAA1C91DDAFE0074"
+                                },
+                                "multiplicity": "1"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA7E03F2F29BB34",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Settings",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAE4F85594EDA14",
+                            "_parent": {
+                                "$ref": "AAAAA7E03F2F29BB34"
+                            },
+                            "name": "sound",
+                            "type": "boolean",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA6DFA623B54BF4",
+                            "_parent": {
+                                "$ref": "AAAAA7E03F2F29BB34"
+                            },
+                            "name": "difficulty",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA575202CE10B54",
+                            "_parent": {
+                                "$ref": "AAAAA7E03F2F29BB34"
+                            },
+                            "name": "controls",
+                            "type": "String",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAB6D1802054154",
+                            "_parent": {
+                                "$ref": "AAAAA7E03F2F29BB34"
+                            },
+                            "name": "updateSettings",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA6466191000F84",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA442A84C77B704",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Report",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAE6FEAF2F50254",
+                            "_parent": {
+                                "$ref": "AAAAA442A84C77B704"
+                            },
+                            "name": "reportId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA1B8416AAA3C14",
+                            "_parent": {
+                                "$ref": "AAAAA442A84C77B704"
+                            },
+                            "name": "reportType",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA273FA3F711674",
+                            "_parent": {
+                                "$ref": "AAAAA442A84C77B704"
+                            },
+                            "name": "generatedDate",
+                            "type": "DateTime",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAAA719FCBAADB4",
+                            "_parent": {
+                                "$ref": "AAAAA442A84C77B704"
+                            },
+                            "name": "generateReport",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA93CE5FE544594",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAA60EE1A1C71284",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "Feature",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA1C4A15192F824",
+                            "_parent": {
+                                "$ref": "AAAAA60EE1A1C71284"
+                            },
+                            "name": "featureId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAAAB892C33C174",
+                            "_parent": {
+                                "$ref": "AAAAA60EE1A1C71284"
+                            },
+                            "name": "featureName",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA7FF1EAD371C54",
+                            "_parent": {
+                                "$ref": "AAAAA60EE1A1C71284"
+                            },
+                            "name": "description",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA5EBAABA3A8314",
+                            "_parent": {
+                                "$ref": "AAAAA60EE1A1C71284"
+                            },
+                            "name": "status",
+                            "type": "String",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAC74292ECCDBB4",
+                            "_parent": {
+                                "$ref": "AAAAA60EE1A1C71284"
+                            },
+                            "name": "addFeature",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA718114697E544",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAAE3965BD2F8404",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "SoftwareUpdate",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA1E7E553EE3114",
+                            "_parent": {
+                                "$ref": "AAAAAE3965BD2F8404"
+                            },
+                            "name": "updateId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAF5FC0AC62BBC4",
+                            "_parent": {
+                                "$ref": "AAAAAE3965BD2F8404"
+                            },
+                            "name": "version",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA02E05D8F99F84",
+                            "_parent": {
+                                "$ref": "AAAAAE3965BD2F8404"
+                            },
+                            "name": "releaseDate",
+                            "type": "Date",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA3E5F41A88E2C4",
+                            "_parent": {
+                                "$ref": "AAAAAE3965BD2F8404"
+                            },
+                            "name": "status",
+                            "type": "String",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAA8E1FEEA771774",
+                            "_parent": {
+                                "$ref": "AAAAAE3965BD2F8404"
+                            },
+                            "name": "deploy",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAAC51A3D2CD4164",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "AAAAAC2E6FDEC6CF84",
+                    "_parent": {
+                        "$ref": "AAAAA39F4A7156C044"
+                    },
+                    "name": "BugReport",
+                    "attributes": [
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA90C1062BE5C14",
+                            "_parent": {
+                                "$ref": "AAAAAC2E6FDEC6CF84"
+                            },
+                            "name": "bugId",
+                            "type": "int",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA6F03BB7021B74",
+                            "_parent": {
+                                "$ref": "AAAAAC2E6FDEC6CF84"
+                            },
+                            "name": "title",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAD7251D9CBE994",
+                            "_parent": {
+                                "$ref": "AAAAAC2E6FDEC6CF84"
+                            },
+                            "name": "description",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAAC56211B5B8234",
+                            "_parent": {
+                                "$ref": "AAAAAC2E6FDEC6CF84"
+                            },
+                            "name": "priority",
+                            "type": "String",
+                            "visibility": "private"
+                        },
+                        {
+                            "_type": "UMLAttribute",
+                            "_id": "AAAAA15E3D212CB404",
+                            "_parent": {
+                                "$ref": "AAAAAC2E6FDEC6CF84"
+                            },
+                            "name": "status",
+                            "type": "String",
+                            "visibility": "private"
+                        }
+                    ],
+                    "operations": [
+                        {
+                            "_type": "UMLOperation",
+                            "_id": "AAAAAABA26FB990C34",
+                            "_parent": {
+                                "$ref": "AAAAAC2E6FDEC6CF84"
+                            },
+                            "name": "fix",
+                            "visibility": "public",
+                            "parameters": [
+                                {
+                                    "_type": "UMLParameter",
+                                    "_id": "AAAAA815F4EB341A94",
+                                    "type": "void",
+                                    "direction": "return"
+                                }
+                            ]
+                        }
+                    ],
+                    "ownedElements": []
+                }
+            ]
+        }
+    ]
+}

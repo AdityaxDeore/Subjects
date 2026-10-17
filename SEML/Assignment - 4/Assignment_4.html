@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 4 - Banking System Class Diagram</title>
+    <style>
+body {
+  font-family: Arial, sans-serif;
+  font-size: 12pt;
+  line-height: 1.5;
+  color: #000;
+  background: #e5e7eb;
+  padding: 20px;
+}
+
+.container {
+  max-width: 8.5in;
+  margin: 0 auto;
+}
+
+.page {
+  min-height: 11in;
+  width: 8.5in;
+  padding: 0.8in;
+  background: #ffffff;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  box-sizing: border-box;
+}
+.page:focus-within {
+  outline: 2px dashed #4299e1;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    padding: 0;
+  }
+  .container {
+    max-width: 100%;
+    margin: 0;
+    box-shadow: none;
+  }
+  .page {
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    padding: 0.2in;
+    box-shadow: none;
+    border: none;
+    page-break-after: always;
+  }
+}
+
+.cover-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+  font-family: 'Times New Roman', Times, serif;
+}
+.cover-table td {
+  border: 1px solid #000;
+  padding: 8px 12px;
+}
+.cover-table .college-info {
+  text-align: center;
+  font-weight: bold;
+  font-size: 16pt;
+  line-height: 1.4;
+}
+.cover-table .row-centered { text-align: center; font-weight: bold; font-size: 14pt; }
+.cover-table .row-left { text-align: left; font-weight: bold; font-size: 14pt; }
+.logo-container { text-align: center; width: 18%; padding: 5px !important; }
+.logo-container img { max-width: 100px; height: auto; display: block; margin: 0 auto; }
+
+h2 {
+  font-family: Arial, sans-serif;
+  font-size: 16pt;
+  color: #000;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-family: Arial, sans-serif;
+  font-size: 14pt;
+  color: #000;
+  margin-top: 18px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-family: Arial, sans-serif;
+  font-size: 11pt;
+  text-align: justify;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+ul, ol {
+  margin-left: 20px;
+  font-size: 11pt;
+  margin-bottom: 15px;
+}
+li { margin-bottom: 6px; }
+
+pre {
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  font-size: 10pt;
+  padding: 10px;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.styled-table td, .styled-table th {
+  border: 1px solid #000;
+  padding: 8px;
+  font-size: 11pt;
+  vertical-align: top;
+}
+.styled-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.diagram-box { text-align: center; margin: 20px 0; padding: 10px; }
+    </style>
+</head>
+<body>
+<div class="container" contenteditable="true">
+
+<div class="page">
+<table class="cover-table">
+  <tr>
+    <td class="logo-container"><img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false"></td>
+    <td class="college-info">Pimpri Chinchwad Education Trust's<br>Pimpri Chinchwad College of Engineering</td>
+  </tr>
+  <tr><td colspan="2" class="row-centered">Assignment No. 4</td></tr>
+  <tr><td colspan="2" class="row-left">Course:- Software Engineering and Modeling Lab (SEML)</td></tr>
+  <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore, Aditya Gurav</td></tr>
+  <tr><td colspan="2" class="row-left">PRN:- 124B1F116, 124B1F124</td></tr>
+  <tr><td colspan="2" class="row-left">Batch:- B3</td></tr>
+</table>
+
+<h2>Aim</h2>
+<p>Based on the reference models of a Banking System, systematically break down the Analysis Class Diagram. Model the classes, attributes, operations, responsibilities, and specific relationships (dependency, generalization, association, and loops/self-associations) step by step.</p>
+
+<h2>1. Class Anatomy: Names, Attributes, and Operations</h2>
+<p>A class in UML is represented as a rectangle divided into three compartments. The top holds the <strong>Class Name</strong>, the middle holds <strong>Class Attributes</strong> (the data or state), and the bottom holds <strong>Class Operations</strong> (the methods or behavior).</p>
+<p>Visibility of attributes and operations is denoted by symbols: <code>+</code> (Public), <code>-</code> (Private), <code>#</code> (Protected). Operations can accept parameters and return values (e.g., <code>+ Withdraw(amount): boolean</code>).</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 200" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <g transform="translate(200, 30)">
+      <rect x="0" y="0" width="200" height="120" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="30" x2="200" y2="30" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="75" x2="200" y2="75" stroke="#A80036" stroke-width="1.5"/>
+      <text x="100" y="20" text-anchor="middle" font-size="12" font-weight="bold">Account</text>
+      <text x="10" y="45" font-size="11">- Account_No: int</text>
+      <text x="10" y="57" font-size="11">- Acc_name: String</text>
+      <text x="10" y="69" font-size="11">- Balance: double</text>
+      <text x="10" y="90" font-size="11">+ Deposit(amount: double)</text>
+      <text x="10" y="105" font-size="11">+ Withdraw(amount: double)</text>
+    </g>
+    
+    <!-- Annotations -->
+    <path d="M 120 40 L 195 40" stroke="#0056b3" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="110" y="45" text-anchor="end" font-size="11" fill="#0056b3" font-weight="bold">Class Name</text>
+    
+    <path d="M 120 85 L 195 85" stroke="#0056b3" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="110" y="90" text-anchor="end" font-size="11" fill="#0056b3" font-weight="bold">Class Attributes</text>
+    
+    <path d="M 120 120 L 195 120" stroke="#0056b3" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="110" y="125" text-anchor="end" font-size="11" fill="#0056b3" font-weight="bold">Class Operations</text>
+  </svg>
+</div>
+
+</div>
+
+<div class="page">
+<h2>2. Identified Domain Classes</h2>
+<p>Below are all the classes identified in the Banking System, depicted individually before any relationships are established.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 900 200" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <g transform="translate(50, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Bank</text>
+    </g>
+    <g transform="translate(200, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Branch</text>
+    </g>
+    <g transform="translate(350, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Customer</text>
+    </g>
+    <g transform="translate(500, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Account</text>
+    </g>
+    <g transform="translate(650, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Saving Account</text>
+    </g>
+    <g transform="translate(50, 100)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Loan Account</text>
+    </g>
+    <g transform="translate(200, 100)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">ATM</text>
+    </g>
+  </svg>
+</div>
+<h2>3. Class Responsibilities</h2>
+<p>Each class is assigned specific business responsibilities, defining the actions it is responsible for handling within the system.</p>
+<table class="styled-table">
+<thead><tr><th>Class Name</th><th>Responsibilities</th></tr></thead>
+<tbody>
+<tr><td><strong>Bank</strong></td><td>Responsible for governing overall financial rules, and adding or removing physical branches.</td></tr>
+<tr><td><strong>Branch</strong></td><td>Responsible for localized operations, managing customer accounts within a specific city or region.</td></tr>
+<tr><td><strong>Customer</strong></td><td>Responsible for interacting with their own accounts, updating personal details (KYC), and performing transactions.</td></tr>
+<tr><td><strong>Account</strong></td><td>Responsible for maintaining a precise ledger of funds, securely processing Deposits and Withdrawals.</td></tr>
+<tr><td><strong>Saving Account</strong></td><td>Responsible for managing saving-specific rules like applying interest rates over time.</td></tr>
+<tr><td><strong>Loan Account</strong></td><td>Responsible for managing borrowed funds, calculating interest on loans, and tracking repayment amounts.</td></tr>
+<tr><td><strong>ATM</strong></td><td>Provides an interface for the Customer to execute transactions externally.</td></tr>
+</tbody>
+</table>
+
+</div>
+
+<div class="page">
+<h2>4. Relationship Modeling</h2>
+<h3>A. Association and Multiplicities</h3>
+<p>Associations are structural relationships indicating that instances of one class are connected to another. Multiplicities indicate <em>how many</em> instances are involved (e.g., <code>1</code> to exactly one, <code>1..*</code> for one or many).</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 120" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <g transform="translate(50, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Customer</text>
+    </g>
+    <g transform="translate(430, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Account</text>
+    </g>
+    
+    <!-- Association Line -->
+    <line x1="170" y1="50" x2="430" y2="50" stroke="black" stroke-width="1.2"/>
+    <text x="300" y="45" font-size="12" text-anchor="middle">owns &gt;</text>
+    <text x="180" y="65" font-size="12">1</text>
+    <text x="400" y="65" font-size="12">1..*</text>
+    <text x="300" y="75" font-size="11" fill="gray" text-anchor="middle">(One customer owns 1 or more accounts)</text>
+  </svg>
+</div>
+
+<h3>B. Dependency Relationships</h3>
+<p>A dependency indicates that a change in the independent class may affect the dependent class. It is shown as a dashed arrow. For example, a Customer depends on the ATM class to perform withdrawals, but the Customer does not structurally "own" the ATM.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 120" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <defs>
+      <marker id="dep_arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="none" stroke="black" stroke-width="1.5"/>
+      </marker>
+    </defs>
+    <g transform="translate(50, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Customer</text>
+    </g>
+    <g transform="translate(430, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">ATM</text>
+    </g>
+    
+    <!-- Dependency Line -->
+    <line x1="170" y1="50" x2="420" y2="50" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#dep_arrow)"/>
+    <text x="300" y="45" font-size="12" text-anchor="middle">&lt;&lt;uses&gt;&gt;</text>
+  </svg>
+</div>
+
+</div>
+
+<div class="page">
+<h3>C. Generalization Relationships</h3>
+<p>Generalization represents inheritance. A subclass inherits attributes and operations from a superclass. Multiple inheritance (where one class inherits from multiple parents) is permitted in UML, though this diagram demonstrates standard hierarchical inheritance.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 200" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <defs>
+      <marker id="gen_arrow" viewBox="0 0 14 10" refX="14" refY="5" markerWidth="14" markerHeight="10" orient="auto">
+        <polygon points="0,0 14,5 0,10" fill="white" stroke="black" stroke-width="1.5"/>
+      </marker>
+    </defs>
+    <g transform="translate(240, 20)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Account</text>
+    </g>
+    <g transform="translate(100, 120)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Saving Account</text>
+    </g>
+    <g transform="translate(380, 120)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Loan Account</text>
+    </g>
+    
+    <!-- Generalization Lines -->
+    <path d="M 160 120 L 160 95 L 300 95 L 300 80" fill="none" stroke="black" stroke-width="1.5" marker-end="url(#gen_arrow)"/>
+    <path d="M 440 120 L 440 95 L 300 95 L 300 80" fill="none" stroke="black" stroke-width="1.5"/>
+  </svg>
+</div>
+
+<h3>D. Loops (Self-Association)</h3>
+<p>A loop, or self-association, occurs when objects of a class interact with other objects of the same class. For example, a Customer may refer another Customer to the bank for a referral bonus.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 120" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <defs>
+      <marker id="loop_arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="black"/>
+      </marker>
+    </defs>
+    <g transform="translate(240, 30)">
+      <rect x="0" y="0" width="120" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="60" y="35" text-anchor="middle" font-size="12" font-weight="bold">Customer</text>
+    </g>
+    
+    <!-- Self Association Line -->
+    <path d="M 360 45 L 410 45 L 410 75 L 360 75" fill="none" stroke="black" stroke-width="1.2" marker-end="url(#loop_arrow)"/>
+    <text x="450" y="65" font-size="12" text-anchor="middle">refers &gt;</text>
+    <text x="370" y="40" font-size="11">0..1</text>
+    <text x="370" y="90" font-size="11">0..*</text>
+  </svg>
+</div>
+
+</div>
+
+<div class="page">
+<h2>5. Final Combined Analysis Class Diagram</h2>
+<p>The final diagram integrates all the modeled components: classes, attributes, operations, associations (with multiplicities), dependencies, loops, and generalizations.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 900 650" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <defs>
+      <!-- Generalization Arrow -->
+      <marker id="gen_final" viewBox="0 0 14 10" refX="14" refY="5" markerWidth="14" markerHeight="10" orient="auto">
+        <polygon points="0,0 14,5 0,10" fill="white" stroke="black" stroke-width="1.5"/>
+      </marker>
+      <!-- Association Line Arrow -->
+      <marker id="arr_final" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#000" />
+      </marker>
+      <!-- Aggregation Diamond -->
+      <marker id="agg_final" viewBox="0 0 20 10" refX="20" refY="5" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+        <polygon points="0,5 10,0 20,5 10,10" fill="white" stroke="black" stroke-width="1.5"/>
+      </marker>
+      <!-- Dependency Arrow -->
+      <marker id="dep_final" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="none" stroke="black" stroke-width="1.5"/>
+      </marker>
+    </defs>
+
+    <!-- Class: Bank (Top Left) -->
+    <g transform="translate(100, 50)">
+      <rect x="0" y="0" width="180" height="110" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="30" x2="180" y2="30" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="75" x2="180" y2="75" stroke="#A80036" stroke-width="1.5"/>
+      <text x="90" y="20" text-anchor="middle" font-size="12" font-weight="bold">Bank</text>
+      <text x="10" y="45" font-size="11">- Bankname: String</text>
+      <text x="10" y="57" font-size="11">- location: String</text>
+      <text x="10" y="69" font-size="11">- Code: String</text>
+      <text x="10" y="90" font-size="11">+ Add_branch()</text>
+      <text x="10" y="102" font-size="11">+ removebranch()</text>
+    </g>
+
+    <!-- Class: Branch (Top Right) -->
+    <g transform="translate(500, 50)">
+      <rect x="0" y="0" width="180" height="100" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="30" x2="180" y2="30" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="65" x2="180" y2="65" stroke="#A80036" stroke-width="1.5"/>
+      <text x="90" y="20" text-anchor="middle" font-size="12" font-weight="bold">Branch</text>
+      <text x="10" y="45" font-size="11">- Branch_code: String</text>
+      <text x="10" y="57" font-size="11">- CIty: String</text>
+      <text x="10" y="80" font-size="11">+ add_account()</text>
+      <text x="10" y="92" font-size="11">+ removeaccount()</text>
+    </g>
+
+    <!-- Class: Customer (Center Left) -->
+    <g transform="translate(100, 250)">
+      <rect x="0" y="0" width="180" height="90" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="30" x2="180" y2="30" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="65" x2="180" y2="65" stroke="#A80036" stroke-width="1.5"/>
+      <text x="90" y="20" text-anchor="middle" font-size="12" font-weight="bold">Customer</text>
+      <text x="10" y="45" font-size="11">- ID: String</text>
+      <text x="10" y="57" font-size="11">- Name: String</text>
+      <text x="10" y="80" font-size="11">+ update()</text>
+    </g>
+    
+    <!-- Self-Association Loop on Customer -->
+    <path d="M 100 270 L 50 270 L 50 320 L 100 320" fill="none" stroke="black" stroke-width="1.2" marker-end="url(#arr_final)"/>
+    <text x="30" y="295" font-size="11" text-anchor="end">refers &gt;</text>
+
+    <!-- Class: ATM (Dependency Target, Far Left) -->
+    <g transform="translate(100, 450)">
+      <rect x="0" y="0" width="140" height="60" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="30" x2="140" y2="30" stroke="#A80036" stroke-width="1.5"/>
+      <text x="70" y="20" text-anchor="middle" font-size="12" font-weight="bold">ATM</text>
+      <text x="10" y="50" font-size="11">+ authenticate()</text>
+    </g>
+
+    <!-- Dependency Line: Customer uses ATM -->
+    <line x1="170" y1="340" x2="170" y2="440" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#dep_final)"/>
+    <text x="180" y="390" font-size="11">&lt;&lt;uses&gt;&gt;</text>
+
+    <!-- Class: Account (Center Right) -->
+    <g transform="translate(500, 250)">
+      <rect x="0" y="0" width="180" height="110" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="30" x2="180" y2="30" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="75" x2="180" y2="75" stroke="#A80036" stroke-width="1.5"/>
+      <text x="90" y="20" text-anchor="middle" font-size="12" font-weight="bold">Account</text>
+      <text x="10" y="45" font-size="11">- Account_No: int</text>
+      <text x="10" y="57" font-size="11">- Acc_name: String</text>
+      <text x="10" y="69" font-size="11">- Balance: double</text>
+      <text x="10" y="90" font-size="11">+ Deposit()</text>
+      <text x="10" y="102" font-size="11">+ Withdraw()</text>
+    </g>
+
+    <!-- Class: Saving Account (Bottom Left) -->
+    <g transform="translate(380, 470)">
+      <rect x="0" y="0" width="160" height="80" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="30" x2="160" y2="30" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="55" x2="160" y2="55" stroke="#A80036" stroke-width="1.5"/>
+      <text x="80" y="20" text-anchor="middle" font-size="12" font-weight="bold">Saving account</text>
+      <text x="10" y="45" font-size="11">- Attribute1: String</text>
+      <text x="10" y="70" font-size="11">+ add_customer()</text>
+    </g>
+
+    <!-- Class: Loan Account (Bottom Right) -->
+    <g transform="translate(620, 470)">
+      <rect x="0" y="0" width="160" height="80" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="30" x2="160" y2="30" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="0" y1="55" x2="160" y2="55" stroke="#A80036" stroke-width="1.5"/>
+      <text x="80" y="20" text-anchor="middle" font-size="12" font-weight="bold">Loan account</text>
+      <text x="10" y="45" font-size="11">- amount: double</text>
+      <text x="10" y="70" font-size="11">+ add_customer()</text>
+    </g>
+
+    <!-- Lines and Associations -->
+    
+    <!-- Bank to Branch (Aggregation) -->
+    <line x1="280" y1="100" x2="500" y2="100" stroke="black" stroke-width="1.2" marker-start="url(#agg_final)"/>
+    <text x="390" y="95" font-size="11" text-anchor="middle">has &gt;</text>
+    <text x="305" y="115" font-size="11">1</text>
+    <text x="475" y="115" font-size="11">1..*</text>
+
+    <!-- Branch to Account -->
+    <line x1="590" y1="150" x2="590" y2="250" stroke="black" stroke-width="1.2" />
+    <text x="600" y="205" font-size="11">manages</text>
+    <polygon points="590,215 600,210 590,205" fill="black"/> <!-- arrow -->
+    <text x="570" y="165" font-size="11">1</text>
+    <text x="570" y="240" font-size="11">0..*</text>
+
+    <!-- Customer to Account -->
+    <line x1="280" y1="300" x2="500" y2="300" stroke="black" stroke-width="1.2" />
+    <text x="390" y="295" font-size="11" text-anchor="middle">owns &gt;</text>
+    <text x="295" y="315" font-size="11">1</text>
+    <text x="475" y="315" font-size="11">1..*</text>
+
+    <!-- Generalization: Saving Account to Account -->
+    <path d="M 460 470 L 460 410 L 590 410 L 590 360" fill="none" stroke="black" stroke-width="1.2" marker-end="url(#gen_final)"/>
+    
+    <!-- Generalization: Loan Account to Account -->
+    <path d="M 700 470 L 700 410 L 590 410 L 590 360" fill="none" stroke="black" stroke-width="1.2"/>
+  </svg>
+</div>
+
+</div>
+
+</div>
+</body>
+</html>

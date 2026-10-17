@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<title>Memorial – Prakriti Raksha Manch v. Union of Brahmas</title>
+<style>
+/* Base font */
+body, .page {
+  font-family: "Times New Roman", serif !important;
+}
+
+/* Screen Layout */
+body {
+  background: #ffffff !important;
+  margin: 0 !important;
+  padding: 40px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+/* Each page is an A4 card on screen */
+.page {
+  width: 210mm !important;
+  min-height: 297mm !important;
+  padding: 72pt !important;
+  margin: 0 0 24px 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  background-color: #ffffff !important;
+}
+
+/* Cover page – red background */
+.page.cover-page {
+  background-color: #c0392b !important;
+}
+
+/* Print rules */
+@media print {
+  body {
+    background: #ffffff !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  /* All pages: no box shadow, no screen margin */
+  .page {
+    width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  
+  /* Force page break before every new page (except the first one) */
+  .page + .page {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* Regular content pages */
+  .page:not(.cover-page) {
+    padding: 0 !important;
+    background-color: #ffffff !important;
+  }
+
+  /* Cover page: zero padding so red fills edge-to-edge, inner div handles padding */
+  .page.cover-page {
+    padding: 0 !important;
+    background-color: #c0392b !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    /* Fill full A4 page */
+    height: 297mm !important;
+    min-height: 297mm !important;
+    display: flex !important;
+    align-items: stretch !important;
+  }
+
+  /* Cover inner fills the full red page */
+  .page.cover-page .cover-inner {
+    width: 100% !important;
+    padding: 72pt !important;
+    box-sizing: border-box !important;
+    height: 100% !important;
+    min-height: 100% !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 20mm; /* Native margins prevent text slicing */
+  }
+  
+  @page :first {
+    margin: 0; /* Cover page goes edge to edge */
+  }
+}
+
+
+/* Typography */
+p, li { font-size: 12pt !important; line-height: 1.7 !important; margin: 8px 0 !important; }
+h1 { font-size: 16pt !important; line-height: 1.4 !important; text-align: center; margin: 20px 0 16px 0; font-weight: bold; }
+h2 { font-size: 14pt !important; line-height: 1.4 !important; margin: 22px 0 10px 0; font-weight: bold; }
+h3 { font-size: 13pt !important; line-height: 1.4 !important; margin: 18px 0 8px 0; font-weight: bold; }
+ol, ul { margin: 8px 0 8px 24px !important; padding: 0; }
+li { margin: 6px 0 !important; }
+
+/* Full-grid tables */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 18px 0 !important;
+  font-size: 11.5pt !important;
+}
+th, td {
+  border: 1.2px solid #222 !important;
+  padding: 9px 11px !important;
+  vertical-align: top !important;
+  text-align: left !important;
+  line-height: 1.5 !important;
+}
+thead tr th, tr:first-child td {
+  background-color: #f2f2f2 !important;
+  font-weight: bold !important;
+  text-align: center !important;
+}
+td:first-child { text-align: center !important; width: auto; }
+
+/* Horizontal rule dividers */
+hr.section { border: none; border-top: 1.5px solid black; margin: 12px 0; }
+hr.thin    { border: none; border-top: 0.8px solid black; margin: 8px 0; }
+
+/* ── Cover page ────────────────────────────────── */
+.cover-inner {
+  color: #fff;
+  text-align: center;
+  font-family: "Times New Roman", serif;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.team-box {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.7);
+  color: #fff;
+  padding: 5px 20px;
+  font-size: 11pt;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  float: right;
+  margin-bottom: 6px;
+}
+.clearfix::after { content: ""; display: table; clear: both; }
+.cover-gold { border:none; border-top:2px solid rgba(255,215,0,0.75); margin:12px auto; width:80%; display:block; }
+.cover-thin  { border:none; border-top:1px solid rgba(255,255,255,0.35); margin:10px auto; width:70%; display:block; }
+.team-box {
+  background: rgba(255,255,255,0.12);
+  border: 1.2px solid rgba(255,255,255,0.6);
+  color: #fff;
+  padding: 4px 16px;
+  font-size: 10.5pt;
+  font-weight: bold;
+  display: inline-block;
+  float: right;
+}
+.clearfix::after { content:""; display:table; clear:both; }
+/* Conclusion paragraphs – plain text, no box */
+.conclusion { margin: 20px 0 8px 0; font-style: normal; }
+
+/* ── Key legal highlights ──────────────────────────── */
+/* Yellow highlight for important legal propositions */
+.hl-key {
+  background: #fef9c3;
+  border-left: 3px solid #eab308;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: bold;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+/* Case citation style */
+.hl-case {
+  font-style: italic;
+  font-weight: bold;
+  color: #1d4ed8;
+}
+/* Principle box – for major legal principles */
+.principle-box {
+  border: 1px solid #d1d5db;
+  border-left: 4px solid #1d4ed8;
+  background: #f0f7ff;
+  padding: 10px 14px;
+  margin: 14px 0;
+  font-size: 11.5pt;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.principle-box strong { color: #1e40af; }
+/* Issues list styling */
+.issue-item {
+  background: #f8fafc;
+  border-left: 3px solid #64748b;
+  padding: 8px 12px;
+  margin: 8px 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+@media print {
+  * { outline: none !important; }
+  .hl-key { background: #fef9c3 !important; }
+  .principle-box { background: #f0f7ff !important; }
+  .issue-item { background: #f8fafc !important; }
+}
+
+/* Screen only focus indication */
+@media screen {
+  .page:focus-within {
+    outline: 2px dashed #4299e1;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container" contenteditable="true">
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 1 – COVER PAGE
+════════════════════════════════════════════════════ -->
+<div class="page cover-page">
+  <div class="cover-inner">
+    <!-- Team code – top right -->
+    <div class="clearfix" style="margin-bottom:16px;">
+      <span class="team-box">TEAM CODE: __________</span>
+    </div>
+
+    <!-- All content: one centred block -->
+    <div style="text-align:center; color:#fff; font-family:'Times New Roman',serif; flex:1; display:flex; flex-direction:column; justify-content:center;">
+      
+      <div>
+        <!-- Competition -->
+        <p style="font-size:10.5pt; font-weight:bold; letter-spacing:1.5px; margin:0 0 4px 0; color:rgba(255,255,255,0.85);">4<sup style="font-size:0.65em;">TH</sup> NATIONAL MOOT COURT COMPETITION, 2025</p>
+
+        <hr class="cover-gold">
+
+        <!-- Court -->
+        <p style="font-style:italic; font-size:10.5pt; margin:8px 0 2px 0; color:rgba(255,255,255,0.75);">BEFORE</p>
+        <p style="font-size:16pt; font-weight:bold; margin:2px 0 6px 0; line-height:1.3;">THE HON'BLE SUPREME COURT OF BRAHMAS</p>
+        <p style="font-size:10pt; letter-spacing:1.5px; margin:0 0 3px 0; color:rgba(255,255,255,0.8);">CIVIL APPELLATE JURISDICTION</p>
+        <p style="font-size:11pt; font-weight:bold; margin:3px 0 0 0;">Civil Appeal No. ______ of 2024</p>
+
+        <hr class="cover-thin" style="margin-top:14px;">
+
+        <!-- Parties -->
+        <p style="font-size:10.5pt; font-weight:bold; letter-spacing:1px; margin:10px 0 8px 0; color:rgba(255,255,255,0.8);">IN THE MATTER OF:</p>
+
+        <div style="margin: 16px 0;">
+          <div style="font-size:14.5pt; font-weight:bold;">PRAKRITI RAKSHA MANCH</div>
+          <div style="font-style:italic; font-size:11.5pt; color:rgba(255,255,255,0.85); margin-top:3px;">&hellip;Appellant</div>
+        </div>
+
+        <div style="font-size:11pt; font-weight:bold; margin:12px 0; letter-spacing:2px; color:rgba(255,215,0,0.9);">&#8212; VERSUS &#8212;</div>
+
+        <div style="margin: 16px 0;">
+          <div style="font-size:14.5pt; font-weight:bold;">UNION OF BRAHMAS &amp; ANR.</div>
+          <div style="font-style:italic; font-size:11.5pt; color:rgba(255,255,255,0.85); margin-top:3px;">&hellip;Respondents</div>
+        </div>
+
+        <hr class="cover-gold" style="margin-top:14px;">
+
+        <!-- Memorial title – the centrepiece -->
+        <p style="font-size:17pt; font-weight:bold; letter-spacing:0.5px; margin:18px 0 6px 0; line-height:1.35;">MEMORANDUM ON BEHALF OF<br>THE RESPONDENTS</p>
+        <p style="font-size:10.5pt; color:rgba(255,255,255,0.8); margin:0 0 18px 0;">On Submission to the Hon'ble Supreme Court of Brahmas</p>
+
+        <hr class="cover-thin">
+        
+        <!-- Submitter Details -->
+        <div style="margin: 24px 0 16px 0; font-size: 11pt;">
+          <p style="margin:2px 0; color:rgba(255,255,255,0.85); font-weight:bold; letter-spacing:1px; font-size:9pt;">SUBMITTED BY:</p>
+          <p style="margin:2px 0; font-weight:bold; font-size:13pt; color:#fef08a;">Mrunali Manoj Pawar</p>
+          <p style="margin:2px 0; color:rgba(255,255,255,0.9);">LL.B. II Year</p>
+          <p style="margin:2px 0; color:rgba(255,255,255,0.9);">SNBP Law College</p>
+          <p style="margin:2px 0; font-style:italic; font-size:10pt; color:rgba(255,255,255,0.7);">Practical Training &ndash; Moot Court Exercise</p>
+        </div>
+
+        <hr class="cover-thin">
+
+        <!-- Footnote -->
+        <p style="font-size:9.5pt; font-style:italic; color:rgba(255,255,255,0.6); margin:10px 0 0 0;">
+          The jurisdiction is fictional; applicable laws and principles are <em>pari materia</em> with those in force in India.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 2 – TABLE OF CONTENTS
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>TABLE OF CONTENTS</h1>
+  <table>
+    <thead>
+      <tr><th>S.No.</th><th>Contents</th><th>Pg. No.</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1.</td><td>Table of Abbreviations</td><td>3</td></tr>
+      <tr><td>2.</td><td>Index of Authorities</td><td>4</td></tr>
+      <tr><td>3.</td><td>Table of Cases</td><td>5</td></tr>
+      <tr><td>4.</td><td>Statement of Jurisdiction</td><td>6</td></tr>
+      <tr><td>5.</td><td>Statement of Facts</td><td>7–8</td></tr>
+      <tr><td>6.</td><td>Issues Raised</td><td>9</td></tr>
+      <tr><td>7.</td><td>Summary of Arguments</td><td>10–11</td></tr>
+      <tr><td>8.</td><td>Arguments Advanced</td><td>12–27</td></tr>
+      <tr><td>9.</td><td>Prayer</td><td>28</td></tr>
+    </tbody>
+  </table>
+  <p style="font-style:italic; font-size:10.5pt; margin-top:16px;">
+    <em>Note: Page numbers are indicative and may shift slightly depending on printing and formatting.</em>
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 3 – TABLE OF ABBREVIATIONS
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>TABLE OF ABBREVIATIONS</h1>
+  <table>
+    <thead>
+      <tr><th>Abbreviation</th><th>Expansion</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style="text-align:left;">Art.</td><td>Article</td></tr>
+      <tr><td style="text-align:left;">CA</td><td>Compensatory Afforestation</td></tr>
+      <tr><td style="text-align:left;">CRZ</td><td>Coastal Regulation Zone</td></tr>
+      <tr><td style="text-align:left;">EC</td><td>Environmental Clearance</td></tr>
+      <tr><td style="text-align:left;">EIA</td><td>Environmental Impact Assessment</td></tr>
+      <tr><td style="text-align:left;">EPA</td><td>Environment (Protection) Act, 1986</td></tr>
+      <tr><td style="text-align:left;">FCA</td><td>Forest (Conservation) Act, 1980</td></tr>
+      <tr><td style="text-align:left;">FRA</td><td>Forest Rights Act, 2006</td></tr>
+      <tr><td style="text-align:left;">HTL</td><td>High Tide Line</td></tr>
+      <tr><td style="text-align:left;">MoEFCC</td><td>Ministry of Environment, Forest and Climate Change</td></tr>
+      <tr><td style="text-align:left;">NGT</td><td>National Green Tribunal</td></tr>
+      <tr><td style="text-align:left;">SC</td><td>Supreme Court</td></tr>
+      <tr><td style="text-align:left;">SDIDDC</td><td>Sagar Dweep Integrated Development Corporation</td></tr>
+      <tr><td style="text-align:left;">DSMMDP</td><td>Dakshin Sagar Multi-Modal Development Project</td></tr>
+      <tr><td style="text-align:left;">PIL</td><td>Public Interest Litigation</td></tr>
+      <tr><td style="text-align:left;">SCC</td><td>Supreme Court Cases</td></tr>
+      <tr><td style="text-align:left;">AIR</td><td>All India Reporter</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 4 – INDEX OF AUTHORITIES
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>INDEX OF AUTHORITIES</h1>
+
+  <h2>A. Statutes and Constitutional Provisions</h2>
+  <ul>
+    <li>Constitution of India, 1950 — Article 21; Articles 48A and 51A(g)</li>
+    <li>Environment (Protection) Act, 1986 — Sections 3 and 5</li>
+    <li>Environment Impact Assessment Notification, 2006 — Prior environmental clearance; appraisal and public consultation framework</li>
+    <li>Forest (Conservation) Act, 1980 — Section 2 – restriction on use of forest land for non-forest purposes</li>
+    <li>National Green Tribunal Act, 2010 — Section 22 – appeal to the Supreme Court</li>
+    <li>Coastal Regulation Zone Notification — Regulation of activities in ecologically sensitive coastal areas</li>
+    <li>Forest Rights Act, 2006 — Recognition and protection of rights of forest dwelling Scheduled Tribes and traditional forest dwellers</li>
+  </ul>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 5 – TABLE OF CASES
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>TABLE OF CASES</h1>
+  <table>
+    <thead>
+      <tr><th>S.No.</th><th>Case</th><th>Citation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Hanuman Laxman Aroskar v. Union of India</td><td>2019 (Supreme Court)</td></tr>
+      <tr><td>2</td><td>Vellore Citizens’ Welfare Forum v. Union of India</td><td>(1996) 5 SCC 647</td></tr>
+      <tr><td>3</td><td>Lafarge Umiam Mining (P) Ltd. v. Union of India</td><td>(2011) 7 SCC 338</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 6 – STATEMENT OF JURISDICTION
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>STATEMENT OF JURISDICTION</h1>
+  <p>The Respondents respectfully submit that this Hon'ble Court has jurisdiction to hear the present appeal under <strong>Section 22 of the National Green Tribunal Act, 2010</strong>, insofar as an appeal lies to the Supreme Court on a question of law from an order or decision of the National Green Tribunal.</p>
+  <p>The Respondents, however, submit that appellate jurisdiction should be exercised within its proper legal limits. The Appellant must establish an error of law in the NGT's decision, and not merely invite this Hon'ble Court to substitute its policy or scientific assessment for that of the competent statutory authorities.</p>
+  <p>The NGT dismissed the challenge after considering that competent statutory approvals had been granted and that sufficient grounds for interference had not been established. The Respondents submit that this conclusion should be affirmed unless the Appellant demonstrates a material legal or procedural defect.</p>
+  <p>The jurisdiction of this Hon'ble Court is not disputed. The Respondents submit, however, that the scope of review is limited to questions of law and legality, and does not extend to re-appreciation of scientific evidence or substitution of policy judgment.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 7–8 – STATEMENT OF FACTS
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>STATEMENT OF FACTS</h1>
+
+  <p><strong>1.</strong> The Union Territory of Sagar Dweep comprises remote islands in the Bay of Bengal with strategic significance for maritime trade and national security. Dakshin Sagar Island is the southernmost and least populated island, covering approximately 1,050 sq. km., nearly <strong>88%</strong> of which is classified as forest land.</p>
+
+  <p><strong>2.</strong> The island contains rich biodiversity, mangrove belts, coral reef systems and nesting grounds for endangered marine species. It is also exposed to seismic and tsunami risks. The Government has consequently recognised the need for regulated development and environmental safeguards in the region.</p>
+
+  <p><strong>3.</strong> The <strong>Soren Tribe</strong>, a Particularly Vulnerable Tribal Group (PVTG), has inhabited the island for generations and depends traditionally on forest produce, subsistence fishing and small-scale shifting cultivation. The community exercises customary rights over forest and coastal areas, though it does not hold formal land titles under modern legal instruments.</p>
+
+  <p><strong>4.</strong> In <strong>March 2024</strong>, the Union of Brahmas announced the <strong>Dakshin Sagar Multi-Modal Development Project (DSMMDP)</strong> through the Ministry of Maritime Development and Strategic Infrastructure. The project encompasses a deep-sea transshipment port, a greenfield international airport, a coastal township, and ancillary road, power and logistics infrastructure.</p>
+
+  <p><strong>5.</strong> SDIDDC, a government-owned enterprise created to execute large infrastructure projects, was entrusted with implementation. Approximately <strong>140 sq. km.</strong> of forest land was proposed for diversion, including primary evergreen forests, forest areas adjoining mangroves, and land traditionally accessed by the Soren Tribe. The port works required dredging, land reclamation and construction of breakwaters.</p>
+
+  <p><strong>6.</strong> The Government justified the project on economic development, employment generation, national maritime capability, and strategic presence in the Bay of Bengal. Compensatory afforestation on non-forest mainland land, approximately 1,200 km from Dakshin Sagar Island, was proposed as a mitigation measure.</p>
+
+  <p><strong>7.</strong> In <strong>July 2023</strong>, SDIDDC appointed <em>AquaTerra Environmental Consultants Pvt. Ltd.</em> to conduct the EIA. The study involved three months of field work, compilation of secondary governmental data, and predictive environmental assessment. The EIA concluded that the impacts were significant but manageable, and that modern engineering could substantially mitigate ecological damage. Seismic and tsunami risks were assessed as low-probability, high-impact events.</p>
+
+  <p><strong>8.</strong> Public consultation was conducted at Port Nayan, the capital of Sagar Dweep, approximately 1,400 km from Dakshin Sagar Island. Participation by residents of Dakshin Sagar was minimal owing to geographical and logistical constraints. Civil society organisations, environmental experts and members of the Soren community raised objections on study duration, cumulative-impact assessment, disaster-risk assessment and the adequacy of public participation.</p>
+
+  <p><strong>9.</strong> Despite the objections, the <strong>competent environmental authority granted Environmental Clearance in January 2024</strong> under the Environment (Protection) Act, 1986. Coastal authorities also granted CRZ clearance, noting that ports and associated infrastructure were permissible activities, that the project served strategic national interests, and that mitigation measures such as artificial reefs and mangrove transplantation were proposed.</p>
+
+  <p><strong>10.</strong> Marine biologists raised concerns regarding coral reef degradation, disruption of marine breeding cycles and accelerated coastal erosion. The Government maintained that mitigation measures would be undertaken and that no permanent displacement of the Soren Tribe was planned. It further stated that the project would improve healthcare, education and connectivity for the island.</p>
+
+  <p><strong>11.</strong> Following clearance, SDIDDC commenced preliminary activities including vegetation clearing for survey work, temporary access roads, and deployment of heavy machinery. Independent satellite imagery subsequently indicated noticeable changes in forest cover.</p>
+
+  <p><strong>12.</strong> In <strong>May 2024</strong>, <em>Prakriti Raksha Manch</em>, an environmental protection organisation, approached the NGT challenging the legality of the project approvals. The NGT dismissed the application, holding that the project had obtained approvals from competent statutory authorities and that no sufficient ground for interference had been made out at that stage.</p>
+
+  <p><strong>13.</strong> The Appellant thereafter approached this Hon'ble Court. The appeal has been admitted and the present four issues have been framed for final adjudication.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 9 – ISSUES RAISED
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>ISSUES RAISED</h1>
+  <div class="issue-item"><strong>Issue I:</strong> Whether the Environmental Clearance granted to the Dakshin Sagar Multi-Modal Development Project violates the Environment (Protection) Act, 1986 due to an inadequate and flawed Environmental Impact Assessment?</div>
+  <div class="issue-item"><strong>Issue II:</strong> Whether diversion of extensive forest land on Dakshin Sagar Island is contrary to the object and purpose of the Forest (Conservation) Act, 1980?</div>
+  <div class="issue-item"><strong>Issue III:</strong> Whether the grant of Coastal Regulation Zone clearance permitting large-scale construction in ecologically sensitive coastal areas is legally sustainable?</div>
+  <div class="issue-item"><strong>Issue IV:</strong> Whether the Dakshin Sagar Multi-Modal Development Project infringes the right to life and a healthy environment under Article 21 of the Constitution of Brahmas?</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 10–11 – SUMMARY OF ARGUMENTS
+════════════════════════════════════════════════════ -->
+<div class="page">
+  <h1>SUMMARY OF ARGUMENTS</h1>
+
+  <h2>I. The Environmental Clearance Is Legally Sustainable</h2>
+  <p>The Respondents submit that the EIA and clearance process should be presumed valid unless the Appellant establishes a material statutory violation. The EIA was commissioned through a specialised consultant, used field and secondary data, and provided a predictive assessment. The report acknowledged significant impacts and proposed mitigation. The mere fact that the Appellant or experts prefer a longer study or different methodology does not automatically invalidate the statutory decision. Public consultation was conducted and objections were considered. Judicial review must focus on legality and rationality, not scientific substitution.</p>
+
+  <h2>II. Forest Diversion Is Subject to Statutory Approval and Environmental Safeguards</h2>
+  <p>The Respondents do not dispute that forest diversion must comply with the Forest (Conservation) Act. Their submission is that the existence of a proposal to divert forest land does not itself establish illegality. The project was placed before competent authorities and approvals were obtained. Compensatory afforestation and mitigation measures form part of the regulatory framework. The Appellant must demonstrate a specific breach of the statutory approval process, not merely the existence of forest land in the project area.</p>
+
+  <h2>III. The CRZ Clearance Is Sustainable Because the Project Is a Regulated and Permissible Development Activity</h2>
+  <p>The CRZ regime regulates rather than absolutely prohibits development. Ports and associated infrastructure may be permissible subject to conditions. The coastal authority expressly considered strategic importance and mitigation measures. The Respondents submit that the Appellant cannot convert ecological sensitivity into a blanket prohibition when the competent authority has applied the regulatory framework and imposed conditions.</p>
+
+  <h2>IV. Article 21 Does Not Create an Absolute Bar Against Development</h2>
+  <p>The Respondents accept that a healthy environment forms part of Article 21. However, environmental rights must be harmonised with sustainable development, employment, connectivity and national security. The constitutional framework permits responsible development subject to environmental safeguards. The project's objectives are substantial and competent authorities have prescribed mitigation. The appropriate course, if any deficiency is found, would be targeted additional safeguards rather than automatic cancellation of the entire project.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 12 – ARGUMENTS ADVANCED: ISSUE I
+════════════════════════════════════════════════════ -->
+<div class="page" style="page-break-before:always; break-before:page;">
+  <h1>ARGUMENTS ADVANCED</h1>
+
+  <h2>ISSUE I: THE ENVIRONMENTAL CLEARANCE DOES NOT VIOLATE THE ENVIRONMENT (PROTECTION) ACT, 1986</h2>
+
+  <h3>I.A. The EIA was undertaken by a specialised consultant and produced a reasoned assessment.</h3>
+  <p>SDIDDC appointed AquaTerra Environmental Consultants Pvt. Ltd. to conduct the EIA. The assessment included field studies over three months, compilation of secondary governmental data, and predictive assessment of environmental impacts. The report expressly concluded that impacts would be significant but manageable and identified engineering mitigation measures. The existence of a disagreement over methodology is not equivalent to a statutory violation. Environmental clearance involves scientific and technical evaluation by specialised authorities. Judicial review is directed to legality, procedural fairness and rationality, not to replacing expert conclusions merely because another scientific opinion is possible.</p>
+
+  <h3>I.B. The EIA Notification requires assessment and consultation, not a guaranteed duration or outcome.</h3>
+  <p>The Appellant emphasises the three-month field study and argues it was too short. However, the proposition does not prescribe a minimum number of months. The legal question is whether the prescribed process was followed and whether the assessment was materially incapable of informing the decision-maker. The EIA contained baseline material, secondary governmental data and predictive assessment. Unless the Appellant identifies a mandatory requirement that was omitted, the criticism of duration alone cannot invalidate the clearance.</p>
+
+  <h3>I.C. Public consultation was conducted and objections were considered.</h3>
+  <p>Public consultation was held at Port Nayan. Objections by experts, civil society organisations, marine biologists and the tribal community were received. Limited geographical participation does not establish that the entire statutory consultation process was legally void. In <span class="hl-case">Hanuman Laxman Aroskar v. Union of India</span>, (2019) 15 SCC 401, the Supreme Court recognised the importance of environmental decision-making and public consultation, while confirming that <span class="hl-key">the judicial task is to determine whether the process was legally flawed, not to substitute a different outcome.</span></p>
+
+  <h3>I.D. Strategic and public-interest considerations are legitimate factors in environmental decision-making.</h3>
+  <p>The DSMMDP is intended to establish a deep-sea port, international airport, coastal township and supporting infrastructure. In <span class="hl-case">Narmada Bachao Andolan v. Union of India</span>, (2000) 10 SCC 664, the Supreme Court recognised that <span class="hl-key">sustainable development requires balancing development and environmental protection.</span> Courts should not treat environmental protection as requiring every development project to be abandoned. The appropriate question is whether the project can proceed with legally adequate safeguards.</p>
+
+  <h3>I.E. The precautionary principle does not amount to absolute prohibition.</h3>
+  <div class="principle-box"><strong>Principle:</strong> <span class="hl-case">Vellore Citizens' Welfare Forum v. Union of India</span>, (1996) 5 SCC 647 — The precautionary principle requires preventive and proportionate action where serious environmental harm is apprehended; <strong>it does not automatically prohibit every activity carrying environmental risk.</strong></div>
+  <p>The present project includes mitigation measures — artificial reef creation, mangrove transplantation, and engineering solutions to manage seismic and tsunami risks. The authority was entitled to weigh risks against public benefits and prescribe mitigation.</p>
+
+  <h3>I.F. The NGT correctly exercised restraint.</h3>
+  <p>The NGT dismissed the application because competent statutory authorities had granted approvals and sufficient grounds for interference were not established. The Appellant must demonstrate a question of law or a material procedural illegality — it cannot succeed simply by inviting the Supreme Court to reassess technical evidence as if it were the primary environmental regulator.</p>
+
+  <p class="conclusion"><strong>Conclusion on Issue I:</strong> The EIA and clearance process contained the principal statutory components required by environmental law. The Appellant has not demonstrated a fatal procedural illegality. The Environmental Clearance should therefore be upheld.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE – ARGUMENTS ADVANCED: ISSUE II
+════════════════════════════════════════════════════ -->
+<div class="page" style="page-break-before:always; break-before:page;">
+  <h2>ISSUE II: THE FOREST DIVERSION IS NOT ILLEGAL MERELY BECAUSE THE PROJECT INVOLVES FOREST LAND</h2>
+
+  <h3>II.A. Section 2 of the Forest (Conservation) Act regulates diversion; it does not impose an absolute prohibition.</h3>
+  <p>Section 2 requires prior Central approval for specified uses of forest land. The proposition states that the project received statutory approvals. Therefore, the legal issue is not whether forest land is involved, but whether the required approval and conditions were complied with. The Appellant has not established from the proposition that the competent authority bypassed the statutory forest-diversion process. A general objection to the scale of diversion cannot by itself establish a violation.</p>
+
+  <h3>II.B. Compensatory afforestation is an established statutory safeguard.</h3>
+  <p>The Government proposed compensatory afforestation on non-forest land on the mainland. Compensatory afforestation is an established component of forest-diversion regulation under the Forest (Conservation) Act. The Appellant argues that mainland plantation cannot replicate island biodiversity. While this concern may justify stronger ecological conditions, <span class="hl-key">it does not automatically render the statutory compensatory mechanism legally invalid.</span> The appropriate judicial approach is to examine whether the statutory conditions are satisfied and whether additional safeguards are required.</p>
+
+  <h3>II.C. The rights of the Soren Tribe must be protected, but the proposition does not establish that every statutory requirement was violated.</h3>
+  <p>The Government expressly stated that no permanent displacement was planned and that development would improve healthcare, education and connectivity. <span class="hl-case">Orissa Mining Corporation Ltd. v. Ministry of Environment &amp; Forests</span>, (2013) 6 SCC 476, recognises the importance of tribal and community rights under the Forest Rights Act. However, <span class="hl-key">this does not mean all development in a tribal area is prohibited.</span> If a specific procedural requirement is established to have been breached, the competent authority may be directed to comply with it. The Respondents respectfully submit that the proper remedy is meaningful consultation and compliance, not project cancellation.</p>
+
+  <h3>II.D. The Court should consider proportional remedies rather than cancelling the entire project.</h3>
+  <p>Even if a deficiency in forest-rights consultation or a particular clearance condition is found, the remedy should be proportionate. <em>Lafarge Umiam Mining Pvt. Ltd. v. Union of India</em>, (2011) 7 SCC 338, illustrates the need to balance development and environmental concerns through structured conditions and informed decision-making. A blanket cancellation would disregard the project's strategic and economic significance. A direction for additional study, consultation or strengthened conditions would be a less disruptive and legally appropriate response.</p>
+
+  <p class="conclusion"><strong>Conclusion on Issue II:</strong> Forest diversion is legally permissible when undertaken in accordance with the statutory approval framework and subject to environmental safeguards. The Appellant has not demonstrated that the project's diversion was processed contrary to the Forest (Conservation) Act.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE – ARGUMENTS ADVANCED: ISSUE III
+════════════════════════════════════════════════════ -->
+<div class="page" style="page-break-before:always; break-before:page;">
+  <h2>ISSUE III: THE CRZ CLEARANCE IS LEGALLY SUSTAINABLE</h2>
+
+  <h3>III.A. The CRZ regime regulates development in coastal areas; it does not impose a blanket prohibition.</h3>
+  <p>The coastal authority granted clearance after considering that ports and associated infrastructure are permissible activities, that the project serves strategic and national interests, and that mitigation measures would be undertaken. The mere fact that the project is situated in a coastal area does not establish illegality. The CRZ Notification, 2019 provides a framework that distinguishes between prohibited and permissible activities in different CRZ categories. Ports are among the permissible activities subject to conditions.</p>
+
+  <h3>III.B. Ecological sensitivity can be addressed through strict conditions and mitigation.</h3>
+  <p>The proposition records proposed artificial reef creation and mangrove transplantation. These measures demonstrate that environmental effects were recognised rather than ignored. <span class="hl-case">Krishnadevi Malchand Kamathia v. Bombay Environmental Action Group</span>, (2011) 3 SCC 363, recognises the ecological sensitivity of mangrove ecosystems. The Respondents do not dispute that protection. <span class="hl-key">Sensitivity calls for careful regulation and conditions, not an automatic conclusion that all infrastructure is legally impossible in such zones.</span></p>
+
+  <h3>III.C. National interest is relevant to the proportionality analysis.</h3>
+  <p>The port and associated infrastructure are intended to strengthen maritime capabilities and strategic presence in the Bay of Bengal. Such considerations fall within the Government's policy domain. Environmental law requires the Government to balance these objectives with ecological safeguards. <em>Narmada Bachao Andolan</em> and <em>Lafarge</em> demonstrate that sustainable development is a balancing principle. The Court should not substitute its own assessment of national infrastructure policy where statutory authorities have acted within the legal framework.</p>
+
+  <h3>III.D. Scientific warnings require monitoring and safeguards, not necessarily project cancellation.</h3>
+  <p>Marine biologists warned about coral reefs, marine breeding cycles and coastal erosion. These concerns support stringent monitoring, environmental management plans and adaptive mitigation. A proportionate remedy could require periodic biodiversity monitoring, restrictions on dredging during breeding seasons, coral-protection measures, mangrove restoration and erosion-control measures, while permitting the project to proceed subject to compliance and continuous oversight.</p>
+
+  <p class="conclusion"><strong>Conclusion on Issue III:</strong> The CRZ clearance is sustainable because the regulatory framework permits controlled infrastructure development and the competent authority considered mitigation measures and public importance. No sufficient ground for complete invalidation has been established.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE – ARGUMENTS ADVANCED: ISSUE IV
+════════════════════════════════════════════════════ -->
+<div class="page" style="page-break-before:always; break-before:page;">
+  <h2>ISSUE IV: THE PROJECT DOES NOT, ON THE PRESENT RECORD, ESTABLISH AN INFRINGEMENT OF ARTICLE 21</h2>
+
+  <h3>IV.A. Article 21 protects environmental quality but must be harmonised with sustainable development.</h3>
+  <div class="principle-box"><strong>Constitutional Principle:</strong> <span class="hl-case">Subhash Kumar v. State of Bihar</span>, (1991) 1 SCC 598 — The right to life under Article 21 includes the right to enjoy pollution-free water and air. However, <strong>Article 21 does not establish that every development project affecting the environment is unconstitutional.</strong></div>
+  <p>The constitutional standard requires a lawful and proportionate balance between environmental protection and legitimate public objectives. The DSMMDP is accompanied by environmental clearance, CRZ clearance and proposed mitigation measures.</p>
+
+  <h3>IV.B. Articles 48A and 51A(g) operate within the framework of sustainable development.</h3>
+  <p>Article 48A directs the State to protect and improve the environment and safeguard forests and wildlife. Article 51A(g) recognises the duty to protect the natural environment. These provisions strengthen environmental governance but must be read together with the State's responsibility to promote infrastructure, development and national security. <em>Vellore Citizens' Welfare Forum</em> treats sustainable development as a balance between environmental protection and development — the constitutional framework does not require a choice between the two in every case.</p>
+
+  <h3>IV.C. The Appellant has not established actual or inevitable irreversible harm at this stage.</h3>
+  <p>The proposition records warnings and satellite-observed changes in forest cover, but does not state that the project has caused an established, irreversible environmental injury that cannot be addressed through regulatory intervention. The EIA concluded that impacts were significant but manageable. The constitutional threshold for setting aside the entire project has not been met. If monitoring establishes non-compliance, the authorities can impose further conditions, suspend particular activities or require corrective measures.</p>
+
+  <h3>IV.D. Judicial review should respect institutional competence.</h3>
+  <p>Environmental disputes often involve complex scientific, engineering and policy questions. The Supreme Court's role is to ensure legality, fairness, rationality and compliance with environmental principles. It should not become the primary designer of a port, airport or township. <em>N.D. Jayal v. Union of India</em>, (2014) 11 SCC 362, and <em>Lafarge</em> support a balanced approach in which environmental governance is strengthened without ignoring institutional competence and legitimate development objectives.</p>
+
+  <h3>IV.E. The Soren Tribe's rights are a serious constitutional consideration.</h3>
+  <p>The Respondents acknowledge the deep and longstanding relationship between the Soren Tribe and their traditional lands. The Government's commitment to provide improved healthcare, education and connectivity, alongside the assurance against permanent displacement, demonstrates awareness of this dimension. The appropriate remedy is meaningful consultation, recognition of customary rights under the FRA, and compliance with applicable safeguards — not cancellation of the entire project. The Court may direct the Respondents to undertake a cultural and social impact study in consultation with the Soren community before any permanent displacement occurs.</p>
+
+  <p class="conclusion"><strong>Conclusion on Issue IV:</strong> The Project does not violate Article 21 merely because it has environmental consequences. On the present record, statutory scrutiny and mitigation measures exist. The constitutional standard of sustainable development can be met through strict compliance, monitoring and protection of affected communities.</p>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE – OVERALL SUBMISSIONS
+════════════════════════════════════════════════════ -->
+<div class="page" style="page-break-before:always; break-before:page;">
+  <h1>OVERALL SUBMISSIONS</h1>
+  <p>The Respondents respectfully submit that the present appeal seeks to convert disputed technical and policy questions into grounds for judicial invalidation. The DSMMDP was subjected to an EIA, Environmental Clearance and CRZ scrutiny by competent authorities. The principles of precaution, sustainable development and environmental rule of law remain fully applicable. They require careful assessment, mitigation, monitoring and protection of affected communities. They do not, however, mandate a zero-risk standard or judicial substitution of expert and policy decisions in the absence of demonstrated illegality. The NGT was justified in declining to interfere. The appeal deserves dismissal, subject to any additional safeguards this Hon'ble Court may consider necessary.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE – PRAYER
+════════════════════════════════════════════════════ -->
+<div class="page" style="page-break-before:always; break-before:page;">
+  <h1>PRAYER</h1>
+  <p>WHEREFORE, in light of the facts, circumstances, statutory framework and submissions made herein, it is most respectfully prayed that this Hon'ble Court may be pleased to:</p>
+
+  <ul style="margin-left:28px;">
+    <li><strong>Dismiss</strong> the appeal filed by Prakriti Raksha Manch and affirm the order of the National Green Tribunal;</li>
+    <li><strong>Hold</strong> that the Environmental Clearance granted for the DSMMDP is not liable to be set aside merely on the basis of disputed scientific methodology or disagreement with the expert assessment, in the absence of a demonstrated statutory violation;</li>
+    <li><strong>Hold</strong> that the proposed forest diversion has been processed through the applicable statutory approval framework, with compensatory and environmental safeguards;</li>
+    <li><strong>Uphold</strong> the CRZ clearance, subject to such additional environmental safeguards, monitoring requirements or conditions as this Hon'ble Court may consider appropriate;</li>
+    <li><strong>Hold</strong> that the project, when implemented in compliance with environmental, forest and coastal regulations, does not per se violate Article 21;</li>
+    <li><strong>Direct</strong>, if this Hon'ble Court considers appropriate, continued environmental monitoring, protection of mangrove and coral ecosystems, and meaningful participation of the Soren Tribe in accordance with applicable law; and</li>
+    <li><strong>Pass</strong> any other order deemed fit in the interests of justice, sustainable development, environmental protection, public welfare and national interest.</li>
+  </ul>
+
+  <p style="text-align:center; font-weight:bold; margin-top:36px; font-size:12pt;">
+    AND FOR THIS ACT OF KINDNESS, THE RESPONDENTS AS IN DUTY BOUND SHALL EVER PRAY.
+  </p>
+
+  <div style="display:flex; justify-content:space-between; margin-top:60px;">
+    <div>
+      Place: ____________<br>
+      Date: ____________
+    </div>
+    <div style="text-align:right;">
+      <strong>Counsel for the Respondents</strong>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE – VERIFICATION
+════════════════════════════════════════════════════ -->
+<div class="page" style="page-break-before:always; break-before:page;">
+  <h1>VERIFICATION</h1>
+  <p>I, the undersigned Counsel for the Respondents, do hereby verify that the contents of this Memorial, including the Statement of Jurisdiction, Statement of Facts, Issues Raised, Summary of Arguments, Arguments Advanced and Prayer, are based on the facts stated in the Moot Proposition and the legal authorities relied upon for the purposes of the moot.</p>
+
+  <div style="display:flex; justify-content:space-between; margin-top:60px;">
+    <div>
+      <div style="margin-bottom: 25px;">Verified at: ____________</div>
+      <div>Date: _________________</div>
+    </div>
+    <div style="text-align:right;">
+      Signature: ______________<br>
+      <strong>Counsel for the Respondents</strong>
+    </div>
+  </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

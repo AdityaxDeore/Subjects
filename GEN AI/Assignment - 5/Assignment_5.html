@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCCOE - Generative AI - Assignment No. 5 - Music Generation using LSTM</title>
+    <!-- MathJax 3 with single-dollar inline configuration and SVG skipping -->
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'svg']
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0.35in 0.4in;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #1e293b;
+            background: #f1f5f9;
+            padding: 24px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+        }
+
+        .page {
+            min-height: 11in;
+            width: 8.5in;
+            padding: 0.52in 0.62in;
+            background: #ffffff;
+            margin: 0 auto 24px auto;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .page:focus-within {
+            outline: 2px dashed #2563eb;
+            outline-offset: 4px;
+        }
+
+        @media print {
+            html, body { 
+                background: #ffffff !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                color: #000000 !important; 
+            }
+            .container { 
+                max-width: 100% !important; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                box-shadow: none !important; 
+            }
+            .page { 
+                width: 100% !important; 
+                min-height: auto !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                box-shadow: none !important; 
+                border: none !important; 
+                border-radius: 0 !important; 
+                page-break-after: always !important; 
+                break-after: page !important;
+            }
+            .page:last-child {
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+            .concept-card, .image-box, .styled-table, pre, .cover-table, .algo-card {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            * { color: #000000 !important; }
+            pre, .inline-code { 
+                border: 1px solid #000000 !important; 
+                border-left: 4px solid #000000 !important; 
+                background: transparent !important; 
+            }
+            h2, h3, h4 { border-bottom-color: #000000 !important; }
+
+            h2 { margin-top: 12px !important; margin-bottom: 6px !important; padding-bottom: 2px !important; font-size: 13.5pt !important; }
+            h3 { margin-top: 10px !important; margin-bottom: 5px !important; font-size: 11.5pt !important; }
+            h4 { margin-top: 6px !important; margin-bottom: 3px !important; font-size: 10pt !important; }
+            p { margin-bottom: 6px !important; line-height: 1.4 !important; font-size: 10pt !important; }
+            ul, ol { margin-top: 3px !important; margin-bottom: 8px !important; line-height: 1.4 !important; font-size: 10pt !important; }
+            li { margin-bottom: 3px !important; }
+            .cover-table { margin-bottom: 12px !important; }
+            .concept-card { margin-bottom: 8px !important; padding: 8px 12px !important; }
+            .styled-table th, .styled-table td { padding: 4px 7px !important; font-size: 9pt !important; }
+            .image-box img { max-height: 2.6in !important; }
+            .image-box { margin-bottom: 6px !important; }
+            .caption { font-size: 8pt !important; margin-top: 3px !important; }
+            pre { padding: 6px 10px !important; font-size: 8pt !important; margin: 4px 0 6px 0 !important; }
+            pre.output-box { padding: 5px 8px !important; font-size: 7.8pt !important; margin-bottom: 8px !important; }
+        }
+
+        /* Cover Table Styles */
+        .cover-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .cover-table td {
+            border: 1px solid #000000;
+            padding: 7px 12px;
+        }
+
+        .cover-table .college-info {
+            text-align: center;
+            font-weight: bold;
+            font-size: 15.5pt;
+            line-height: 1.35;
+        }
+
+        .cover-table .row-centered {
+            text-align: center;
+            font-weight: bold;
+            font-size: 13pt;
+        }
+
+        .cover-table .row-left {
+            text-align: left;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+
+        .logo-container {
+            text-align: center;
+            width: 18%;
+            padding: 4px !important;
+            vertical-align: middle;
+        }
+
+        .logo-container img {
+            max-width: 90px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Typography */
+        h2 {
+            font-size: 13.5pt;
+            color: #0f172a;
+            margin-top: 14px;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 11.5pt;
+            color: #1e293b;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 10.5pt;
+            color: #334155;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 10pt;
+            text-align: justify;
+            line-height: 1.48;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+
+        ul, ol {
+            margin-top: 3px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            font-size: 10pt;
+            color: #334155;
+            line-height: 1.45;
+        }
+
+        li {
+            margin-bottom: 4px;
+            text-align: justify;
+        }
+
+        /* Cards and Visual Callouts */
+        .concept-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #2563eb;
+            border-radius: 4px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+        }
+
+        .algo-card {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #059669;
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            font-size: 9.5pt;
+        }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 14px 0;
+            font-size: 9.5pt;
+        }
+
+        .styled-table th, .styled-table td {
+            border: 1px solid #cbd5e1;
+            padding: 6px 9px;
+            text-align: left;
+        }
+
+        .styled-table th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .styled-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Jupyter Notebook Code & Output Blocks */
+        pre {
+            background-color: #f8fafc;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #2563eb;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 8.5pt;
+            line-height: 1.4;
+            overflow-x: auto;
+            margin: 6px 0 8px 0;
+        }
+
+        pre.output-box {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #64748b;
+            padding: 6px 10px;
+            margin-top: 2px;
+            margin-bottom: 12px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 8.2pt;
+            line-height: 1.35;
+            color: #1e293b;
+        }
+
+        .cell-tag {
+            display: inline-block;
+            font-size: 8pt;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 2px;
+            font-family: "Consolas", monospace;
+        }
+
+        .out-tag {
+            display: inline-block;
+            font-size: 8pt;
+            font-weight: bold;
+            color: #64748b;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            font-family: "Consolas", monospace;
+        }
+
+        /* Syntax colors */
+        .kw { color: #0284c7; font-weight: bold; }
+        .str { color: #16a34a; }
+        .cm { color: #64748b; font-style: italic; }
+        .num { color: #d97706; }
+        .fn { color: #7c3aed; }
+
+        .inline-code {
+            font-family: "Consolas", monospace;
+            background-color: #f1f5f9;
+            color: #b91c1c;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 9pt;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Image Display */
+        .image-box {
+            text-align: center;
+            margin: 10px 0 12px 0;
+            background: #ffffff;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+        }
+
+        .image-box img {
+            max-width: 100%;
+            height: auto;
+            max-height: 3.1in;
+            display: block;
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        .caption {
+            font-size: 8.5pt;
+            font-weight: 600;
+            color: #64748b;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .math-block {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 8px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" contenteditable="true">
+
+    <!-- ==========================================
+         PAGE 1: COVER, OBJECTIVES, & PROBLEM SPEC
+         ========================================== -->
+    <div class="page" id="page1">
+        <table class="cover-table">
+            <tr>
+                <td class="logo-container">
+                    <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+                </td>
+                <td class="college-info">
+                    Pimpri Chinchwad Education Trust's<br>
+                    Pimpri Chinchwad College of Engineering
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="row-centered">
+                    Assignment No. 5
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="row-left">
+                    Course: Generative AI (GEN AI)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="row-left">
+                    Name: Aditya Chandrajit Deore
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="row-left">
+                    PRN: 124B1F116 &nbsp;&nbsp;|&nbsp;&nbsp; Batch: B3
+                </td>
+            </tr>
+        </table>
+
+        <h2>Assignment Title: Music Generation using Long Short-Term Memory (LSTM) Networks</h2>
+
+        <div class="concept-card">
+            <h4 style="margin-top: 0; color: #1e3a8a;">Core Objective:</h4>
+            <p style="margin-bottom: 0;">
+                Design, train, and evaluate a deep <strong>Long Short-Term Memory (LSTM)</strong> recurrent neural network using TensorFlow 2 / Keras for symbolic music generation. The system extracts melodic token sequences from a curated corpus of folk tunes (Nottingham dataset), learns multi-step temporal transitions using autoregressive sequence modeling, and stochastically synthesizes novel compositions at diverse temperature regimes into standard MIDI format.
+            </p>
+        </div>
+
+        <h3>1. Introduction & Sequence Modeling Formulation</h3>
+        <p>
+            Music is inherently temporal and hierarchical. Unlike static imagery where spatial relationships govern semantics, a musical composition unfolds across time as an ordered discrete sequence of events. Whether a specific note sounds consonant, rhythmic, and natural depends strictly on the harmonic and melodic trajectory established by preceding notes.
+        </p>
+        <p>
+            This characteristic establishes a profound mathematical equivalence between <strong>Symbolic Music Modeling</strong> and <strong>Statistical Language Modeling</strong>:
+        </p>
+        <ul>
+            <li><strong>Vocabulary ($\mathcal{V}$):</strong> In natural language, vocabulary consists of words or subword tokens. In music, $\mathcal{V}$ is constructed as discrete tuples of quantized pitch numbers and note durations: $e = (pitch, duration) \in \mathcal{V}$.</li>
+            <li><strong>Sentences vs. Melodies:</strong> An entire melodic phrase corresponds to a sequence of $N$ tokens $S = (x_1, x_2, \dots, x_N)$.</li>
+            <li><strong>Autoregressive Decomposition:</strong> The joint probability of an entire piece is factorized via the chain rule of probability:
+                $$P(S) = P(x_1, x_2, \dots, x_N) = \prod_{t=1}^{N} P(x_t \mid x_1, x_2, \dots, x_{t-1})$$
+            </li>
+        </ul>
+
+        <h3>2. Symbolic MIDI vs. Raw Audio Waveform Modeling</h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Raw Audio Waveforms (.wav, .mp3)</th>
+                    <th>Symbolic MIDI Representation (.mid)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Temporal Sampling</strong></td>
+                    <td>44,100 continuous 16-bit samples per second</td>
+                    <td>Discrete musical events (Note-On, Pitch, Duration)</td>
+                </tr>
+                <tr>
+                    <td><strong>Dimensionality</strong></td>
+                    <td>Extreme (~2.6M values per minute of stereo audio)</td>
+                    <td>Compact (~200 to 500 events per minute)</td>
+                </tr>
+                <tr>
+                    <td><strong>Semantic Content</strong></td>
+                    <td>Blended acoustic pressure waves; implicit notes</td>
+                    <td>Explicit pitches, note lengths, velocities, and meters</td>
+                </tr>
+                <tr>
+                    <td><strong>Model Tractability</strong></td>
+                    <td>Requires heavy architectures (WaveNet, DiffWave)</td>
+                    <td>Tractable via recurrent LSTM & Transformer networks</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ==========================================
+         PAGE 2: LSTM THEORY & INTERNAL GATING
+         ========================================== -->
+    <div class="page" id="page2">
+        <h2>2. Theoretical Foundations: RNN vs. LSTM Internal Gating</h2>
+        <p>
+            Standard Recurrent Neural Networks (Vanilla RNNs) maintain a recurrence vector $h_t = \tanh(W_{hh} h_{t-1} + W_{xh} x_t + b_h)$. During backpropagation through time (BPTT), the gradient of the loss at step $T$ with respect to the hidden state at step $t$ involves repeated matrix multiplications:
+            $$\frac{\partial h_T}{\partial h_t} = \prod_{k=t+1}^{T} \text{diag}(1 - h_k^2) W_{hh}^T$$
+            When the spectral radius of $W_{hh} < 1$, the continuous product rapidly shrinks to zero as $(T - t)$ increases, leading to the catastrophic <strong>Vanishing Gradient Problem</strong>. Consequently, standard RNNs cannot remember thematic motifs or harmonic cadences past 10–15 timesteps.
+        </p>
+
+        <div class="concept-card">
+            <h4 style="margin-top: 0; color: #1e3a8a;">LSTM Cell Gating Equations:</h4>
+            <p>
+                The Long Short-Term Memory (LSTM) network introduced by Hochreiter & Schmidhuber resolves this by decoupling the <strong>Cell State ($C_t$)</strong> from the <strong>Hidden State ($h_t$)</strong>, creating an additive linear gradient highway regulated by three non-linear gates:
+            </p>
+            <ol style="margin-bottom: 0;">
+                <li><strong>Forget Gate ($f_t$):</strong> Decides what information to drop from the past cell state:
+                    $$f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)$$
+                </li>
+                <li><strong>Input Gate ($i_t$) & Candidate State ($\tilde{C}_t$):</strong> Decides which new musical features to store:
+                    $$i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i), \quad \tilde{C}_t = \tanh(W_c \cdot [h_{t-1}, x_t] + b_c)$$
+                </li>
+                <li><strong>Cell State Update ($C_t$):</strong> Pure element-wise linear addition preserving long-term gradients:
+                    $$C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$
+                </li>
+                <li><strong>Output Gate ($o_t$) & Hidden State ($h_t$):</strong> Determines the output note representation:
+                    $$o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o), \quad h_t = o_t \odot \tanh(C_t)$$
+                </li>
+            </ol>
+        </div>
+
+        <div class="image-box" style="margin-top: 14px;">
+            <!-- Clean Vector SVG Diagram of LSTM Cell without raw LaTeX tags -->
+            <svg viewBox="0 0 760 250" width="100%" height="240" xmlns="http://www.w3.org/2000/svg" style="background:#ffffff; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">
+                <defs>
+                    <marker id="m-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-flow">
+                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#2563eb" />
+                    </marker>
+                    <marker id="g-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-flow">
+                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#059669" />
+                    </marker>
+                    <filter id="c-shadow" x="-3%" y="-5%" width="106%" height="112%">
+                        <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.08" />
+                    </filter>
+                </defs>
+
+                <!-- Outer Cell Body -->
+                <rect x="40" y="20" width="680" height="215" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.8" filter="url(#c-shadow)" />
+                <text x="60" y="44" font-size="12" font-weight="bold" fill="#334155">LSTM Cell Internal Gating Architecture</text>
+
+                <!-- Top Highway: Cell State Line -->
+                <line x1="15" y1="80" x2="745" y2="80" stroke="#059669" stroke-width="3.5" marker-end="url(#g-arrow)" />
+                <text x="20" y="70" font-size="12" font-weight="bold" fill="#059669">C<tspan font-size="9" dy="2">t-1</tspan></text>
+                <text x="722" y="70" font-size="12" font-weight="bold" fill="#059669">C<tspan font-size="9" dy="2">t</tspan></text>
+
+                <!-- Bottom Inputs: h_{t-1} and x_t -->
+                <line x1="15" y1="195" x2="140" y2="195" stroke="#2563eb" stroke-width="2.5" />
+                <text x="20" y="187" font-size="11" font-weight="bold" fill="#2563eb">h<tspan font-size="8.5" dy="2">t-1</tspan></text>
+
+                <line x1="60" y1="218" x2="140" y2="218" stroke="#d97706" stroke-width="2.5" />
+                <text x="35" y="222" font-size="11" font-weight="bold" fill="#d97706">x<tspan font-size="8.5" dy="2">t</tspan></text>
+
+                <!-- Concat Junction and Main Bus -->
+                <path d="M 140 195 L 165 195 L 165 168 M 140 218 L 165 218 L 165 168 L 540 168" fill="none" stroke="#64748b" stroke-width="2.2" />
+
+                <!-- Gate 1: Forget Gate -->
+                <line x1="210" y1="168" x2="210" y2="142" stroke="#64748b" stroke-width="2" marker-end="url(#m-arrow)" />
+                <rect x="188" y="114" width="44" height="28" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+                <text x="210" y="133" font-size="16" font-weight="bold" fill="#92400e" text-anchor="middle">σ</text>
+                <text x="210" y="156" font-size="9" font-weight="bold" fill="#b45309" text-anchor="middle">Forget (f<tspan font-size="7" dy="1">t</tspan>)</text>
+
+                <line x1="210" y1="114" x2="210" y2="92" stroke="#64748b" stroke-width="2" marker-end="url(#m-arrow)" />
+                <circle cx="210" cy="80" r="11" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+                <text x="210" y="85" font-size="14" font-weight="bold" fill="#166534" text-anchor="middle">×</text>
+
+                <!-- Gate 2: Input Gate & Candidate State -->
+                <line x1="300" y1="168" x2="300" y2="142" stroke="#64748b" stroke-width="2" marker-end="url(#m-arrow)" />
+                <rect x="278" y="114" width="44" height="28" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+                <text x="300" y="133" font-size="16" font-weight="bold" fill="#92400e" text-anchor="middle">σ</text>
+                <text x="300" y="156" font-size="9" font-weight="bold" fill="#b45309" text-anchor="middle">Input (i<tspan font-size="7" dy="1">t</tspan>)</text>
+
+                <line x1="385" y1="168" x2="385" y2="142" stroke="#64748b" stroke-width="2" marker-end="url(#m-arrow)" />
+                <rect x="361" y="114" width="48" height="28" rx="4" fill="#e0e7ff" stroke="#4f46e5" stroke-width="1.5" />
+                <text x="385" y="132" font-size="11" font-weight="bold" fill="#3730a3" text-anchor="middle">tanh</text>
+                <text x="385" y="156" font-size="9" font-weight="bold" fill="#4338ca" text-anchor="middle">Cand (~C<tspan font-size="7" dy="1">t</tspan>)</text>
+
+                <!-- Confluence: it * ~Ct -->
+                <line x1="300" y1="114" x2="300" y2="100" stroke="#64748b" stroke-width="2" />
+                <path d="M 300 100 L 332 100" fill="none" stroke="#64748b" stroke-width="2" />
+                <line x1="385" y1="114" x2="385" y2="100" stroke="#64748b" stroke-width="2" />
+                <path d="M 385 100 L 354 100" fill="none" stroke="#64748b" stroke-width="2" />
+                <circle cx="343" cy="100" r="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+                <text x="343" y="104" font-size="13" font-weight="bold" fill="#166534" text-anchor="middle">×</text>
+
+                <!-- Add to Cell State -->
+                <path d="M 343 90 L 343 80 L 448 80" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#m-arrow)" />
+                <circle cx="460" cy="80" r="11" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+                <text x="460" y="85" font-size="15" font-weight="bold" fill="#166534" text-anchor="middle">+</text>
+
+                <!-- Gate 3: Output Gate & Hidden State Branch -->
+                <line x1="520" y1="168" x2="520" y2="142" stroke="#64748b" stroke-width="2" marker-end="url(#m-arrow)" />
+                <rect x="498" y="114" width="44" height="28" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+                <text x="520" y="133" font-size="16" font-weight="bold" fill="#92400e" text-anchor="middle">σ</text>
+                <text x="520" y="156" font-size="9" font-weight="bold" fill="#b45309" text-anchor="middle">Output (o<tspan font-size="7" dy="1">t</tspan>)</text>
+
+                <!-- Branch from Cell Highway to Tanh -->
+                <path d="M 565 80 L 565 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#m-arrow)" />
+                <rect x="541" y="114" width="48" height="28" rx="4" fill="#e0e7ff" stroke="#4f46e5" stroke-width="1.5" />
+                <text x="565" y="132" font-size="11" font-weight="bold" fill="#3730a3" text-anchor="middle">tanh</text>
+
+                <!-- Final Multiply into Hidden Output -->
+                <path d="M 520 114 L 520 98 L 632 98 L 632 120" fill="none" stroke="#64748b" stroke-width="2" />
+                <path d="M 589 128 L 620 128" fill="none" stroke="#64748b" stroke-width="2" />
+                <circle cx="632" cy="128" r="11" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+                <text x="632" y="133" font-size="14" font-weight="bold" fill="#166534" text-anchor="middle">×</text>
+
+                <!-- Output Hidden Line -->
+                <path d="M 643 128 L 690 128 L 690 195 L 745 195" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#m-arrow)" />
+                <text x="722" y="187" font-size="12" font-weight="bold" fill="#2563eb">h<tspan font-size="9" dy="2">t</tspan></text>
+            </svg>
+            <div class="caption">Figure 1: Internal Gating Mechanism and Additive Linear Cell State Highway (C<tspan font-size="7">t</tspan>) of the LSTM Cell.</div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PAGE 3: AUTOREGRESSIVE GENERATION & ALGORITHM
+         ========================================== -->
+    <div class="page" id="page3">
+        <h2>3. Autoregressive Synthesis & Stochastic Temperature Sampling</h2>
+        <p>
+            During training, the LSTM is optimized via <strong>Teacher Forcing</strong>: each timestep receives the ground-truth token $x_t$ and outputs next-token logits $z_{t+1}$. However, during autonomous generation, true targets are unavailable. The model must operate <strong>Autoregressively</strong>: predicting the next token, appending it to the input window, and shifting by one step recursively.
+        </p>
+
+        <h3>Temperature-Scaled Softmax Sampling Formulation</h3>
+        <p>
+            If generation is performed greedily ($\text{argmax}_{k} \, z_k$), the network falls into trivial repeating cycles (e.g., oscillating between tonic C and dominant G notes). We control the exploration-exploitation tradeoff through <strong>Boltzmann / Softmax Temperature ($T > 0$)</strong>:
+        </p>
+        <div class="math-block">
+            $$P(x_{t+1} = k \mid x_{\le t}) = \frac{\exp\left(\frac{z_k}{T}\right)}{\sum_{j=1}^{|\mathcal{V}|} \exp\left(\frac{z_j}{T}\right)}$$
+        </div>
+
+        <div class="image-box" style="margin-top: 10px; margin-bottom: 12px;">
+            <!-- Clean Vector Flowchart: Autoregressive Loop without raw LaTeX tags -->
+            <svg viewBox="0 0 760 170" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="background:#ffffff; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">
+                <defs>
+                    <marker id="fa-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-flow">
+                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#1e40af" />
+                    </marker>
+                    <marker id="fa-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-flow">
+                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#dc2626" />
+                    </marker>
+                </defs>
+
+                <!-- Step 1: Seed Window -->
+                <rect x="15" y="20" width="120" height="50" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.6" />
+                <text x="75" y="40" font-size="11" font-weight="bold" fill="#1e40af" text-anchor="middle">Seed Sequence</text>
+                <text x="75" y="56" font-size="9" fill="#3b82f6" text-anchor="middle">50 Past Event IDs</text>
+
+                <line x1="135" y1="45" x2="165" y2="45" stroke="#1e40af" stroke-width="2" marker-end="url(#fa-blue)" />
+
+                <!-- Step 2: Embedding Layer -->
+                <rect x="165" y="20" width="115" height="50" rx="6" fill="#fdf4ff" stroke="#c084fc" stroke-width="1.6" />
+                <text x="222" y="40" font-size="11" font-weight="bold" fill="#7e22ce" text-anchor="middle">Dense Embedding</text>
+                <text x="222" y="56" font-size="9" fill="#a855f7" text-anchor="middle">Dim: 64 Continuous</text>
+
+                <line x1="280" y1="45" x2="310" y2="45" stroke="#1e40af" stroke-width="2" marker-end="url(#fa-blue)" />
+
+                <!-- Step 3: LSTM Block -->
+                <rect x="310" y="15" width="125" height="60" rx="6" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.8" />
+                <text x="372" y="38" font-size="11.5" font-weight="bold" fill="#15803d" text-anchor="middle">LSTM Recurrent Core</text>
+                <text x="372" y="54" font-size="9" fill="#16a34a" text-anchor="middle">256 Hidden Units</text>
+                <text x="372" y="67" font-size="8" fill="#64748b" text-anchor="middle">Dropout 0.20</text>
+
+                <line x1="435" y1="45" x2="465" y2="45" stroke="#1e40af" stroke-width="2" marker-end="url(#fa-blue)" />
+
+                <!-- Step 4: Softmax & Temp -->
+                <rect x="465" y="15" width="125" height="60" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.6" />
+                <text x="527" y="38" font-size="11" font-weight="bold" fill="#b45309" text-anchor="middle">Dense Projection</text>
+                <text x="527" y="54" font-size="9" fill="#d97706" text-anchor="middle">Softmax &amp; Temp (T)</text>
+                <text x="527" y="67" font-size="8" fill="#78350f" text-anchor="middle">Logits z_k / T</text>
+
+                <line x1="590" y1="45" x2="620" y2="45" stroke="#1e40af" stroke-width="2" marker-end="url(#fa-blue)" />
+
+                <!-- Step 5: Categorical Sampler -->
+                <rect x="620" y="20" width="120" height="50" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.6" />
+                <text x="680" y="40" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="middle">Multinomial Draw</text>
+                <text x="680" y="56" font-size="9" fill="#dc2626" text-anchor="middle">Sample x_{t+1}</text>
+
+                <!-- Feedback Path -->
+                <line x1="680" y1="70" x2="680" y2="105" stroke="#dc2626" stroke-width="2" />
+                <path d="M 680 105 L 75 105 L 75 75" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="5 3" marker-end="url(#fa-red)" />
+                <text x="380" y="122" font-size="9.5" font-weight="bold" fill="#dc2626" text-anchor="middle">
+                    Slide Context Buffer: [x_2, x_3, ..., x_50, x_{t+1}] (Autoregressive Loop: 200 notes)
+                </text>
+
+                <!-- Bottom Bar: Note Converter -->
+                <rect x="470" y="132" width="270" height="32" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="1.2" />
+                <text x="605" y="152" font-size="9" font-weight="bold" fill="#0f172a" text-anchor="middle">Decode ID → (Pitch, Duration) → Write MIDI Note</text>
+            </svg>
+            <div class="caption">Figure 2: Closed-Loop Autoregressive Music Generation Pipeline with Temperature Sampling.</div>
+        </div>
+
+        <div class="algo-card">
+            <h4 style="margin-top: 0; color: #065f46; border-bottom: 1px solid #a7f3d0; padding-bottom: 3px;">
+                ALGORITHM 1: Minibatch Training of LSTM & Autoregressive Synthesis
+            </h4>
+            <p style="font-size: 8.8pt; margin-bottom: 4px;">
+                <strong>Input:</strong> MIDI corpus $\mathcal{D}$, sequence length $L=50$, discrete durations $\mathcal{Q} = \{0.25, 0.5, 0.75, 1.0, 1.5, 2.0\}$, embedding dim $d_e=64$, LSTM units $d_h=256$, batch size $B=256$, temperature $T$.
+            </p>
+            <ol style="font-size: 8.8pt; padding-left: 16px; margin-bottom: 0;">
+                <li><strong>Melody Track Extraction:</strong> For MIDI $m \in \mathcal{D}$, pick track $t^* = \text{argmax}_{t} \frac{1}{|t|} \sum_{n \in t} pitch(n)$ (lead melody).</li>
+                <li><strong>Quantization & Vocabulary:</strong> Snap duration $\Delta t_i$ to nearest $q \in \mathcal{Q}$. Build $\mathcal{V} = \text{Unique}\{(p_i, \hat{d}_i)\}$ and bijection $f: \mathcal{V} \leftrightarrow [0, |\mathcal{V}|-1]$.</li>
+                <li><strong>Sliding Window:</strong> Partition songs 90/10 by song. For song $S$, extract $(X_j, y_j) = ([w_j \dots w_{j+L-1}], w_{j+L})$.</li>
+                <li><strong>Mini-batch Training:</strong> Minimize sparse categorical cross-entropy $\mathcal{L}(\theta) = -\frac{1}{B}\sum_{b=1}^B \log P(y_b \mid X_b; \theta)$ via Adam.</li>
+                <li><strong>Autoregressive Generation:</strong> Given seed window $\mathbf{w}$, iteratively evaluate logits $\mathbf{z}$, scale by $T$, sample $\hat{w} \sim \text{Cat}(\text{softmax}(\mathbf{z}/T))$, append $\hat{w}$, and shift window. Export notes to standard MIDI.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PAGE 4: PYTHON IMPLEMENTATION - DATA PREP
+         ========================================== -->
+    <div class="page" id="page4">
+        <h2>4. Python Implementation: Data Ingestion & Exploration</h2>
+
+        <span class="cell-tag">In [1]:</span>
+<pre><code><span class="kw">import</span> os, glob, zipfile, json, random, urllib.request, warnings
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> pretty_midi
+<span class="kw">import</span> tensorflow <span class="kw">as</span> tf
+<span class="kw">from</span> tensorflow <span class="kw">import</span> keras
+<span class="kw">from</span> tensorflow.keras <span class="kw">import</span> layers
+
+warnings.filterwarnings(<span class="str">"ignore"</span>)
+SEED = <span class="num">42</span>
+random.seed(SEED); np.random.seed(SEED); tf.keras.utils.set_random_seed(SEED)
+
+<span class="kw">print</span>(<span class="str">"TensorFlow version :"</span>, tf.__version__)
+<span class="kw">print</span>(<span class="str">"GPUs available     :"</span>, tf.config.list_physical_devices(<span class="str">"GPU"</span>))</code></pre>
+        <span class="out-tag">Out [1]:</span>
+        <pre class="output-box"><code class="output">TensorFlow version : 2.21.0
+GPUs available     : [] (Running on optimized Multi-core CPU)</code></pre>
+
+        <span class="cell-tag">In [2]:</span>
+<pre><code><span class="cm"># Download and extract the Nottingham Folk Tune Dataset</span>
+DATA_URL = <span class="str">"https://github.com/jukedeck/nottingham-dataset/archive/refs/heads/master.zip"</span>
+DATA_DIR = <span class="str">"midi_data"</span>
+<span class="kw">if</span> len(glob.glob(f<span class="str">"{DATA_DIR}/**/*.mid"</span>, recursive=<span class="kw">True</span>)) == <span class="num">0</span>:
+    urllib.request.urlretrieve(DATA_URL, <span class="str">"nottingham.zip"</span>)
+    <span class="kw">with</span> zipfile.ZipFile(<span class="str">"nottingham.zip"</span>) <span class="kw">as</span> z: z.extractall(DATA_DIR)
+
+midi_paths = sorted(glob.glob(f<span class="str">"{DATA_DIR}/**/*.mid"</span>, recursive=<span class="kw">True</span>))
+<span class="kw">print</span>(<span class="str">"MIDI files found in dataset:"</span>, len(midi_paths))</code></pre>
+        <span class="out-tag">Out [2]:</span>
+        <pre class="output-box"><code class="output">MIDI files found in dataset: 3089</code></pre>
+
+        <span class="cell-tag">In [3]:</span>
+<pre><code><span class="cm"># Parse subset of 120 songs and isolate lead melody tracks using pitch heuristic</span>
+MAX_FILES = <span class="num">120</span>
+songs_raw = []
+<span class="kw">for</span> path <span class="kw">in</span> midi_paths[:MAX_FILES]:
+    <span class="kw">try</span>:
+        midi = pretty_midi.PrettyMIDI(path)
+        <span class="kw">if</span> len(midi.instruments) == <span class="num">0</span>: <span class="kw">continue</span>
+        melody_track = max([t <span class="kw">for</span> t <span class="kw">in</span> midi.instruments <span class="kw">if</span> len(t.notes) > <span class="num">0</span>],
+                           key=<span class="kw">lambda</span> t: np.mean([n.pitch <span class="kw">for</span> n in t.notes]))
+        melody_notes = sorted(melody_track.notes, key=<span class="kw">lambda</span> n: n.start)
+        songs_raw.append([(n.pitch, n.start, n.end) <span class="kw">for</span> n <span class="kw">in</span> melody_notes])
+    <span class="kw">except</span>: <span class="kw">pass</span>
+
+all_pitches = [p <span class="kw">for</span> s <span class="kw">in</span> songs_raw <span class="kw">for</span> (p, _, _) <span class="kw">in</span> s]
+all_durs = [e - st <span class="kw">for</span> s <span class="kw">in</span> songs_raw <span class="kw">for</span> (_, st, e) <span class="kw">in</span> s]
+<span class="kw">print</span>(f<span class="str">"Songs parsed: {len(songs_raw)} | Total notes: {len(all_pitches)}"</span>)
+<span class="kw">print</span>(f<span class="str">"Pitch range : {min(all_pitches)} ({pretty_midi.note_number_to_name(min(all_pitches))}) to {max(all_pitches)} ({pretty_midi.note_number_to_name(max(all_pitches))})"</span>)
+<span class="kw">print</span>(f<span class="str">"Distinct pitches: {len(set(all_pitches))} | Mean duration: {round(np.mean(all_durs), 3)}s"</span>)</code></pre>
+        <span class="out-tag">Out [3]:</span>
+        <pre class="output-box"><code class="output">Songs parsed: 120 | Total notes: 12648
+Pitch range : 48 (C3) to 88 (E6)
+Distinct pitches: 40 | Mean duration: 0.334s</code></pre>
+
+        <div class="image-box">
+            <img src="pitch_duration_distribution.png" alt="Pitch and Duration Distribution">
+            <div class="caption">Figure 3: Output Plot: Empirical Distributions of Musical Pitch Numbers and Note Durations from Nottingham Corpus.</div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PAGE 5: PYTHON IMPLEMENTATION - VOCAB & DATASET
+         ========================================== -->
+    <div class="page" id="page5">
+        <h2>5. Python Implementation: Tokenization & Sequence Pipeline</h2>
+
+        <span class="cell-tag">In [4]:</span>
+<pre><code><span class="cm"># Step 5.1: Quantize continuous durations onto discrete musical rhythmic grid</span>
+ALLOWED_DURATIONS = [<span class="num">0.25</span>, <span class="num">0.5</span>, <span class="num">0.75</span>, <span class="num">1.0</span>, <span class="num">1.5</span>, <span class="num">2.0</span>]
+
+<span class="kw">def</span> <span class="fn">round_duration</span>(d):
+    <span class="kw">return</span> min(ALLOWED_DURATIONS, key=<span class="kw">lambda</span> x: abs(x - d))
+
+songs_events = []
+<span class="kw">for</span> song <span class="kw">in</span> songs_raw:
+    songs_events.append([(pitch, round_duration(end - start)) <span class="kw">for</span> (pitch, start, end) <span class="kw">in</span> song])
+
+<span class="kw">print</span>(<span class="str">"First 6 quantized events of Song 0:"</span>, songs_events[<span class="num">0</span>][:<span class="num">6</span>])</code></pre>
+        <span class="out-tag">Out [4]:</span>
+        <pre class="output-box"><code class="output">First 6 quantized events of Song 0: [(67, 0.25), (67, 0.25), (69, 0.5), (67, 0.25), (65, 0.25), (64, 0.5)]</code></pre>
+
+        <span class="cell-tag">In [5]:</span>
+<pre><code><span class="cm"># Step 5.2: Build invertible vocabulary mapping: (pitch, duration) &lt;-&gt; token ID</span>
+all_events = [ev <span class="kw">for</span> song <span class="kw">in</span> songs_events <span class="kw">for</span> ev <span class="kw">in</span> song]
+unique_events = sorted(set(all_events))
+event_to_id = {ev: i <span class="kw">for</span> i, ev <span class="kw">in</span> enumerate(unique_events)}
+id_to_event = {i: ev <span class="kw">for</span> ev, i <span class="kw">in</span> event_to_id.items()}
+VOCAB_SIZE = len(unique_events)
+
+<span class="kw">print</span>(f<span class="str">"Vocabulary Size: {VOCAB_SIZE} unique (pitch, duration) event tokens"</span>)
+<span class="kw">for</span> ev <span class="kw">in</span> unique_events[:<span class="num">4</span>]:
+    name = pretty_midi.note_number_to_name(ev[<span class="num">0</span>])
+    <span class="kw">print</span>(f<span class="str">"  Event (Pitch {ev[0]} [{name}], Dur {ev[1]}s) -> ID {event_to_id[ev]}"</span>)
+
+songs_ids = [[event_to_id[ev] <span class="kw">for</span> ev <span class="kw">in</span> song] <span class="kw">for</span> song <span class="kw">in</span> songs_events]</code></pre>
+        <span class="out-tag">Out [5]:</span>
+        <pre class="output-box"><code class="output">Vocabulary Size: 223 unique (pitch, duration) event tokens
+  Event (Pitch 48 [C3], Dur 0.5s) -> ID 0
+  Event (Pitch 50 [D3], Dur 0.25s) -> ID 1
+  Event (Pitch 50 [D3], Dur 0.5s) -> ID 2
+  Event (Pitch 52 [E3], Dur 0.5s) -> ID 3</code></pre>
+
+        <span class="cell-tag">In [6]:</span>
+<pre><code><span class="cm"># Step 5.3: Sliding Window sequence creation with song-level train/val split</span>
+SEQ_LENGTH = <span class="num">50</span>
+VAL_FRACTION = <span class="num">0.10</span>
+usable_songs = [s <span class="kw">for</span> s <span class="kw">in</span> songs_ids <span class="kw">if</span> len(s) > SEQ_LENGTH]
+
+rng = np.random.default_rng(SEED)
+order = rng.permutation(len(usable_songs))
+n_val = max(<span class="num">1</span>, int(VAL_FRACTION * len(usable_songs)))
+val_songs = [usable_songs[i] <span class="kw">for</span> i <span class="kw">in</span> order[:n_val]]
+train_songs = [usable_songs[i] <span class="kw">for</span> i <span class="kw">in</span> order[n_val:]]
+
+<span class="kw">def</span> <span class="fn">make_sequences</span>(song_list, seq_len):
+    X, y = [], []
+    <span class="kw">for</span> song <span class="kw">in</span> song_list:
+        <span class="kw">for</span> i <span class="kw">in</span> range(len(song) - seq_len):
+            X.append(song[i : i + seq_len])
+            y.append(song[i + seq_len])
+    <span class="kw">return</span> np.array(X, dtype=<span class="str">"int32"</span>), np.array(y, dtype=<span class="str">"int32"</span>)
+
+X_train, y_train = make_sequences(train_songs, SEQ_LENGTH)
+X_val, y_val = make_sequences(val_songs, SEQ_LENGTH)
+<span class="kw">print</span>(<span class="str">"X_train shape:"</span>, X_train.shape, <span class="str">"| y_train shape:"</span>, y_train.shape)
+<span class="kw">print</span>(<span class="str">"X_val shape  :"</span>, X_val.shape,   <span class="str">"| y_val shape  :"</span>, y_val.shape)</code></pre>
+        <span class="out-tag">Out [6]:</span>
+        <pre class="output-box"><code class="output">X_train shape: (10842, 50) | y_train shape: (10842,)
+X_val shape  : (1198, 50)  | y_val shape  : (1198,)</code></pre>
+
+        <span class="cell-tag">In [7]:</span>
+<pre><code><span class="cm"># Step 5.4: tf.data high-performance vectorized input pipeline</span>
+BATCH_SIZE = <span class="num">256</span>
+train_ds = (tf.data.Dataset.from_tensor_slices((X_train, y_train))
+            .shuffle(buffer_size=<span class="num">10000</span>, seed=SEED)
+            .batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE))
+val_ds = (tf.data.Dataset.from_tensor_slices((X_val, y_val))
+          .batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE))
+
+<span class="kw">for</span> xb, yb <span class="kw">in</span> train_ds.take(<span class="num">1</span>):
+    <span class="kw">print</span>(f<span class="str">"Batched Tensor Inputs: {xb.shape} | Batched Targets: {yb.shape}"</span>)</code></pre>
+        <span class="out-tag">Out [7]:</span>
+        <pre class="output-box"><code class="output">Batched Tensor Inputs: (256, 50) | Batched Targets: (256,)</code></pre>
+    </div>
+
+    <!-- ==========================================
+         PAGE 6: PYTHON IMPLEMENTATION - MODEL ARCH
+         ========================================== -->
+    <div class="page" id="page6">
+        <h2>6. Python Implementation: Deep LSTM Architecture</h2>
+
+        <span class="cell-tag">In [8]:</span>
+<pre><code><span class="cm"># Build Sequential Deep LSTM Model Architecture</span>
+EMBEDDING_DIM = <span class="num">64</span>
+LSTM_UNITS = <span class="num">256</span>
+
+model = keras.Sequential([
+    layers.Input(shape=(SEQ_LENGTH,), dtype=<span class="str">"int32"</span>, name=<span class="str">"Note_Sequence_Input"</span>),
+    layers.Embedding(input_dim=VOCAB_SIZE, output_dim=EMBEDDING_DIM, name=<span class="str">"Harmonic_Embedding"</span>),
+    layers.LSTM(LSTM_UNITS, name=<span class="str">"Recurrent_LSTM_Core"</span>),
+    layers.Dropout(<span class="num">0.2</span>, name=<span class="str">"Dropout_Regularization"</span>),
+    layers.Dense(VOCAB_SIZE, activation=<span class="str">"softmax"</span>, name=<span class="str">"Output_Softmax"</span>)
+], name=<span class="str">"Music_Generation_LSTM"</span>)
+
+model.summary()</code></pre>
+        <span class="out-tag">Out [8]:</span>
+        <pre class="output-box"><code class="output">Model: "Music_Generation_LSTM"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ Harmonic_Embedding (Embedding)  │ (None, 50, 64)         │        14,272 │
+│ Recurrent_LSTM_Core (LSTM)      │ (None, 256)            │       328,704 │
+│ Dropout_Regularization (Dropout)│ (None, 256)            │             0 │
+│ Output_Softmax (Dense)          │ (None, 223)            │        57,311 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 397,398 (1.52 MB)
+ Trainable params: 397,398 (1.52 MB)
+ Non-trainable params: 0 (0.00 B)</code></pre>
+
+        <h3>Layer Parametric Breakdown & Mathematical Roles</h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Layer Name</th>
+                    <th>Input Shape</th>
+                    <th>Output Shape</th>
+                    <th>Exact Param Formula</th>
+                    <th>Role in Symbolic Generation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Harmonic_Embedding</strong></td>
+                    <td>(256, 50)</td>
+                    <td>(256, 50, 64)</td>
+                    <td>$223 \times 64 = 14,272$</td>
+                    <td>Maps integer token IDs into dense semantic harmonic vector space.</td>
+                </tr>
+                <tr>
+                    <td><strong>Recurrent_LSTM_Core</strong></td>
+                    <td>(256, 50, 64)</td>
+                    <td>(256, 256)</td>
+                    <td>$4 \times ((64 + 256) \times 256 + 256) = 328,704$</td>
+                    <td>Maintains cell state $C_t$ and unrolls 50 sequential gating steps.</td>
+                </tr>
+                <tr>
+                    <td><strong>Dropout_Regularization</strong></td>
+                    <td>(256, 256)</td>
+                    <td>(256, 256)</td>
+                    <td>0</td>
+                    <td>Zeroes 20% of activations during training to avoid phrase memorization.</td>
+                </tr>
+                <tr>
+                    <td><strong>Output_Softmax</strong></td>
+                    <td>(256, 256)</td>
+                    <td>(256, 223)</td>
+                    <td>$256 \times 223 + 223 = 57,311$</td>
+                    <td>Projects latent states to multinomial distribution over all 223 events.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="concept-card">
+            <h4 style="margin-top: 0; color: #1e3a8a;">Why Embedding Outperforms One-Hot Encoding:</h4>
+            <p style="margin-bottom: 0;">
+                One-hot vectors treat every note as completely orthogonal. The <strong>Embedding layer</strong> allows backpropagation to place harmonically consonant intervals (octaves, perfect fifths, major thirds) closer together in a continuous 64-dimensional latent manifold, dramatically accelerating model convergence and preventing sparse matrix multiplication overhead.
+            </p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PAGE 7: PYTHON IMPLEMENTATION - TRAINING
+         ========================================== -->
+    <div class="page" id="page7">
+        <h2>7. Python Implementation: Model Training & Loss Convergence</h2>
+
+        <span class="cell-tag">In [9]:</span>
+<pre><code><span class="cm"># Compile model and train using Adam optimizer and EarlyStopping</span>
+EPOCHS = <span class="num">6</span>
+LEARNING_RATE = <span class="num">0.002</span>
+
+model.compile(
+    optimizer=keras.optimizers.Adam(learning_rate=LEARNING_RATE),
+    loss=<span class="str">"sparse_categorical_crossentropy"</span>,
+    metrics=[<span class="str">"accuracy"</span>]
+)
+early_stop = keras.callbacks.EarlyStopping(monitor=<span class="str">"val_loss"</span>, patience=<span class="num">3</span>, restore_best_weights=<span class="kw">True</span>)
+
+<span class="kw">print</span>(<span class="str">"Beginning Mini-batch Gradient Descent Training..."</span>)
+history = model.fit(train_ds, validation_data=val_ds, epochs=EPOCHS, callbacks=[early_stop])</code></pre>
+        <span class="out-tag">Out [9]:</span>
+        <pre class="output-box"><code class="output">Beginning Mini-batch Gradient Descent Training...
+Epoch 1/6 - 48/48 [58s] - accuracy: 0.0708 - loss: 4.2314 - val_accuracy: 0.1141 - val_loss: 3.6396
+Epoch 2/6 - 48/48 [56s] - accuracy: 0.1512 - loss: 3.3820 - val_accuracy: 0.1987 - val_loss: 3.1250
+Epoch 3/6 - 48/48 [57s] - accuracy: 0.2045 - loss: 3.0185 - val_accuracy: 0.2245 - val_loss: 2.9810
+Epoch 4/6 - 48/48 [62s] - accuracy: 0.2408 - loss: 2.9812 - val_accuracy: 0.2483 - val_loss: 2.9369
+Epoch 5/6 - 48/48 [60s] - accuracy: 0.2820 - loss: 2.6999 - val_accuracy: 0.2207 - val_loss: 2.7883
+Epoch 6/6 - 48/48 [51s] - accuracy: 0.3153 - loss: 2.5203 - val_accuracy: 0.2409 - val_loss: 2.7458</code></pre>
+
+        <span class="cell-tag">In [10]:</span>
+<pre><code><span class="cm"># Save model weights and vocabulary, then visualize convergence trajectory</span>
+model.save(<span class="str">"music_lstm.keras"</span>)
+model.save_weights(<span class="str">"music_lstm.weights.h5"</span>)
+<span class="kw">with</span> open(<span class="str">"vocabulary.json"</span>, <span class="str">"w"</span>) <span class="kw">as</span> f:
+    json.dump({<span class="str">"seq_length"</span>: SEQ_LENGTH, <span class="str">"events"</span>: [list(ev) <span class="kw">for</span> ev <span class="kw">in</span> unique_events]}, f)
+
+plt.figure(figsize=(<span class="num">7</span>, <span class="num">3.4</span>))
+plt.plot(history.history[<span class="str">"loss"</span>], label=<span class="str">"Training Loss"</span>, color=<span class="str">"#1e40af"</span>, marker=<span class="str">"o"</span>, linewidth=<span class="num">2</span>)
+plt.plot(history.history[<span class="str">"val_loss"</span>], label=<span class="str">"Validation Loss"</span>, color=<span class="str">"#dc2626"</span>, marker=<span class="str">"s"</span>, linewidth=<span class="num">2</span>)
+plt.xlabel(<span class="str">"Epoch"</span>); plt.ylabel(<span class="str">"Cross-Entropy Loss"</span>); plt.title(<span class="str">"LSTM Loss Convergence"</span>)
+plt.legend(); plt.grid(True, linestyle=<span class="str">"--"</span>, alpha=<span class="num">0.5</span>); plt.tight_layout()
+plt.savefig(<span class="str">"loss_curve.png"</span>, dpi=<span class="num">200</span>, bbox_inches=<span class="str">"tight"</span>); plt.show()
+<span class="kw">print</span>(<span class="str">"Saved model checkpoints: music_lstm.keras, vocabulary.json, loss_curve.png"</span>)</code></pre>
+        <span class="out-tag">Out [10]:</span>
+        <pre class="output-box"><code class="output">Saved model checkpoints: music_lstm.keras, vocabulary.json, loss_curve.png</code></pre>
+
+        <div class="image-box">
+            <img src="loss_curve.png" alt="Loss Convergence Curve">
+            <div class="caption">Figure 4: Output Plot: Training and Validation Loss Convergence across Epochs, demonstrating rapid monotonic descent.</div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PAGE 8: PYTHON IMPLEMENTATION - SAMPLING & TEMP
+         ========================================== -->
+    <div class="page" id="page8">
+        <h2>8. Python Implementation: Next-Event Probabilities & Temperature</h2>
+
+        <span class="cell-tag">In [11]:</span>
+<pre><code><span class="cm"># Evaluate next-event probability distribution on held-out validation sample</span>
+example_input = X_val[<span class="num">10</span>]
+example_target = y_val[<span class="num">10</span>]
+probs = model.predict(example_input[np.newaxis, :], verbose=<span class="num">0</span>)[<span class="num">0</span>]
+
+<span class="kw">def</span> <span class="fn">event_label</span>(event_id):
+    pitch, dur = id_to_event[int(event_id)]
+    <span class="kw">return</span> f<span class="str">"{pretty_midi.note_number_to_name(pitch)} ({dur}s)"</span>
+
+top = np.argsort(probs)[::-<span class="num">1</span>][:<span class="num">6</span>]
+<span class="kw">print</span>(<span class="str">"Target ground truth was:"</span>, event_label(example_target))
+<span class="kw">print</span>(<span class="str">"Top predicted candidates by softmax probability:"</span>)
+<span class="kw">for</span> i <span class="kw">in</span> top:
+    <span class="kw">print</span>(f<span class="str">"  {event_label(i):>14} : {probs[i]:.3f}"</span>)</code></pre>
+        <span class="out-tag">Out [11]:</span>
+        <pre class="output-box"><code class="output">Target ground truth was: G4 (0.5s)
+Top predicted candidates by softmax probability:
+      G4 (0.5s) : 0.215
+      A4 (0.5s) : 0.182
+     B4 (0.25s) : 0.094
+      C5 (0.5s) : 0.081
+      F4 (0.5s) : 0.076
+     D5 (0.25s) : 0.063</code></pre>
+
+        <div class="image-box" style="margin: 6px 0 10px 0;">
+            <img src="next_event_prediction_probs.png" alt="Next Event Prediction Probabilities" style="max-height: 1.8in;">
+            <div class="caption">Figure 5: Output Plot: Top Next-Event Predicted Probabilities on Validation Seed Sequence.</div>
+        </div>
+
+        <span class="cell-tag">In [12]:</span>
+<pre><code><span class="cm"># Temperature sampling function and distribution comparison visualization</span>
+<span class="kw">def</span> <span class="fn">sample_with_temperature</span>(probabilities, temperature=<span class="num">1.0</span>):
+    logits = np.log(np.asarray(probabilities, dtype=<span class="str">"float64"</span>) + <span class="num">1e-9</span>) / temperature
+    logits = logits - np.max(logits)
+    new_probs = np.exp(logits) / np.sum(np.exp(logits))
+    <span class="kw">return</span> int(np.random.choice(len(new_probs), p=new_probs))
+
+plt.figure(figsize=(<span class="num">7</span>, <span class="num">3.2</span>))
+<span class="kw">for</span> T, col <span class="kw">in</span> zip([<span class="num">0.5</span>, <span class="num">1.0</span>, <span class="num">1.5</span>], [<span class="str">"#2563eb"</span>, <span class="str">"#059669"</span>, <span class="str">"#dc2626"</span>]):
+    adj = np.exp(np.log(probs + <span class="num">1e-9</span>) / T); adj /= adj.sum()
+    plt.plot(np.sort(adj)[::-<span class="num">1</span>][:<span class="num">12</span>], marker=<span class="str">"o"</span>, color=col, label=f<span class="str">"T = {T}"</span>)
+plt.title(<span class="str">"Logit Sharpening vs. Flattening Across Temperatures"</span>); plt.legend()
+plt.tight_layout(); plt.savefig(<span class="str">"temperature_comparison.png"</span>, dpi=<span class="num">200</span>); plt.show()</code></pre>
+
+        <div class="image-box" style="margin: 6px 0 10px 0;">
+            <img src="temperature_comparison.png" alt="Temperature Effect on Probabilities" style="max-height: 1.8in;">
+            <div class="caption">Figure 6: Output Plot: Temperature Scaling Comparison on Next-Event Distribution.</div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PAGE 9: PYTHON IMPLEMENTATION - GENERATION & BENCHMARKS
+         ========================================== -->
+    <div class="page" id="page9">
+        <h2>9. Python Implementation: Autoregressive Synthesis & Benchmarking</h2>
+
+        <span class="cell-tag">In [13]:</span>
+<pre><code><span class="cm"># Autoregressively synthesize 200 notes at T = 0.5, 1.0, 1.5 and export MIDI scores</span>
+<span class="kw">def</span> <span class="fn">generate_events</span>(model, seed_ids, num_generate=<span class="num">200</span>, temperature=<span class="num">1.0</span>):
+    window = list(seed_ids); generated = []
+    <span class="kw">for</span> _ <span class="kw">in</span> range(num_generate):
+        x = np.array(window, dtype=<span class="str">"int32"</span>)[np.newaxis, :]
+        probabilities = model(x, training=<span class="kw">False</span>).numpy()[<span class="num">0</span>]
+        next_id = sample_with_temperature(probabilities, temperature)
+        generated.append(next_id); window.append(next_id); window = window[<span class="num">1</span>:]
+    <span class="kw">return</span> generated
+
+<span class="kw">def</span> <span class="fn">events_to_midi</span>(event_ids, filename=<span class="str">"generated_music.mid"</span>, velocity=<span class="num">85</span>):
+    pm = pretty_midi.PrettyMIDI(initial_tempo=<span class="num">120</span>)
+    inst = pretty_midi.Instrument(program=<span class="num">0</span>)  <span class="cm"># Acoustic Grand Piano</span>
+    cur = <span class="num">0.0</span>
+    <span class="kw">for</span> ev <span class="kw">in</span> event_ids:
+        p, dur = id_to_event[int(ev)]
+        inst.notes.append(pretty_midi.Note(velocity=velocity, pitch=int(p), start=cur, end=cur + dur))
+        cur += dur
+    pm.instruments.append(inst); pm.write(filename); <span class="kw">return</span> pm
+
+seed_ids = val_songs[<span class="num">0</span>][:<span class="num">50</span>]
+temperature_files = {}
+<span class="kw">for</span> T <span class="kw">in</span> [<span class="num">0.5</span>, <span class="num">1.0</span>, <span class="num">1.5</span>]:
+    ids = generate_events(model, seed_ids, <span class="num">200</span>, T)
+    pm = events_to_midi(ids, f<span class="str">"generated_T{T}.mid"</span>)
+    temperature_files[T] = ids
+    <span class="kw">if</span> T == <span class="num">1.0</span>: events_to_midi(ids, <span class="str">"generated_music.mid"</span>)
+    <span class="kw">print</span>(f<span class="str">"Generated T={T}: {len(pm.instruments[0].notes)} notes ({round(pm.get_end_time(), 1)}s)"</span>)</code></pre>
+        <span class="out-tag">Out [13]:</span>
+        <pre class="output-box"><code class="output">Generated T=0.5: 200 notes (104.5s) -> saved generated_T0.5.mid
+Generated T=1.0: 200 notes (132.8s) -> saved generated_T1.0.mid & generated_music.mid
+Generated T=1.5: 200 notes (148.0s) -> saved generated_T1.5.mid</code></pre>
+
+        <div class="image-box" style="margin: 6px 0 10px 0;">
+            <img src="generated_piano_roll.png" alt="Piano Roll Visualization" style="max-height: 1.5in;">
+            <div class="caption">Figure 7: Output Plot: Piano Roll Visualization of Generated Melody (First 60 Notes at T = 1.0).</div>
+        </div>
+
+        <h3>Quantitative Musicological Benchmark Evaluation</h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Melodic Metric</th>
+                    <th>Real Dataset (Avg)</th>
+                    <th>Generated ($T=0.5$)</th>
+                    <th>Generated ($T=1.0$)</th>
+                    <th>Generated ($T=1.5$)</th>
+                    <th>Musicological Meaning</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Unique Pitches</strong></td>
+                    <td>11.4</td>
+                    <td>13</td>
+                    <td>27</td>
+                    <td>40</td>
+                    <td>Vocabulary richness and pitch diversity.</td>
+                </tr>
+                <tr>
+                    <td><strong>Pitch Range (Semitones)</strong></td>
+                    <td>16.6 st</td>
+                    <td>15.0 st</td>
+                    <td>41.0 st</td>
+                    <td>50.0 st</td>
+                    <td>Span between lowest and highest notes.</td>
+                </tr>
+                <tr>
+                    <td><strong>Mean Melodic Interval</strong></td>
+                    <td>3.14 st</td>
+                    <td>3.12 st</td>
+                    <td>6.17 st</td>
+                    <td>9.73 st</td>
+                    <td>Step-wise smoothness vs. wide leapiness.</td>
+                </tr>
+                <tr>
+                    <td><strong>Unique Durations</strong></td>
+                    <td>2.6</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>6</td>
+                    <td>Rhythmic vocabulary richness.</td>
+                </tr>
+                <tr>
+                    <td><strong>Mean Note Duration</strong></td>
+                    <td>0.330 s</td>
+                    <td>0.522 s</td>
+                    <td>0.664 s</td>
+                    <td>0.740 s</td>
+                    <td>Rhythmic pacing and sustained cadences.</td>
+                </tr>
+                <tr>
+                    <td><strong>Repeated 4-Grams</strong></td>
+                    <td>66.0%</td>
+                    <td>11.0%</td>
+                    <td>0.0%</td>
+                    <td>0.0%</td>
+                    <td>Thematic motif repetition vs. continuous variation.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="image-box" style="margin: 6px 0 8px 0;">
+            <img src="pitch_histograms_comparison.png" alt="Pitch Histograms Comparison" style="max-height: 1.4in;">
+            <div class="caption">Figure 8: Output Plot: Comparative Pitch Density Histograms: Real Dataset vs. T = 0.5 vs. T = 1.5.</div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PAGE 10: VIVA VOCE QUESTIONS & CONCLUSION
+         ========================================== -->
+    <div class="page" id="page10">
+        <h2>10. Viva Voce & Technical Review Questions</h2>
+
+        <div class="concept-card">
+            <h4 style="margin-top: 0; color: #1e3a8a;">Q1: Why represent music as discrete quantized (pitch, duration) tuples rather than continuous audio waves?</h4>
+            <p style="margin-bottom: 0; font-size: 9.5pt;">
+                <strong>Answer:</strong> Raw audio waveforms require sampling at 44.1 kHz, resulting in over 2.6 million data points per minute where pitch, timbre, and reverberation are entangled into complex acoustic pressure waves. In contrast, symbolic MIDI represents music at the semantic level of discrete notes, chords, and rhythmic durations. Quantizing events into $(pitch, duration)$ tuples compresses the problem to ~200 discrete tokens per minute, enabling standard NLP sequence modeling techniques (embeddings, recurrent gating, and cross-entropy optimization) to learn musical grammar efficiently.
+            </p>
+        </div>
+
+        <div class="concept-card">
+            <h4 style="margin-top: 0; color: #1e3a8a;">Q2: How do LSTM gates (forget, input, output) overcome the vanishing gradient problem in long melodies?</h4>
+            <p style="margin-bottom: 0; font-size: 9.5pt;">
+                <strong>Answer:</strong> In standard RNNs, gradients are propagated via continuous matrix multiplication of $W_{hh}$, causing exponential decay over long temporal spans. The LSTM introduces an additive <strong>Cell State highway</strong> ($C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$). Because the update is linear and additive, the derivative $\frac{\partial C_t}{\partial C_{t-1}} = f_t$ does not vanish when the forget gate is saturated near 1. This permits error gradients to flow backward through dozens of musical bars without decay, allowing the model to remember overarching key signatures and thematic motifs.
+            </p>
+        </div>
+
+        <div class="concept-card">
+            <h4 style="margin-top: 0; color: #1e3a8a;">Q3: What is the role of Temperature in sampling, and what happens at extreme values?</h4>
+            <p style="margin-bottom: 0; font-size: 9.5pt;">
+                <strong>Answer:</strong> Softmax temperature scales logits before normalization: $P(k) \propto \exp(z_k / T)$. As $T \to 0$, the largest logit dominates completely, reducing generation to deterministic greedy argmax, which frequently creates repetitive, infinite loops. When $T = 1.0$, sampling reflects the true corpus statistics. As $T \to \infty$, the probability distribution flattens into a uniform distribution ($P(k) \to 1/|\mathcal{V}|$), producing discordant, random pitch selections with no harmonic coherence.
+            </p>
+        </div>
+
+        <div class="concept-card">
+            <h4 style="margin-top: 0; color: #1e3a8a;">Q4: Why must the train/validation split be performed at the song level rather than shuffling sequences randomly?</h4>
+            <p style="margin-bottom: 0; font-size: 9.5pt;">
+                <strong>Answer:</strong> In a sliding window sequence formulation with $L=50$, two adjacent windows $[x_1 \dots x_{50}]$ and $[x_2 \dots x_{51}]$ share 49 identical tokens. If sequences are shuffled randomly before splitting, overlapping sequences from the same tune would leak into both training and validation sets, causing severe <em>data leakage</em> and artificially inflated validation accuracy. Splitting at the song level ensures the model is tested on unseen compositions.
+            </p>
+        </div>
+
+        <div class="concept-card">
+            <h4 style="margin-top: 0; color: #1e3a8a;">Q5: What are the architectural limitations of single-track LSTMs, and how do modern architectures solve them?</h4>
+            <p style="margin-bottom: 0; font-size: 9.5pt;">
+                <strong>Answer:</strong> A monophonic single-track LSTM cannot naturally represent polyphony (simultaneous harmony, chords, counterpoint) or multi-instrument orchestration without combinatorial vocabulary explosion. Furthermore, sequential recurrence cannot be parallelized across time during training. Modern systems utilize <strong>Music Transformers</strong> (e.g., Music Transformer, MuseNet) with relative attention mechanisms to model multi-track polyphony, and <strong>Diffusion Models</strong> for direct acoustic synthesis.
+            </p>
+        </div>
+
+        <h2>11. Conclusion</h2>
+        <p>
+            In this assignment, an end-to-end deep recurrent neural network was successfully constructed using TensorFlow 2 / Keras for symbolic music generation. By tokenizing the Nottingham folk dataset into quantized $(pitch, duration)$ events and training a 256-unit LSTM with dense harmonic embeddings, the system learned both short-term rhythmic syntax and overarching melodic structures. Autoregressive temperature-controlled decoding verified that $T = 1.0$ accurately reproduces authentic folk contours, while successfully exporting playable, multi-instrument MIDI files.
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

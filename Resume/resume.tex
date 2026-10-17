@@ -1,0 +1,192 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+% Ensure that generated pdf is machine readable/ATS parsable
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+\pagestyle{fancy}
+
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-0.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Aditya Deore} \\ \vspace{1pt}
+    Pune, India \\ \vspace{1pt}
+    \small 8010767685 $|$ \href{mailto:adityadeorework@gmail.com}{\underline{adityadeorework@gmail.com}} $|$ 
+    \href{https://linkedin.com/in/aditya-deore-3a725a263}{\underline{linkedin.com/in/aditya-deore-3a725a263}} $|$
+    \href{https://github.com/AdityaxDeore}{\underline{github.com/AdityaxDeore}}
+\end{center}
+
+\vspace{-10pt}
+\begin{center}
+    \small \textit{Motivated AI \& Machine Learning developer with full-stack foundations focused on building data-driven, scalable applications.}
+\end{center}
+\vspace{-5pt}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Pimpri Chinchwad College of Engineering (PCCOE)}{Pune, India}
+      {Bachelor of Technology in Information Technology (CGPA: 8.3)}{2024 -- 2028}
+      \resumeItemListStart
+        \resumeItem{\textbf{Relevant Coursework:} Machine Learning, Data Science, Cloud Computing, Generative AI.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Software Development Associate (Part-time)}{May 2025 -- Jan 2026}
+      {ITSA – (Information Technology Students Council)}{On-site, PCCOE}
+      \resumeItemListStart
+        \resumeItem{Engineered an event management platform that onboarded 3,500+ students across hackathons, workshops, and technical initiatives.}
+        \resumeItem{Implemented a Unique Student ID–based registration and attendance system, reducing manual verification efforts by 80\%.}
+        \resumeItem{Developed responsive full-stack web applications, streamlining event discovery, registration, and engagement for the student community.}
+        \resumeItem{\textbf{Technologies:} HTML5, CSS3, React.js, Node.js}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {AI/ML Intern}{Mar 2025 -- May 2025}
+      {Personify}{Hybrid, Bengaluru/Karnataka}
+      \resumeItemListStart
+        \resumeItem{Engineered TensorFlow-based computer vision models for image classification and object detection, achieving over 94\% accuracy across multiple datasets.}
+        \resumeItem{Optimized CNN architectures using transfer learning, data augmentation, and hyperparameter tuning, resulting in a 15\% improvement in F1-Score and enhanced model generalization.}
+        \resumeItem{Designed automated preprocessing and training pipelines, reducing data preparation time by 40\%.}
+        \resumeItem{Evaluated model performance through Precision metrics, reducing false detections by 25\% and improving prediction reliability.}
+        \resumeItem{Enhanced inference efficiency through feature extraction and model optimization techniques, decreasing prediction latency by 30\% while maintaining high accuracy.}
+        \resumeItem{\textbf{Technologies:} Python, TensorFlow, Machine Learning, NumPy, Pandas}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{Code Campus — Proctored Coding \& Learning Platform} $|$ \emph{React.js, Vite, Express.js, MongoDB}}{Sep 2025 -- Present}
+          \resumeItemListStart
+            \resumeItem{Engineered a VS Code–style IDE supporting assessments for 90+ students.}
+            \resumeItem{Automated proctoring workflows, reducing manual invigilation by 70\%.}
+            \resumeItem{Built a context-aware AI tutor for adaptive hints and debugging assistance.}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Brain Tumor Detection — MRI Classification} $|$ \emph{Python, Scikit-learn, OpenCV, SVM, Logistic Regression}}{Aug 2025 -- Nov 2025}
+          \resumeItemListStart
+            \resumeItem{Delivered 96.3\% classification accuracy on unseen MRI scans using an optimized SVM-based diagnostic pipeline.}
+            \resumeItem{Improved model reliability with only 9 misclassifications, leveraging image preprocessing.}
+            \resumeItem{Benchmarked multiple ML classifiers, achieving superior detection performance and generalization with SVM.}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Clarity — AI Mental Health Companion} $|$ \emph{React, TypeScript, PostgreSQL, TensorFlow}}{Jan 2025 -- Apr 2025}
+          \resumeItemListStart
+            \resumeItem{Engineered a VS Code–style IDE supporting assessments for 90+ students.}
+            \resumeItem{Automated proctoring workflows, reducing manual invigilation by 70\%.}
+            \resumeItem{Built a context-aware AI tutor for adaptive hints and debugging assistance.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Programming Languages}{: Python, C++, JavaScript, TypeScript, SQL} \\
+     \textbf{Frameworks \& Libraries}{: React, Node.js, TensorFlow, Scikit-learn, Pandas, NumPy} \\
+     \textbf{Databases}{: MongoDB, PostgreSQL, MySQL} \\
+     \textbf{Tools \& Platforms}{: Git, GitHub, Linux, Docker, CI/CD} \\
+     \textbf{Soft Skills}{: Problem Solving, Teamwork, Decision Making, Critical Thinking, Adaptability}
+    }}
+ \end{itemize}
+ 
+%-----------CERTIFICATIONS-----------
+\section{Certifications}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{IBM Data Analyst Professional Certificate} {(Jan 2025)} \\
+     \textbf{Google Cloud – Introduction to Generative AI} {(Jun 2026)}
+    }}
+ \end{itemize}
+
+%-------------------------------------------
+\end{document}

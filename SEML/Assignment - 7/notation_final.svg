@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" width="160" height="140" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Incoming Flow -->
+  <line x1="80" y1="12" x2="80" y2="48" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_f)"/>
+  <!-- Bullseye circle -->
+  <circle cx="80" cy="75" r="22" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+  <circle cx="80" cy="75" r="14" fill="#0f172a"/>
+  <!-- Label -->
+  <text x="80" y="125" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Activity Final</text>
+</svg>

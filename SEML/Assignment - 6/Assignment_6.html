@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEML Assignment 6 - Activity Diagram for Open Ocean Cleanup</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    /* Screen CSS (The "Preview") */
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      color: #000;
+      background: #e5e7eb;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 8.5in;
+      margin: 0 auto;
+    }
+
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.8in;
+      background: #ffffff;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .page:focus-within {
+      outline: 2px dashed #4299e1;
+    }
+
+    /* Print CSS */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0;
+        box-shadow: none;
+      }
+      .page {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 0.2in;
+        box-shadow: none;
+        border: none;
+        page-break-after: always;
+      }
+    }
+
+    /* Cover Table CSS */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .cover-table td {
+      border: 1px solid #000;
+      padding: 8px 12px;
+    }
+    .cover-table .college-info {
+      text-align: center;
+      font-weight: bold;
+      font-size: 16pt;
+      line-height: 1.4;
+    }
+    .cover-table .row-centered {
+      text-align: center;
+      font-weight: bold;
+      font-size: 14pt;
+    }
+    .cover-table .row-left {
+      text-align: left;
+      font-weight: bold;
+      font-size: 14pt;
+    }
+    .logo-container {
+      text-align: center;
+      width: 18%;
+      padding: 5px !important;
+    }
+    .logo-container img {
+      max-width: 100px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Typography */
+    h2 {
+      font-family: Arial, sans-serif;
+      font-size: 16pt;
+      color: #000;
+      margin-top: 22px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+    }
+    h3 {
+      font-family: Arial, sans-serif;
+      font-size: 14pt;
+      color: #000;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+    p {
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+      text-align: justify;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    ul, ol {
+      margin-left: 20px;
+      font-size: 11pt;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+
+    /* Styled Tables */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 10.5pt;
+    }
+    .styled-table th, .styled-table td {
+      border: 1px solid #000;
+      padding: 7px 10px;
+      text-align: left;
+    }
+    .styled-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    /* Diagram Placeholder & Interactive Link */
+    .img-placeholder {
+      width: 100%;
+      min-height: 380px;
+      border: 2px dashed #999;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #555;
+      margin: 16px 0;
+      cursor: pointer;
+      padding: 15px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .img-placeholder img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .interactive-link {
+      display: inline-block;
+      margin-bottom: 12px;
+      font-size: 11pt;
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #0284c7;
+      padding: 6px 14px;
+      border-radius: 4px;
+      background: #f0f9ff;
+    }
+    .interactive-link:hover {
+      background: #e0f2fe;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 9.5pt;
+      font-weight: bold;
+      border-radius: 3px;
+      background-color: #e2e8f0;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+    
+    <!-- ==================== PAGE 1: COVER & INTRODUCTION ==================== -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust's<br>
+            Pimpri Chinchwad college of Engineering
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-centered">
+            Assignment No. 6
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Course:- Software Engineering and Modeling Laboratory (SEML)
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Name:- Aditya Chandrajit Deore
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            PRN:- 124B1F116
+          </td>
+        </tr>
+      </table>
+
+      <h2>Title</h2>
+      <p>Design and Modeling of UML Activity Diagram for Open Ocean Cleanup System</p>
+
+      <h2>Objectives</h2>
+      <ul>
+        <li>To comprehend the principles, semantics, and formal notations of UML 2.0 Activity Diagrams.</li>
+        <li>To model dynamic business workflows, control flows, concurrent tasks, and object interactions.</li>
+        <li>To formulate an end-to-end activity model for the autonomous <strong>Open Ocean Cleanup</strong> platform incorporating swimlanes (partitions), decision logic, synchronization bars, and error recovery.</li>
+      </ul>
+
+      <h2>Introduction to UML Activity Diagrams</h2>
+      <p>An <strong>Activity Diagram</strong> is a behavioral diagram within the Unified Modeling Language (UML) specification that portrays the step-by-step workflow of stepwise activities and actions with support for choice, iteration, and concurrency. In software engineering, activity diagrams represent both computational workflows and organizational business processes, functioning as advanced object-oriented flowcharts.</p>
+      
+      <p>Unlike standard functional flowcharts, UML Activity Diagrams provide native constructs for:</p>
+      <ul>
+        <li><strong>Swimlanes (Activity Partitions):</strong> Allocating responsibilities among distinct actors, subsystems, or computing tiers.</li>
+        <li><strong>Concurrency (Forks &amp; Joins):</strong> Specifying threads of execution that execute in parallel and later synchronize.</li>
+        <li><strong>Object Flows:</strong> Illustrating how physical artifacts or digital data tokens flow between and are transformed by operational activities.</li>
+      </ul>
+    </div>
+
+    <!-- ==================== PAGE 2: NOTATIONS & SEMANTICS ==================== -->
+    <div class="page">
+      <h2>UML 2.0 Activity Diagram Notations &amp; Standards</h2>
+      <p>UML 2.0 standardizes symbols to describe system dynamics, data transformations, and decision paths without ambiguity:</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Notation Element</th>
+            <th style="width: 25%;">Graphical Symbol</th>
+            <th style="width: 50%;">Description &amp; Behavioral Semantics</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Initial Node</strong></td>
+            <td>Solid black circle (⚫)</td>
+            <td>Marks the commencement of an activity invocation when the process begins.</td>
+          </tr>
+          <tr>
+            <td><strong>Action / Activity</strong></td>
+            <td>Rounded Rectangle</td>
+            <td>Represents an atomic, non-interruptible step or functional sub-process.</td>
+          </tr>
+          <tr>
+            <td><strong>Decision Node</strong></td>
+            <td>Diamond (◇) with guards</td>
+            <td>Evaluates conditional guards (e.g., <code>[Yes]</code> / <code>[No]</code>) to route a single input into mutually exclusive outputs.</td>
+          </tr>
+          <tr>
+            <td><strong>Merge Node</strong></td>
+            <td>Diamond (◇) with 2+ inputs</td>
+            <td>Unifies multiple alternative paths into a single output stream without synchronization.</td>
+          </tr>
+          <tr>
+            <td><strong>Fork Node</strong></td>
+            <td>Thick horizontal / vertical bar</td>
+            <td>Splits a single incoming control flow into two or more concurrently executing parallel flows.</td>
+          </tr>
+          <tr>
+            <td><strong>Join Node</strong></td>
+            <td>Thick horizontal / vertical bar</td>
+            <td>Synchronizes multiple concurrent control flows; waits for all incoming flows before yielding control.</td>
+          </tr>
+          <tr>
+            <td><strong>Object Node</strong></td>
+            <td>Rectangle with stereotype</td>
+            <td>Represents an instance of data or physical resource (e.g., <code>&laquo;object: WasteBatch&raquo;</code>) generated or consumed.</td>
+          </tr>
+          <tr>
+            <td><strong>Activity Final Node</strong></td>
+            <td>Bullseye Circle (◉)</td>
+            <td>Terminates all control and object flows across all concurrent threads in the activity.</td>
+          </tr>
+          <tr>
+            <td><strong>Swimlane / Partition</strong></td>
+            <td>Vertical or Horizontal Columns</td>
+            <td>Organizes responsibilities across organizational boundaries, actors, microservices, or devices.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Mathematical Flow Representation</h3>
+      <p>In Petri-net semantics underlying UML 2.0 Activity Graphs, an activity state transition is triggered when token condition \(T_c\) is satisfied across all incoming edges \(E_{in}\):</p>
+      \[
+      T_c = \bigwedge_{e \in E_{in}} \text{HasToken}(e) \implies \text{FireAction}(A) \implies \forall e' \in E_{out}, \text{EmitToken}(e')
+      \]
+      <p>For Decision nodes, routing satisfies the condition of mutually exclusive guard predicates:</p>
+      \[
+      \sum_{i=1}^{n} P(\text{Guard}_i) = 1 \quad \text{where} \quad \text{Guard}_j \cap \text{Guard}_k = \emptyset \quad (\forall j \neq k)
+      \]
+    </div>
+
+    <!-- ==================== PAGE 3: OCEAN CLEANUP ARCHITECTURE ==================== -->
+    <div class="page">
+      <h2>Open Ocean Cleanup System Architecture</h2>
+      <p>The <strong>Open Ocean Cleanup</strong> system is an autonomous cyber-physical marine restoration platform designed to detect, intercept, collect, and recycle marine plastics (macro-plastics, derelict ghost fishing nets, and surface microplastics) while ensuring zero harm to marine biodiversity. The system workflow is architected across four distinct <strong>Swimlanes</strong>:</p>
+
+      <h3>Partition 1: Operator / Player (Command &amp; Telemetry)</h3>
+      <p>Represents the human operator or gamer initiating missions, selecting ocean sectors (e.g., Great Pacific Garbage Patch, North Atlantic Gyre), tracking live vessel metrics, managing fuel/storage economics, and receiving tokenized ecological rewards.</p>
+
+      <h3>Partition 2: Navigation &amp; Detection System (Autonomous Edge AI)</h3>
+      <p>Executes pathfinding algorithms, obstacle detection, and edge neural network inference. It interfaces with onboard multi-spectral cameras, high-frequency forward sonar, and LiDAR to scan ocean surfaces and classify floating entities into marine debris, navigational hazards, or living marine fauna.</p>
+
+      <h3>Partition 3: Cleanup &amp; Collection Unit (Robotic Ingestion)</h3>
+      <p>Operates the physical collection apparatus consisting of automated floating containment booms, a variable-speed perforated conveyor belt, bycatch escape gratings, hydraulic balers, and ultrasonic storage hopper sensors.</p>
+
+      <h3>Partition 4: Base Harbor &amp; Recycling Facility (Post-Mission Operations)</h3>
+      <p>Oversees automated dock mooring, shore battery fast-charging, container crane offloading, Near-Infrared (NIR) polymer spectroscopic sorting (PET, HDPE, PP), pelletization, impact score computation, and ledger logging.</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Module Name</th>
+            <th>Primary Swimlane</th>
+            <th>Hardware / Subsystem</th>
+            <th>Key Responsibilities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Fleet Console</td>
+            <td>Operator / Player</td>
+            <td>Web / Desktop Dashboard</td>
+            <td>Authentication, Mission Planning, Wallet &amp; Badges</td>
+          </tr>
+          <tr>
+            <td>Autonav Controller</td>
+            <td>Navigation &amp; Detection</td>
+            <td>NVIDIA Jetson Edge Computing</td>
+            <td>Lidar-Sonar Fusion, Dynamic Waypoint Guidance</td>
+          </tr>
+          <tr>
+            <td>Harvester Assembly</td>
+            <td>Cleanup &amp; Collection</td>
+            <td>Hydraulic Booms &amp; Conveyors</td>
+            <td>Surface Debris Skimming, Bycatch Screening, Compaction</td>
+          </tr>
+          <tr>
+            <td>Harbor Command</td>
+            <td>Harbor &amp; Facility</td>
+            <td>Automated Docking Station</td>
+            <td>Mooring, Offloading, NIR Sorting, Eco-Token Ledger</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==================== PAGE 4: DETAILED PROCESS PHASES ==================== -->
+    <div class="page">
+      <h2>Operational Lifecycle: Five-Phase Execution Flow</h2>
+      <p>The activity model coordinates the end-to-end mission cycle into five sequential yet concurrent phases:</p>
+
+      <h3>Phase 1: Mission Setup &amp; Pre-Launch Concurrent Diagnostics</h3>
+      <p>The operator logs in, configures the vessel payload thresholds, and commits a designated ocean cleanup grid. The vessel performs pre-launch self-diagnostics. If any subsystem registers a fault, execution is routed to a maintenance sub-loop. Upon passing, a <strong>Fork Bar</strong> triggers three concurrent initializations: powering electric propulsion waterjets, calibrating sonar/camera sensors, and establishing encrypted telemetry with Harbor Command, joined via a <strong>Join Bar</strong>.</p>
+
+      <h3>Phase 2: Ocean Patrol, Sensor Surveillance &amp; Classification</h3>
+      <p>The vessel enters an autonomous patrol loop across coordinate waypoints. Active sensors sweep the water column. When an object is detected, a deep-learning classifier evaluates the contact:</p>
+      <ul>
+        <li><strong>Navigational Hazard (Reef/Storm):</strong> Triggers an evasive path recalculation keeping a 500m safety perimeter before re-entering the patrol grid.</li>
+        <li><strong>Marine Wildlife (Cetaceans, Sea Turtles):</strong> Triggers a directional low-frequency acoustic deterrent ping to safely guide animals away while maintaining course.</li>
+        <li><strong>Plastic Debris / Target Waste:</strong> Transfers control flow to the Collection Unit.</li>
+      </ul>
+
+      <h3>Phase 3: Plastic Ingestion, Bycatch Screening &amp; Compression</h3>
+      <p>Containment booms deploy to channel debris toward the intake conveyor. A <strong>Fork Bar</strong> splits flow into simultaneous plastic capture and hydraulic water-straining with bycatch escape grates. Once joined, a hydraulic compactor compresses collected plastics into dense bales and logs batch mass into an <code>&laquo;object: WasteBatch&raquo;</code> node. Bin sensors evaluate storage capacity. If under 90%, patrol resumes; if full (or battery &lt; 20%), return autopilot initiates.</p>
+
+      <h3>Phase 4: Autonomous Harbor Return &amp; Container Offloading</h3>
+      <p>The vessel returns via fuel-optimized cruise vectors, transmits payload manifests, docks via laser telemetry, locks into shore power for fast charging, and offloads compressed bales via automated crane gantry.</p>
+
+      <h3>Phase 5: Polymer Granulation, Carbon Metrics &amp; Eco-Rewards</h3>
+      <p>In the recycling facility, plastics undergo automated Near-Infrared (NIR) polymer sorting and granulation into recyclable resin flakes. The platform calculates total kilograms diverted, estimates ocean plastic footprint reduction, mints verified <code>&laquo;object: CleanCredits&raquo;</code> tokens to the operator's wallet, updates global fleet leaderboards, and logs records to the database.</p>
+    </div>
+
+    <!-- ==================== PAGE 5: DIAGRAM DISPLAY & LINK ==================== -->
+    <div class="page">
+      <h2>UML Activity Diagram Visualization</h2>
+      <p>The complete activity diagram has been implemented as a full-screen, clutter-free canvas with intuitive drag-and-pan and smooth mouse-wheel zooming. Click the link below to view it in full screen:</p>
+
+      <div style="text-align: center; margin: 10px 0;">
+        <a href="Activity_Diagram.html" class="interactive-link" contenteditable="false" target="_blank">
+          🔗 Launch Full Screen Clean Activity Diagram (Activity_Diagram.html)
+        </a>
+      </div>
+
+      <div class="diagram-preview-card" style="border: 1.5px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.06); margin: 12px 0;">
+        <div style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 9.5pt;">
+          <span style="font-weight: bold; color: #0f172a;">🗺️ UML 2.0 Activity Diagram &mdash; 4 Solid Swimlanes</span>
+          <span style="color: #64748b;">(Full screen pan &amp; zoom available in <a href="Activity_Diagram.html" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: bold;">Activity_Diagram.html</a>)</span>
+        </div>
+        <div style="height: 380px; overflow-y: auto; overflow-x: hidden; text-align: center; background: #f8fafc; padding: 10px; border-bottom: 1px solid #e2e8f0;">
+          <img src="activity_diagram.svg" alt="UML Activity Diagram" style="max-width: 100%; height: auto; display: inline-block; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); background: #ffffff;" />
+        </div>
+        <div style="padding: 10px 14px; background: #ffffff; font-size: 9pt; color: #334155;">
+          <strong>Diagram Architecture Highlights:</strong>
+          <span style="color: #475569;">
+            <strong>4 Partitions:</strong> Operator (<span style="color:#0284c7; font-weight:bold;">Sky Blue</span>) &bull; Navigation &amp; Edge AI (<span style="color:#0d9488; font-weight:bold;">Teal</span>) &bull; Cleanup Unit (<span style="color:#2563eb; font-weight:bold;">Royal Blue</span>) &bull; Harbor Facility (<span style="color:#7c3aed; font-weight:bold;">Violet</span>) &bull; 
+            <strong>Features:</strong> 3 Synchronization Fork/Joins, 4 Diamond Decision nodes with explicit guard conditions, 3 Pin-linked Object Nodes.
+          </span>
+        </div>
+      </div>
+
+      <h3>Key Data &amp; Control Flow Summary</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Control / Data Transition</th>
+            <th>Source Partition</th>
+            <th>Target Partition</th>
+            <th>Guard / Trigger</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pre-Launch Diagnostics Handshake</td>
+            <td>Operator</td>
+            <td>Navigation System</td>
+            <td>Route plan confirmed</td>
+          </tr>
+          <tr>
+            <td>Debris Capture Handover</td>
+            <td>Navigation System</td>
+            <td>Cleanup Unit</td>
+            <td><code>[Debris / Plastic Identified]</code></td>
+          </tr>
+          <tr>
+            <td>Capacity Full Notification</td>
+            <td>Cleanup Unit</td>
+            <td>Navigation System</td>
+            <td><code>[Storage &gt;= 90% or Batt &lt; 20%]</code></td>
+          </tr>
+          <tr>
+            <td>Berth Assignment &amp; ETA</td>
+            <td>Navigation System</td>
+            <td>Harbor Facility</td>
+            <td>Payload manifest transmitted</td>
+          </tr>
+          <tr>
+            <td>Eco-Token Credit Disbursement</td>
+            <td>Harbor Facility</td>
+            <td>Operator / Player</td>
+            <td>Impact calculation verified</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==================== PAGE 6: EXCEPTION HANDLING & CONCLUSION ==================== -->
+    <div class="page">
+      <h2>Exception Handling &amp; Edge Cases</h2>
+      <p>Robust operational design requires explicit modeling of alternate paths and boundary failures:</p>
+      <ul>
+        <li><strong>Sensor Blindness / Communication Blackout:</strong> If ocean spray or satellite loss interrupts telemetry, the vessel switches to autonomous dead-reckoning and holds position until connection recovers.</li>
+        <li><strong>Derelict Net Entanglement:</strong> If propeller rpm drops sharply, the system issues an automated emergency stop, attempts reverse thrust pulse, and alerts harbor support if clearing fails.</li>
+        <li><strong>Wildlife False Positives:</strong> High-confidence image thresholds guarantee that live fauna are given maximum clearance via benign acoustic deterrents.</li>
+      </ul>
+
+      <h2>Verification &amp; Design Quality Checklist</h2>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>UML Modeling Quality Metric</th>
+            <th>Implementation Status</th>
+            <th>Verification Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Liveness &amp; Deadlock Prevention</strong></td>
+            <td><span class="badge" style="background: #dcfce7; color: #15803d;">Verified</span></td>
+            <td>Every fork has a matching join bar; token counts remain balanced across threads.</td>
+          </tr>
+          <tr>
+            <td><strong>Complete Decision Coverage</strong></td>
+            <td><span class="badge" style="background: #dcfce7; color: #15803d;">Verified</span></td>
+            <td>Every decision diamond accounts for all conditions with mutually exclusive guards.</td>
+          </tr>
+          <tr>
+            <td><strong>Correct Swimlane Responsibility</strong></td>
+            <td><span class="badge" style="background: #dcfce7; color: #15803d;">Verified</span></td>
+            <td>Actions are mapped strictly to the responsible agent or hardware layer.</td>
+          </tr>
+          <tr>
+            <td><strong>Object Flow Integration</strong></td>
+            <td><span class="badge" style="background: #dcfce7; color: #15803d;">Verified</span></td>
+            <td>Material waste and digital tokens flow with explicit pinned dashed connections.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Conclusion</h2>
+      <p>Through this assignment, we successfully engineered a comprehensive <strong>UML 2.0 Activity Diagram</strong> for the <strong>Open Ocean Cleanup</strong> system. By employing four structured swimlanes, the diagram clearly delineates the operational boundaries between human operators, autonomous navigation, physical robotic collection, and shore recycling facilities. Incorporating fork/join synchronization bars ensured parallel tasks—such as simultaneous sensor calibration and dual-stream waste screening—were formally represented, while decision nodes established robust error-recovery loops. This model provides an authoritative behavioral blueprint for implementing the platform's backend services and robotic control logic.</p>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon India SRS - Assignment 2</title>
+    <!-- Mermaid.js for Diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+    <!-- MathJax for Formulas -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12pt;
+            line-height: 1.45;
+            color: #000000;
+            background: #e5e7eb;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 194mm;
+            margin: 0 auto;
+        }
+
+        .page {
+            width: 194mm;
+            height: 281mm;
+            min-height: 281mm;
+            max-height: 281mm;
+            padding: 10mm 12mm;
+            background: #ffffff;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1.2px solid #000000;
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .page:focus-within {
+            outline: 2px dashed #000000;
+            outline-offset: 4px;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0mm; /* Suppresses browser default header (date/title) and footer (URL) */
+        }
+
+        @media print {
+            html, body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 210mm !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .container {
+                max-width: 210mm !important;
+                width: 210mm !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            .page {
+                width: 194mm !important;
+                height: 281mm !important;
+                min-height: 281mm !important;
+                max-height: 281mm !important;
+                box-sizing: border-box !important;
+                margin: 8mm auto !important;
+                padding: 10mm 12mm !important;
+                border: 1.2px solid #000000 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                page-break-before: auto !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                overflow: hidden !important;
+            }
+            .styled-table, tr, td, th, .diagram-box, .uc-block {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+
+        /* Cover Table CSS */
+        .cover-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-family: "Times New Roman", Times, serif;
+        }
+        .cover-table td {
+            border: 1px solid #000000;
+            padding: 8px 12px;
+        }
+        .cover-table .college-info {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16pt;
+            line-height: 1.4;
+            color: #000000;
+        }
+        .cover-table .row-centered { text-align: center; font-weight: bold; font-size: 13pt; color: #000000; }
+        .cover-table .row-left { text-align: left; font-weight: bold; font-size: 13pt; color: #000000; }
+        .logo-container { text-align: center; width: 18%; padding: 5px !important; }
+        .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto; }
+
+        /* Formal Typography */
+        h2 {
+            font-family: "Times New Roman", Times, serif;
+            font-weight: bold;
+            font-size: 15pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 4px;
+        }
+        h3 {
+            font-family: "Times New Roman", Times, serif;
+            font-weight: bold;
+            font-size: 12.5pt;
+            color: #000000;
+            margin-top: 14px;
+            margin-bottom: 6px;
+        }
+        h4 {
+            font-family: "Times New Roman", Times, serif;
+            font-weight: bold;
+            font-size: 11.5pt;
+            color: #000000;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+        
+        p {
+            font-family: Calibri, Arial, sans-serif;
+            font-size: 11pt;
+            text-align: justify;
+            margin-bottom: 10px;
+            color: #000000;
+            line-height: 1.4;
+        }
+        ul, ol {
+            font-family: Calibri, Arial, sans-serif;
+            margin-left: 22px;
+            font-size: 11pt;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+        li {
+            margin-bottom: 4px;
+            text-align: justify;
+            line-height: 1.35;
+        }
+        
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Formal Technical Tables */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #000000;
+            font-family: Calibri, Arial, sans-serif;
+        }
+        .styled-table th, .styled-table td {
+            border: 1px solid #000000;
+            padding: 5px 8px;
+            text-align: left;
+            font-size: 9.5pt;
+            color: #000000;
+            line-height: 1.3;
+        }
+        .styled-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 10pt;
+            color: #000000;
+        }
+
+        /* Use Case Formal Block */
+        .uc-block {
+            margin-bottom: 10px;
+            font-family: Calibri, Arial, sans-serif;
+            font-size: 10.5pt;
+            line-height: 1.35;
+        }
+        .uc-title {
+            font-family: "Times New Roman", Times, serif;
+            font-weight: bold;
+            font-size: 11.5pt;
+            color: #000000;
+            margin-bottom: 2px;
+        }
+        .uc-row {
+            margin-bottom: 2px;
+            text-align: justify;
+        }
+        .uc-label {
+            font-weight: bold;
+            font-family: Calibri, Arial, sans-serif;
+            color: #000000;
+        }
+
+        /* TOC Styling */
+        .toc {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 11.5pt;
+            color: #000000;
+            line-height: 1.6;
+        }
+        .toc ul { list-style-type: none; padding-left: 20px; margin-bottom: 2px; }
+        .toc > ul { padding-left: 0; }
+        .toc li { margin-bottom: 5px; }
+        .toc .toc-h2 { font-weight: bold; font-size: 12pt; margin-top: 10px; color: #000000; }
+        .toc .toc-h3 { font-weight: normal; color: #000000; }
+
+        /* Diagram Box */
+        .diagram-box {
+            text-align: center;
+            margin: 12px 0;
+            padding: 8px;
+            background: #ffffff;
+            border: 1px solid #666666;
+        }
+        .diagram-caption {
+            font-size: 10pt;
+            color: #000000;
+            font-family: "Times New Roman", Times, serif;
+            font-style: italic;
+            margin-top: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" contenteditable="true">
+        
+        <!-- PAGE 1: Cover Page & Abstract -->
+        <div class="page">
+            <table class="cover-table">
+                <tr>
+                    <td class="logo-container"><img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false"></td>
+                    <td class="college-info">Pimpri Chinchwad Education Trust's<br>Pimpri Chinchwad College of Engineering</td>
+                </tr>
+                <tr><td colspan="2" class="row-centered">Assignment No. 2</td></tr>
+                <tr><td colspan="2" class="row-left">Course:- Software Engineering and Modeling Lab (SEML)</td></tr>
+                <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+                <tr><td colspan="2" class="row-left">PRN:- 124B1F116</td></tr>
+                <tr><td colspan="2" class="row-left">Batch:- B3</td></tr>
+            </table>
+
+            <div style="text-align: center; margin-top: 55px; margin-bottom: 35px;">
+                <h2 style="font-size: 22pt; border-bottom: none; color: #000000; margin: 0 0 8px 0;">Software Requirements Specification</h2>
+                <h3 style="color: #000000; font-size: 15pt; margin: 0; font-family: 'Times New Roman', Times, serif; font-weight: normal;">Amazon India E-Commerce Platform — v1.0</h3>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <h3 style="border-bottom: 1px solid #000000; padding-bottom: 4px; font-size: 13pt;">Abstract</h3>
+                <p>This Software Requirements Specification (SRS) establishes the formal functional, non-functional, operational, and architectural requirements for the Amazon India E-Commerce Platform in accordance with IEEE 830 standards. Operating as a distributed, high-concurrency marketplace, the platform interconnects consumers, third-party merchants, warehouse fulfillment centers, logistics personnel, and system administrators. The document defines comprehensive capabilities across product discovery, persistent cart synchronization, secure multi-rail financial transactions (UPI, cards, net banking, wallets, COD), real-time order lifecycle tracking, customer support escalation, and merchant catalog governance. Additionally, strict quantitative constraints are enforced regarding sub-300 millisecond response latencies, 99.999% platform availability, cryptographic credential hashing, and statutory data localization compliance.</p>
+            </div>
+        </div>
+
+        <!-- PAGE 2: Table of Contents -->
+        <div class="page">
+            <h2 id="toc">Table of Contents</h2>
+            <div class="toc" style="margin-top: 20px;">
+                <ul>
+                    <li class="toc-h2"><a href="#s1">1. Introduction</a>
+                        <ul>
+                            <li class="toc-h3"><a href="#s1.1">1.1 Purpose</a></li>
+                            <li class="toc-h3"><a href="#s1.2">1.2 Scope</a></li>
+                            <li class="toc-h3"><a href="#s1.3">1.3 Intended Audience</a></li>
+                            <li class="toc-h3"><a href="#s1.4">1.4 Assumptions &amp; Dependencies</a></li>
+                        </ul>
+                    </li>
+                    <li class="toc-h2"><a href="#s2">2. User Roles &amp; Stakeholder Classes</a>
+                        <ul>
+                            <li class="toc-h3"><a href="#s2.1">2.1 Role-Based Access Control Architecture</a></li>
+                        </ul>
+                    </li>
+                    <li class="toc-h2"><a href="#s3">3. Functional Requirements</a>
+                        <ul>
+                            <li class="toc-h3"><a href="#s3.1">3.1 System Functional Specifications (FR-01 to FR-12)</a></li>
+                        </ul>
+                    </li>
+                    <li class="toc-h2"><a href="#s4">4. Non-Functional Requirements</a>
+                        <ul>
+                            <li class="toc-h3"><a href="#s4.1">4.1 Quality Attributes &amp; Performance Benchmarks</a></li>
+                            <li class="toc-h3"><a href="#s4.2">4.2 Statutory Standards &amp; Compliance Mandates</a></li>
+                        </ul>
+                    </li>
+                    <li class="toc-h2"><a href="#s5">5. System Use Cases</a>
+                        <ul>
+                            <li class="toc-h3"><a href="#s5.1">5.1 Customer Journey Use Cases (UC-1 to UC-5)</a></li>
+                            <li class="toc-h3"><a href="#s5.2">5.2 Operations &amp; Management Use Cases (UC-6 to UC-11)</a></li>
+                        </ul>
+                    </li>
+                    <li class="toc-h2"><a href="#s6">6. Behavioral Analysis &amp; System Models</a>
+                        <ul>
+                            <li class="toc-h3"><a href="#s6.1">6.1 System Boundary &amp; Actor Interactions</a></li>
+                            <li class="toc-h3"><a href="#s6.2">6.2 Order Checkout &amp; Payment Sequence Model</a></li>
+                            <li class="toc-h3"><a href="#s6.3">6.3 Order Lifecycle State Machine Model</a></li>
+                            <li class="toc-h3"><a href="#s6.4">6.4 IEEE 830 Verification &amp; Project Sign-Off</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PAGE 3: Section 1: Introduction -->
+        <div class="page">
+            <h2 id="s1">1. Introduction</h2>
+            
+            <h3 id="s1.1">1.1 Purpose</h3>
+            <p>Define the functional, non-functional, security, performance, and operational requirements for the Amazon India E-Commerce Platform. The system supports product discovery, shopping cart management, secure checkout, payments, order management, delivery tracking, customer support, reviews, promotions, and third-party seller operations.</p>
+            
+            <h3 id="s1.2">1.2 Scope</h3>
+            <p>A web and mobile e-commerce platform connecting customers, third-party sellers, delivery agents, payment providers, and administrators. The scope includes product search and discovery, shopping cart, checkout, multiple payment methods, order tracking, customer accounts, seller management, reviews and ratings, promotions, customer support, and logistics integration.</p>
+            
+            <h3 id="s1.3">1.3 Intended Audience</h3>
+            <p>Software engineers, database developers, UI/UX designers, QA engineers, testers, product managers, system administrators, and project stakeholders.</p>
+            
+            <h3 id="s1.4">1.4 Assumptions &amp; Dependencies</h3>
+            <p>Users are assumed to have a stable internet connection and use modern web browsers or supported Android/iOS devices. Payment processing depends on external banking, UPI and payment gateway services, while delivery estimates and tracking depend on external logistics and routing services. The system also depends on cloud infrastructure and third-party APIs.</p>
+        </div>
+
+        <!-- PAGE 4: Section 2: User Roles -->
+        <div class="page">
+            <h2 id="s2">2. User Roles &amp; Stakeholder Classes</h2>
+            <p>The platform defines distinct stakeholder roles to ensure appropriate authorization boundaries, data isolation, and workflow specialization across the marketplace architecture:</p>
+            
+            <table class="styled-table" style="margin-top: 15px;">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Role</th>
+                        <th style="width: 75%;">Description &amp; Operational Responsibilities</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Shopper / Customer</strong></td>
+                        <td>Browses products, searches and filters items, reads reviews, manages the cart, places orders, makes payments, tracks deliveries, and raises support requests.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Seller</strong></td>
+                        <td>Uploads products and inventory, manages pricing, applies promotions, processes customer orders, and uses the seller dashboard.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delivery Agent</strong></td>
+                        <td>Scans packages, follows optimized delivery routes, updates delivery status, and verifies successful delivery using OTP or digital confirmation.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Warehouse Staff</strong></td>
+                        <td>Handles product inventory intake, bin allocation, pick-and-pack fulfillment, package labeling, and dispatch to carrier hubs.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Administrator</strong></td>
+                        <td>Monitors the platform, manages categories and site configuration, handles major disputes, and oversees overall system operations.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="s2.1" style="margin-top: 20px;">2.1 Role-Based Access Control Architecture</h3>
+            <p>Access privileges are governed strictly via Role-Based Access Control (RBAC). Customer roles operate within authenticated consumer sessions; merchant accounts require verified GSTIN credentials; logistics agents interface through authenticated hardware-bound mobile terminals; and administrators require multi-factor hardware keys with dedicated VPN tunneling.</p>
+        </div>
+
+        <!-- PAGE 5: Section 3: Functional Requirements -->
+        <div class="page">
+            <h2 id="s3">3. Functional Requirements</h2>
+            <p>The functional requirements enumerate the core capabilities, operations, and services provided by the Amazon India platform to its stakeholders:</p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">#</th>
+                        <th style="width: 22%;">Category</th>
+                        <th style="width: 53%;">Requirement Description</th>
+                        <th style="width: 15%; text-align: center;">Priority</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>FR-01</strong></td>
+                        <td>Product Search</td>
+                        <td>The system shall allow customers to search products using keywords, categories, voice search, filters, typo tolerance, and regional-language synonyms.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-02</strong></td>
+                        <td>Product Discovery</td>
+                        <td>The system shall allow customers to filter products by price, brand, ratings, and delivery eligibility.</td>
+                        <td style="text-align: center;">Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-03</strong></td>
+                        <td>Shopping Cart</td>
+                        <td>The system shall allow customers to add, remove, and modify product quantities in their shopping cart.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-04</strong></td>
+                        <td>Cart Synchronization</td>
+                        <td>The system shall persist and synchronize shopping cart data across web and mobile sessions.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-05</strong></td>
+                        <td>Checkout</td>
+                        <td>The system shall provide a multi-step checkout process including address selection, delivery options, payment, and order confirmation.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-06</strong></td>
+                        <td>Payment</td>
+                        <td>The system shall support UPI, credit/debit cards, net banking, Amazon Pay Wallet, and Cash on Delivery.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-07</strong></td>
+                        <td>Order Management</td>
+                        <td>The system shall generate a unique order ID for every successful transaction and allow customers to view order history.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-08</strong></td>
+                        <td>Order Tracking</td>
+                        <td>The system shall display order progress through statuses such as Ordered, Processing, Shipped, Out for Delivery, Delivered, and Returned.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-09</strong></td>
+                        <td>Order Cancellation</td>
+                        <td>The system shall allow customers to cancel an order before it reaches the shipped stage.</td>
+                        <td style="text-align: center;">Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-10</strong></td>
+                        <td>Account Management</td>
+                        <td>The system shall allow customers to manage profile information, multiple delivery addresses, and saved payment methods.</td>
+                        <td style="text-align: center;">Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-11</strong></td>
+                        <td>Customer Support</td>
+                        <td>The system shall provide chatbot-based customer support and transfer unresolved issues to a human support agent.</td>
+                        <td style="text-align: center;">Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FR-12</strong></td>
+                        <td>Notifications</td>
+                        <td>The system shall send users notifications when important order or delivery milestones occur.</td>
+                        <td style="text-align: center;">Medium</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGE 6: Section 4: Non-Functional Requirements -->
+        <div class="page">
+            <h2 id="s4">4. Non-Functional Requirements</h2>
+            <p>Non-functional requirements specify quality attributes, performance benchmarks, architectural constraints, and regulatory standards governing the platform:</p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">#</th>
+                        <th style="width: 22%;">Category</th>
+                        <th style="width: 53%;">Requirement Description</th>
+                        <th style="width: 15%; text-align: center;">Priority</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>NFR-01</strong></td>
+                        <td>Performance</td>
+                        <td>Search responses shall normally be returned within 300 milliseconds.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFR-02</strong></td>
+                        <td>Performance</td>
+                        <td>Homepage and initial search results shall render within 2 seconds on standard 4G connections.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFR-03</strong></td>
+                        <td>Scalability</td>
+                        <td>The platform shall support extremely high concurrent transaction volumes during major sales events.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFR-04</strong></td>
+                        <td>Security</td>
+                        <td>Passwords shall be securely salted and hashed using a modern password-hashing algorithm such as Argon2.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFR-05</strong></td>
+                        <td>Payment Security</td>
+                        <td>Raw CVV data shall never be stored or logged, and saved card information shall be tokenized.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFR-06</strong></td>
+                        <td>Reliability</td>
+                        <td>The platform shall target 99.999% availability using highly available infrastructure.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFR-07</strong></td>
+                        <td>Disaster Recovery</td>
+                        <td>Core databases shall be backed up at regular intervals and the disaster recovery process shall target less than 30 minutes of maximum tolerable downtime.</td>
+                        <td style="text-align: center;">Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFR-08</strong></td>
+                        <td>Data Protection</td>
+                        <td>Critical user and payment-related information shall comply with applicable Indian data protection and localization requirements.</td>
+                        <td style="text-align: center;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFR-09</strong></td>
+                        <td>Accessibility</td>
+                        <td>The interface shall remain responsive across desktop, tablet, and smartphone screen sizes.</td>
+                        <td style="text-align: center;">Medium</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="s4.1" style="margin-top: 18px; font-size: 11.5pt;">4.1 Statutory Standards &amp; Compliance Mandates</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Standard</th>
+                        <th style="width: 75%;">Compliance Mandate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PCI DSS v4.0</strong></td>
+                        <td>Enforces tokenization for all stored credit/debit card numbers and prohibits CVV retention.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RBI Directives</strong></td>
+                        <td>Mandates Indian data localization for all financial transaction records and UPI tokenization.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGE 7: Section 5: System Use Cases (Part 1 - Customer Workflows) -->
+        <div class="page">
+            <h2 id="s5">5. System Use Cases</h2>
+            <p>Use cases define discrete actor interactions with the system, capturing input stimuli, operational sequences, and system responses.</p>
+            
+            <h3 id="s5.1" style="border-bottom: 1px solid #000000; padding-bottom: 2px;">5.1 Customer Journey Use Cases</h3>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-1: Search and Browse Products</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Shopper / Customer</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. Enter product name or keyword. 2. View search results. 3. Apply filters (price, brand, rating). 4. Select a product.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-2: Purchase Product</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Shopper / Customer</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. Add product to cart. 2. Proceed to checkout. 3. Select address and delivery option. 4. Make payment. 5. Confirm order.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-3: Track Order</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Shopper / Customer</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. Open Your Orders. 2. Select an order. 3. Click Track Package. 4. View delivery status.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-4: Manage Account</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Shopper / Customer</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. Open Account Settings. 2. Add or edit address. 3. Verify PIN code. 4. Save changes.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-5: Review Product</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Shopper / Customer</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. Open purchased product. 2. Select Write a Review. 3. Give rating and feedback. 4. Submit review.</div>
+            </div>
+        </div>
+
+        <!-- PAGE 8: Section 5.2 Operations & Management Use Cases -->
+        <div class="page">
+            <h2 id="s5.2">5.2 Operations &amp; Management Use Cases</h2>
+            <p>Operational workflows governing merchant catalog management, logistics fulfillment, warehouse dispatch, and administrative governance:</p>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-6: Manage Product Listings</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Seller</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. Open Seller Dashboard. 2. Add or edit product listings. 3. Update inventory and price. 4. Manage active promotions.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-7: Manage Products &amp; Orders</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Seller</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. Open Seller Dashboard. 2. Add or edit product details. 3. Update inventory and price. 4. View customer orders. 5. Process orders.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-8: Manage Deliveries</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Delivery Agent</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. View assigned deliveries on mobile app. 2. Scan the package barcode. 3. Follow optimized delivery route. 4. Update transit status. 5. Request delivery OTP from customer.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-9: Deliver Order</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Delivery Agent</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. View assigned order. 2. Scan the package. 3. Follow the delivery route. 4. Update delivery status. 5. Verify delivery using OTP. 6. Mark order as delivered.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-10: Manage Platform</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Administrator</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. Open Admin Dashboard. 2. Monitor platform activity. 3. Manage product categories and site settings. 4. Handle major customer-seller disputes. 5. Update platform configurations.</div>
+            </div>
+
+            <div class="uc-block">
+                <div class="uc-title">UC-11: Manage Inventory &amp; Shipments</div>
+                <div class="uc-row"><span class="uc-label">Actor:</span> Warehouse Staff</div>
+                <div class="uc-row"><span class="uc-label">Flow:</span> 1. View pending orders. 2. Check product availability. 3. Pick and pack products. 4. Update inventory. 5. Generate shipping details. 6. Mark package as dispatched.</div>
+            </div>
+        </div>
+
+        <!-- PAGE 9: Section 6.1 System Boundary & Actor Interactions -->
+        <div class="page">
+            <h2 id="s6">6. Behavioral Analysis &amp; System Models</h2>
+            <h3 id="s6.1" style="font-size: 12pt; margin-top: 6px; margin-bottom: 6px;">6.1 System Boundary &amp; Actor Interactions</h3>
+            <p>Formal UML use case representation capturing the architectural boundary, external stakeholder roles, and core operational interactions:</p>
+
+            <div class="diagram-box" contenteditable="false">
+                <svg viewBox="0 0 660 330" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 650px; height: auto; display: block; margin: 0 auto; font-family: 'Times New Roman', Times, serif;">
+                    <style>
+                        .boundary { fill: #fcfcfc; stroke: #000000; stroke-width: 1.4; stroke-dasharray: 6,3; }
+                        .boundary-title { font-weight: bold; font-size: 11pt; fill: #000000; text-anchor: middle; font-family: 'Times New Roman', Times, serif; }
+                        .actor-label { font-size: 9pt; font-weight: bold; fill: #000000; text-anchor: middle; font-family: 'Times New Roman', Times, serif; }
+                        .uc-ellipse { fill: #ffffff; stroke: #000000; stroke-width: 1.2; }
+                        .uc-text { font-size: 8.5pt; fill: #000000; text-anchor: middle; font-family: Calibri, Arial, sans-serif; }
+                        .assoc-line { stroke: #000000; stroke-width: 1.1; }
+                    </style>
+
+                    <!-- System Boundary -->
+                    <rect x="105" y="20" width="450" height="295" rx="4" class="boundary"/>
+                    <text x="330" y="38" class="boundary-title">Amazon India E-Commerce System Boundary</text>
+
+                    <!-- LEFT ACTOR: Shopper / Customer -->
+                    <g transform="translate(52, 140)">
+                        <circle cx="0" cy="-20" r="9" fill="white" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="-11" x2="0" y2="12" stroke="black" stroke-width="1.5"/>
+                        <line x1="-12" y1="-3" x2="12" y2="-3" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="12" x2="-10" y2="30" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="12" x2="10" y2="30" stroke="black" stroke-width="1.5"/>
+                        <text x="0" y="44" class="actor-label">Shopper /</text>
+                        <text x="0" y="56" class="actor-label">Customer</text>
+                    </g>
+
+                    <!-- RIGHT ACTOR 1: Seller -->
+                    <g transform="translate(608, 65)">
+                        <circle cx="0" cy="-16" r="8" fill="white" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="-8" x2="0" y2="10" stroke="black" stroke-width="1.5"/>
+                        <line x1="-10" y1="-1" x2="10" y2="-1" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="10" x2="-8" y2="26" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="10" x2="8" y2="26" stroke="black" stroke-width="1.5"/>
+                        <text x="0" y="38" class="actor-label">Seller</text>
+                    </g>
+
+                    <!-- RIGHT ACTOR 2: Delivery Agent -->
+                    <g transform="translate(608, 135)">
+                        <circle cx="0" cy="-16" r="8" fill="white" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="-8" x2="0" y2="10" stroke="black" stroke-width="1.5"/>
+                        <line x1="-10" y1="-1" x2="10" y2="-1" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="10" x2="-8" y2="26" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="10" x2="8" y2="26" stroke="black" stroke-width="1.5"/>
+                        <text x="0" y="38" class="actor-label">Delivery Agent</text>
+                    </g>
+
+                    <!-- RIGHT ACTOR 3: Warehouse Staff -->
+                    <g transform="translate(608, 205)">
+                        <circle cx="0" cy="-16" r="8" fill="white" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="-8" x2="0" y2="10" stroke="black" stroke-width="1.5"/>
+                        <line x1="-10" y1="-1" x2="10" y2="-1" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="10" x2="-8" y2="26" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="10" x2="8" y2="26" stroke="black" stroke-width="1.5"/>
+                        <text x="0" y="38" class="actor-label">Warehouse Staff</text>
+                    </g>
+
+                    <!-- RIGHT ACTOR 4: Administrator -->
+                    <g transform="translate(608, 270)">
+                        <circle cx="0" cy="-16" r="8" fill="white" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="-8" x2="0" y2="10" stroke="black" stroke-width="1.5"/>
+                        <line x1="-10" y1="-1" x2="10" y2="-1" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="10" x2="-8" y2="26" stroke="black" stroke-width="1.5"/>
+                        <line x1="0" y1="10" x2="8" y2="26" stroke="black" stroke-width="1.5"/>
+                        <text x="0" y="38" class="actor-label">Administrator</text>
+                    </g>
+
+                    <!-- LEFT COLUMN USE CASES (Customer: UC-1 to UC-5) -->
+                    <ellipse cx="215" cy="65" rx="85" ry="16" class="uc-ellipse"/>
+                    <text x="215" y="69" class="uc-text">UC-1: Search &amp; Browse</text>
+
+                    <ellipse cx="215" cy="115" rx="85" ry="16" class="uc-ellipse"/>
+                    <text x="215" y="119" class="uc-text">UC-2: Purchase Product</text>
+
+                    <ellipse cx="215" cy="165" rx="85" ry="16" class="uc-ellipse"/>
+                    <text x="215" y="169" class="uc-text">UC-3: Track Order</text>
+
+                    <ellipse cx="215" cy="215" rx="85" ry="16" class="uc-ellipse"/>
+                    <text x="215" y="219" class="uc-text">UC-4: Manage Account</text>
+
+                    <ellipse cx="215" cy="265" rx="85" ry="16" class="uc-ellipse"/>
+                    <text x="215" y="269" class="uc-text">UC-5: Review Product</text>
+
+                    <!-- RIGHT COLUMN USE CASES (Operations: UC-6 to UC-11) -->
+                    <ellipse cx="445" cy="60" rx="85" ry="15" class="uc-ellipse"/>
+                    <text x="445" y="64" class="uc-text">UC-6: Manage Listings</text>
+
+                    <ellipse cx="445" cy="100" rx="85" ry="15" class="uc-ellipse"/>
+                    <text x="445" y="104" class="uc-text">UC-7: Process Orders</text>
+
+                    <ellipse cx="445" cy="140" rx="85" ry="15" class="uc-ellipse"/>
+                    <text x="445" y="144" class="uc-text">UC-8: Manage Deliveries</text>
+
+                    <ellipse cx="445" cy="180" rx="85" ry="15" class="uc-ellipse"/>
+                    <text x="445" y="184" class="uc-text">UC-9: Deliver Order</text>
+
+                    <ellipse cx="445" cy="225" rx="85" ry="15" class="uc-ellipse"/>
+                    <text x="445" y="229" class="uc-text">UC-11: Manage Inventory</text>
+
+                    <ellipse cx="445" cy="270" rx="85" ry="15" class="uc-ellipse"/>
+                    <text x="445" y="274" class="uc-text">UC-10: Manage Platform</text>
+
+                    <!-- ASSOCIATION LINES: Customer -->
+                    <line x1="72" y1="145" x2="130" y2="70" class="assoc-line"/>
+                    <line x1="72" y1="150" x2="130" y2="115" class="assoc-line"/>
+                    <line x1="72" y1="155" x2="130" y2="165" class="assoc-line"/>
+                    <line x1="72" y1="160" x2="130" y2="215" class="assoc-line"/>
+                    <line x1="72" y1="165" x2="130" y2="265" class="assoc-line"/>
+
+                    <!-- ASSOCIATION LINES: Operations -->
+                    <line x1="580" y1="65" x2="530" y2="62" class="assoc-line"/>
+                    <line x1="580" y1="75" x2="530" y2="98" class="assoc-line"/>
+                    <line x1="570" y1="140" x2="530" y2="140" class="assoc-line"/>
+                    <line x1="570" y1="150" x2="530" y2="178" class="assoc-line"/>
+                    <line x1="570" y1="210" x2="530" y2="225" class="assoc-line"/>
+                    <line x1="570" y1="275" x2="530" y2="270" class="assoc-line"/>
+                </svg>
+                <div class="diagram-caption">Figure 1: UML Use Case Diagram for Primary Actor Roles</div>
+            </div>
+
+            <h3 style="margin-top: 15px; font-size: 11pt;">Actor-to-Feature Mapping Summary</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Actor Class</th>
+                        <th style="width: 35%;">Associated Use Cases</th>
+                        <th style="width: 40%;">Primary System Interface</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Customer</strong></td>
+                        <td>UC-1, UC-2, UC-3, UC-4, UC-5</td>
+                        <td>Web Storefront / Consumer Mobile App</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Seller</strong></td>
+                        <td>UC-6, UC-7</td>
+                        <td>Amazon Seller Central Dashboard</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delivery Agent</strong></td>
+                        <td>UC-8, UC-9</td>
+                        <td>Logistics Handheld Application</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Warehouse Staff</strong></td>
+                        <td>UC-11</td>
+                        <td>Warehouse Management System (WMS)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Administrator</strong></td>
+                        <td>UC-10</td>
+                        <td>Admin Control Center Portal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGE 10: Section 6.2 Order Checkout & Payment Sequence Model -->
+        <div class="page">
+            <h2 id="s6.2">6.2 Order Checkout &amp; Payment Sequence Model</h2>
+            <p>Sequence interaction diagram illustrating the chronological message exchange, tokenized payment verification, and asynchronous event triggers:</p>
+
+            <div class="diagram-box" contenteditable="false">
+                <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Customer as Shopper / Customer
+    participant App as Client Application
+    participant Gateway as API Gateway
+    participant Payment as Payment Gateway
+    participant OrderService as Order Service
+    actor Seller as Seller / Warehouse
+
+    Customer->>App: Add to Cart & Initiate Checkout
+    App->>Gateway: Create Order Intent
+    Gateway->>Payment: Initialize Payment Transaction
+    Payment-->>Customer: Request Bank / UPI Authentication
+    Customer->>Payment: Authorize Payment
+    Payment-->>Gateway: Transaction Success Webhook
+    Gateway->>OrderService: Generate Unique Order ID (FR-07)
+    OrderService-->>Seller: Dispatch Fulfillment Notification
+    OrderService-->>App: Order Confirmed
+    App-->>Customer: Display Order Confirmation
+                </div>
+                <div class="diagram-caption">Figure 2: End-to-End Order Checkout Sequence Diagram</div>
+            </div>
+
+            <h3 style="margin-top: 15px; font-size: 11pt;">Sequence Step Description &amp; Verification</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Step #</th>
+                        <th style="width: 35%;">Interaction Description</th>
+                        <th style="width: 50%;">Security &amp; Transaction Protocol</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1 – 3</strong></td>
+                        <td>Checkout initiation and token creation.</td>
+                        <td>TLS 1.3 encrypted REST payload; zero sensitive card data stored.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4 – 6</strong></td>
+                        <td>Customer authentication and webhook callback.</td>
+                        <td>Two-factor OTP/biometric validation via NPCI/bank payment rail.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7 – 10</strong></td>
+                        <td>Order creation, fulfillment notification, and receipt.</td>
+                        <td>Cryptographically generated unique 17-digit Order ID (FR-07).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGE 11: Section 6.3 Order Lifecycle State Machine Model -->
+        <div class="page">
+            <h2 id="s6.3">6.3 Order Lifecycle State Machine Model</h2>
+            <p>The state machine model specifies the discrete transactional states and event-driven triggers governing the end-to-end lifecycle of consumer orders within the Amazon India marketplace in accordance with functional requirements FR-06 to FR-09 and FR-12:</p>
+
+            <div class="diagram-box" contenteditable="false" style="margin: 8px 0; padding: 6px;">
+                <svg viewBox="0 0 660 185" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 650px; height: auto; display: block; margin: 0 auto; font-family: 'Times New Roman', Times, serif;">
+                    <defs>
+                        <marker id="sm-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#000000"/>
+                        </marker>
+                    </defs>
+                    <style>
+                        .state-box { fill: #ffffff; stroke: #000000; stroke-width: 1.3; rx: 5px; ry: 5px; }
+                        .state-title { font-weight: bold; font-size: 9pt; fill: #000000; text-anchor: middle; font-family: 'Times New Roman', Times, serif; }
+                        .trans-label { font-size: 7.5pt; fill: #222222; text-anchor: middle; font-family: Calibri, Arial, sans-serif; font-weight: normal; }
+                        .trans-line { stroke: #000000; stroke-width: 1.1; fill: none; marker-end: url(#sm-arrow); }
+                    </style>
+
+                    <!-- INITIAL STATE -->
+                    <circle cx="20" cy="45" r="7" fill="#000000"/>
+                    <line x1="27" y1="45" x2="58" y2="45" class="trans-line"/>
+                    <text x="42" y="37" class="trans-label">Create</text>
+
+                    <!-- STATE: Ordered -->
+                    <rect x="60" y="28" width="85" height="34" class="state-box"/>
+                    <text x="102" y="49" class="state-title">Ordered</text>
+
+                    <line x1="145" y1="45" x2="192" y2="45" class="trans-line"/>
+                    <text x="168" y="37" class="trans-label">FR-06 Paid</text>
+
+                    <!-- STATE: Processing -->
+                    <rect x="195" y="28" width="88" height="34" class="state-box"/>
+                    <text x="239" y="49" class="state-title">Processing</text>
+
+                    <line x1="283" y1="45" x2="330" y2="45" class="trans-line"/>
+                    <text x="306" y="37" class="trans-label">Packaged</text>
+
+                    <!-- STATE: Shipped -->
+                    <rect x="333" y="28" width="85" height="34" class="state-box"/>
+                    <text x="375" y="49" class="state-title">Shipped</text>
+
+                    <line x1="418" y1="45" x2="465" y2="45" class="trans-line"/>
+                    <text x="441" y="37" class="trans-label">Dispatched</text>
+
+                    <!-- STATE: Out for Delivery -->
+                    <rect x="468" y="28" width="105" height="34" class="state-box"/>
+                    <text x="520" y="49" class="state-title">Out for Delivery</text>
+
+                    <!-- TRANSITION TO DELIVERED -->
+                    <line x1="520" y1="62" x2="520" y2="105" class="trans-line"/>
+                    <text x="555" y="85" class="trans-label">OTP Verified</text>
+
+                    <!-- STATE: Delivered -->
+                    <rect x="468" y="110" width="105" height="34" class="state-box"/>
+                    <text x="520" y="131" class="state-title">Delivered</text>
+
+                    <!-- FINAL STATE DELIVERED -->
+                    <line x1="573" y1="127" x2="610" y2="127" class="trans-line"/>
+                    <circle cx="622" cy="127" r="8" fill="none" stroke="#000000" stroke-width="1.3"/>
+                    <circle cx="622" cy="127" r="5" fill="#000000"/>
+
+                    <!-- CANCELLED BRANCH (FR-09) from Ordered -->
+                    <line x1="102" y1="62" x2="102" y2="105" class="trans-line"/>
+                    <text x="142" y="85" class="trans-label">FR-09 Cancel</text>
+
+                    <!-- STATE: Cancelled -->
+                    <rect x="60" y="110" width="85" height="34" class="state-box"/>
+                    <text x="102" y="131" class="state-title">Cancelled</text>
+
+                    <!-- FINAL STATE CANCELLED -->
+                    <line x1="60" y1="127" x2="33" y2="127" class="trans-line"/>
+                    <circle cx="23" cy="127" r="8" fill="none" stroke="#000000" stroke-width="1.3"/>
+                    <circle cx="23" cy="127" r="5" fill="#000000"/>
+
+                    <!-- RETURNED BRANCH from Out for Delivery -->
+                    <line x1="495" y1="62" x2="355" y2="110" class="trans-line"/>
+                    <text x="408" y="82" class="trans-label">Delivery Rejected</text>
+
+                    <!-- STATE: Returned -->
+                    <rect x="295" y="110" width="85" height="34" class="state-box"/>
+                    <text x="337" y="131" class="state-title">Returned</text>
+
+                    <!-- FINAL STATE RETURNED -->
+                    <line x1="295" y1="127" x2="255" y2="127" class="trans-line"/>
+                    <circle cx="245" cy="127" r="8" fill="none" stroke="#000000" stroke-width="1.3"/>
+                    <circle cx="245" cy="127" r="5" fill="#000000"/>
+                </svg>
+                <div class="diagram-caption" style="margin-top: 4px;">Figure 3: Order Lifecycle State Machine Diagram</div>
+            </div>
+
+            <h3 style="margin-top: 10px; margin-bottom: 4px; font-size: 11pt;">State Transition Rules &amp; Event Triggers</h3>
+            <table class="styled-table" style="margin-top: 4px; margin-bottom: 6px;">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">State</th>
+                        <th style="width: 36%;">Trigger Event (srs.md Spec)</th>
+                        <th style="width: 44%;">System Actions &amp; Milestone Notifications (FR-12)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ordered</strong></td>
+                        <td>Payment authorization via UPI/Card/Wallet or COD order placement (FR-06).</td>
+                        <td>Generates unique 17-digit Order ID (FR-07); dispatches email and SMS confirmation milestone (FR-12).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Processing</strong></td>
+                        <td>Seller acknowledges order; warehouse allocates pick-and-pack inventory bin.</td>
+                        <td>Inventory locked in stock database; item packaging slip and barcode label generated.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Shipped</strong></td>
+                        <td>Carrier scans parcel barcode at fulfillment hub during dispatch (FR-08).</td>
+                        <td>Tracking link activated with transit milestones; dispatch notification sent to customer.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Out for Delivery</strong></td>
+                        <td>Agent scans parcel at last-mile delivery center; departs on assigned route.</td>
+                        <td>Automated secure delivery OTP generated and transmitted to customer smartphone.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delivered</strong></td>
+                        <td>Delivery agent validates OTP at doorstep handover.</td>
+                        <td>Order status marked completed in order history; 7-day returns and review window opened.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cancelled</strong></td>
+                        <td>Customer invokes unilateral cancellation prior to shipped stage (FR-09).</td>
+                        <td>Inventory unlocked; automated electronic payment refund workflow initiated via original payment rail.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Returned</strong></td>
+                        <td>Customer rejects delivery at doorstep or initiates return within eligible window.</td>
+                        <td>Reverse logistics tracking activated; package routed back to seller/fulfillment hub for inspection.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGE 12: Section 6.4 IEEE 830 Verification & Project Sign-Off -->
+        <div class="page">
+            <h2 id="s6.4">6.4 IEEE 830 Quality Verification &amp; Project Sign-Off</h2>
+            <p>Formal Quality Assurance (QA) acceptance criteria and engineering verification benchmarks established in accordance with IEEE Std 830-1998 guidelines to validate system compliance before production release:</p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Verification Phase</th>
+                        <th style="width: 40%;">Inspection Scope</th>
+                        <th style="width: 35%;">Acceptance Benchmark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Unit &amp; Integration Testing</strong></td>
+                        <td>Search indexing, cart sync across sessions, payment webhook handling, and inventory deduction.</td>
+                        <td>100% automated test suite pass rate; zero CVV storage validation.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Performance &amp; Stress Testing</strong></td>
+                        <td>Concurrency stress testing simulating seasonal peak load (Great Indian Festival).</td>
+                        <td>Sub-300ms search latency under 50,000 requests/sec peak traffic; &lt;2s initial render.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security &amp; Regulatory Audit</strong></td>
+                        <td>RBI data localization audit, Argon2 password hash validation, PCI DSS v4.0 tokenization.</td>
+                        <td>Zero critical vulnerabilities; verified database residency within Indian territory.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>User Acceptance Testing (UAT)</strong></td>
+                        <td>End-to-end checkout scenarios across web, Android, and iOS device form factors.</td>
+                        <td>Successful execution of all 11 core use cases with verified OTP delivery flows.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 20px; font-size: 11.5pt;">Project Sign-Off &amp; Approvals</h3>
+            <p>The undersigned stakeholders certify that this Software Requirements Specification accurately reflects the technical, behavioral, and operational requirements for the Amazon India E-Commerce Platform:</p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Stakeholder Role</th>
+                        <th style="width: 35%;">Designation / Authority</th>
+                        <th style="width: 20%;">Date</th>
+                        <th style="width: 15%; text-align: center;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Author / Student</strong></td>
+                        <td>Aditya Chandrajit Deore (PRN: 124B1F116)</td>
+                        <td>2026-09-13</td>
+                        <td style="text-align: center;">Approved</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Course Faculty</strong></td>
+                        <td>Department of Computer Engineering, PCCOE</td>
+                        <td>2026-09-13</td>
+                        <td style="text-align: center;">Verified</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Laboratory In-Charge</strong></td>
+                        <td>Software Engineering &amp; Modeling Lab (SEML)</td>
+                        <td>2026-09-13</td>
+                        <td style="text-align: center;">Completed</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>

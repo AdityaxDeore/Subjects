@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 330" width="100%" height="330" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#1e3a8a"/>
+    </marker>
+    <marker id="arr2_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="20" y="12" width="820" height="34" rx="6" fill="#1e293b"/>
+  <text x="430" y="34" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    JUNIT 5 METHOD LIFECYCLE &amp; ISOLATION EXECUTION WORKFLOW
+  </text>
+
+  <!-- Step 1: @BeforeAll -->
+  <g transform="translate(30, 65)">
+    <rect x="0" y="0" width="135" height="85" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="105" height="22" rx="4" fill="#3b82f6"/>
+    <text x="67" y="23" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">@BeforeAll</text>
+    <text x="67" y="47" font-size="9.5" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Static Class Setup</text>
+    <text x="67" y="63" font-size="8.5" fill="#475569" text-anchor="middle">Executes ONCE</text>
+    <text x="67" y="75" font-size="8.5" fill="#64748b" text-anchor="middle">before any tests</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="167" y1="107" x2="198" y2="107" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Step 2: Instance Creation -->
+  <g transform="translate(200, 65)">
+    <rect x="0" y="0" width="135" height="85" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4 3" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="105" height="22" rx="4" fill="#64748b"/>
+    <text x="67" y="23" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">new TestClass()</text>
+    <text x="67" y="47" font-size="9.5" font-weight="bold" fill="#334155" text-anchor="middle">Fresh Instance</text>
+    <text x="67" y="63" font-size="8.5" fill="#475569" text-anchor="middle">PER_METHOD</text>
+    <text x="67" y="75" font-size="8.5" fill="#64748b" text-anchor="middle">Isolation Guarantee</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="337" y1="107" x2="368" y2="107" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Step 3: @BeforeEach -->
+  <g transform="translate(370, 65)">
+    <rect x="0" y="0" width="135" height="85" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="105" height="22" rx="4" fill="#10b981"/>
+    <text x="67" y="23" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">@BeforeEach</text>
+    <text x="67" y="47" font-size="9.5" font-weight="bold" fill="#065f46" text-anchor="middle">Fixture Setup</text>
+    <text x="67" y="63" font-size="8.5" fill="#047857" text-anchor="middle">Runs before</text>
+    <text x="67" y="75" font-size="8.5" fill="#047857" text-anchor="middle">EACH @Test</text>
+  </g>
+
+  <!-- Arrow 3 -> 4 -->
+  <line x1="507" y1="107" x2="538" y2="107" stroke="#059669" stroke-width="2" marker-end="url(#arr2_green)"/>
+
+  <!-- Step 4: @Test Execution -->
+  <g transform="translate(540, 55)">
+    <rect x="0" y="0" width="145" height="105" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.2" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="115" height="24" rx="4" fill="#16a34a"/>
+    <text x="72" y="24" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">@Test Execution</text>
+    <text x="72" y="50" font-size="9.5" font-weight="bold" fill="#166534" text-anchor="middle">Assertions &amp; Logic</text>
+    <text x="72" y="68" font-size="8.5" fill="#15803d" text-anchor="middle">&bull; assertAll()</text>
+    <text x="72" y="82" font-size="8.5" fill="#15803d" text-anchor="middle">&bull; assertThrows()</text>
+    <text x="72" y="96" font-size="8.5" fill="#15803d" text-anchor="middle">&bull; @ParameterizedTest</text>
+  </g>
+
+  <!-- Arrow 4 -> 5 -->
+  <line x1="687" y1="107" x2="718" y2="107" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Step 5: @AfterEach -->
+  <g transform="translate(720, 65)">
+    <rect x="0" y="0" width="115" height="85" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.8" filter="url(#shadow2)"/>
+    <rect x="10" y="8" width="95" height="22" rx="4" fill="#ef4444"/>
+    <text x="57" y="23" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">@AfterEach</text>
+    <text x="57" y="47" font-size="9.5" font-weight="bold" fill="#991b1b" text-anchor="middle">Teardown</text>
+    <text x="57" y="63" font-size="8.5" fill="#b91c1c" text-anchor="middle">Resets state</text>
+    <text x="57" y="75" font-size="8.5" fill="#b91c1c" text-anchor="middle">per test</text>
+  </g>
+
+  <!-- Loopback arrow for subsequent tests -->
+  <path d="M 777 152 L 777 195 L 267 195 L 267 152" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arr2)"/>
+  <rect x="420" y="185" width="200" height="20" rx="4" fill="#dbeafe"/>
+  <text x="520" y="199" font-size="9" font-weight="bold" fill="#1e40af" text-anchor="middle">Loop for next @Test method in class</text>
+
+  <!-- Final Step: @AfterAll -->
+  <g transform="translate(350, 230)">
+    <rect x="0" y="0" width="160" height="75" rx="8" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.8" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="130" height="22" rx="4" fill="#a855f7"/>
+    <text x="80" y="23" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">@AfterAll</text>
+    <text x="80" y="46" font-size="9.5" font-weight="bold" fill="#6b21a8" text-anchor="middle">Global Class Cleanup</text>
+    <text x="80" y="62" font-size="8.5" fill="#7e22ce" text-anchor="middle">Executes ONCE after all tests</text>
+  </g>
+
+  <!-- Arrow down to AfterAll -->
+  <line x1="777" y1="195" x2="777" y2="265" stroke="#a855f7" stroke-width="2"/>
+  <line x1="777" y1="265" x2="512" y2="265" stroke="#a855f7" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="645" y="258" font-size="8.5" font-weight="bold" fill="#6b21a8">When all tests finish</text>
+</svg>

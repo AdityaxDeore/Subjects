@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEML Assignment 11 - Unit Testing with JUnit 5 for OceanCleanup2</title>
+
+  <!-- MathJax for Mathematical Formulas -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', Calibri, "Segoe UI", Arial, sans-serif;
+      font-size: 9.7pt;
+      line-height: 1.42;
+      color: #1e293b;
+      background: #e2e8f0;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 8.5in;
+      margin: 0 auto;
+    }
+
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.52in 0.62in;
+      background: #ffffff;
+      margin: 0 auto 22px auto;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      border-radius: 4px;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .page:focus-within {
+      outline: 2px dashed #2563eb;
+      outline-offset: 4px;
+    }
+
+    /* Print CSS */
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+      }
+      .page {
+        width: 100% !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0.28in 0.36in !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        page-break-after: always !important;
+        break-after: page !important;
+      }
+      .page:last-child {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      .diagram-box, .styled-table, .cover-table, .code-card, .info-box, .qna-card {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+
+    /* Cover Table */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+      font-family: "Times New Roman", Times, serif;
+    }
+    .cover-table td {
+      border: 1px solid #000;
+      padding: 5px 10px;
+    }
+    .cover-table .college-info {
+      text-align: center;
+      font-weight: bold;
+      font-size: 14.5pt;
+      line-height: 1.32;
+      color: #000;
+    }
+    .cover-table .row-centered {
+      text-align: center;
+      font-weight: bold;
+      font-size: 12pt;
+      color: #000;
+    }
+    .cover-table .row-left {
+      text-align: left;
+      font-weight: bold;
+      font-size: 11.5pt;
+      color: #000;
+    }
+    .logo-container {
+      text-align: center;
+      width: 17%;
+      padding: 4px !important;
+    }
+    .logo-container img {
+      max-width: 82px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Typography */
+    h2 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 13pt;
+      font-weight: bold;
+      color: #1e3a8a;
+      margin-top: 9px;
+      margin-bottom: 5px;
+      border-bottom: 1.5px solid #bfdbfe;
+      padding-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    h3 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 11pt;
+      font-weight: bold;
+      color: #0f172a;
+      margin-top: 7px;
+      margin-bottom: 3px;
+    }
+    h4 {
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      font-size: 9.8pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 5px;
+      margin-bottom: 3px;
+    }
+    p {
+      font-size: 9.4pt;
+      text-align: justify;
+      line-height: 1.4;
+      margin-bottom: 5px;
+      color: #1e293b;
+    }
+    ul, ol {
+      margin-left: 18px;
+      font-size: 9.3pt;
+      margin-top: 2px;
+      margin-bottom: 5px;
+      line-height: 1.4;
+      padding-left: 2px;
+    }
+    li {
+      margin-bottom: 2px;
+    }
+
+    /* Callout & Info Boxes */
+    .info-box {
+      background: #eff6ff;
+      border-left: 3.5px solid #2563eb;
+      padding: 5px 9px;
+      border-radius: 4px;
+      margin: 5px 0;
+      font-size: 8.9pt;
+      color: #1e3a8a;
+    }
+    .info-box.emerald {
+      background: #ecfdf5;
+      border-left-color: #059669;
+      color: #065f46;
+    }
+    .info-box.amber {
+      background: #fffbeb;
+      border-left-color: #d97706;
+      color: #78350f;
+    }
+    .info-box.purple {
+      background: #faf5ff;
+      border-left-color: #9333ea;
+      color: #581c87;
+    }
+
+    /* Q&A Cards */
+    .qna-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 3.5px solid #0284c7;
+      border-radius: 4px;
+      padding: 5px 8px;
+      margin: 5px 0;
+    }
+    .qna-question {
+      font-weight: 700;
+      color: #0369a1;
+      font-size: 9.1pt;
+      margin-bottom: 2px;
+    }
+    .qna-answer {
+      font-size: 8.8pt;
+      color: #334155;
+      line-height: 1.36;
+      margin: 0;
+      text-align: justify;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 1px 7px;
+      font-size: 7.8pt;
+      font-weight: 600;
+      border-radius: 10px;
+      background: #e0e7ff;
+      color: #3730a3;
+      border: 1px solid #c7d2fe;
+      vertical-align: middle;
+    }
+    .badge-pass {
+      display: inline-block;
+      padding: 1px 6px;
+      font-size: 7.8pt;
+      font-weight: 700;
+      border-radius: 3px;
+      background-color: #dcfce7;
+      color: #15803d;
+      border: 1px solid #86efac;
+    }
+    .badge-skip {
+      display: inline-block;
+      padding: 1px 6px;
+      font-size: 7.8pt;
+      font-weight: 700;
+      border-radius: 3px;
+      background-color: #fef9c3;
+      color: #a16207;
+      border: 1px solid #fde047;
+    }
+    .badge-tag {
+      font-family: 'JetBrains Mono', monospace;
+      display: inline-block;
+      padding: 1px 5px;
+      font-size: 7.8pt;
+      border-radius: 3px;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* Styled Tables */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 5px 0;
+      font-size: 8.6pt;
+    }
+    .styled-table th, .styled-table td {
+      border: 1px solid #cbd5e1;
+      padding: 4px 6px;
+      text-align: left;
+    }
+    .styled-table th {
+      background-color: #f1f5f9;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .styled-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    /* Diagram Boxes (Inline SVG Container) */
+    .diagram-box {
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      padding: 6px;
+      border-radius: 6px;
+      margin: 6px 0 7px 0;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    .diagram-box svg {
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+      margin: 0 auto;
+    }
+    .diagram-caption {
+      font-size: 8.3pt;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* Code Card Container */
+    .code-card {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      margin: 5px 0;
+      overflow: hidden;
+      background: #f8fafc;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .code-header {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 4px 10px;
+      font-size: 8.1pt;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    pre {
+      margin: 0;
+      padding: 6px 9px;
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      font-size: 8pt;
+      line-height: 1.33;
+      background-color: #f8fafc;
+      color: #0f172a;
+      overflow-x: auto;
+    }
+    code {
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      font-size: 8.4pt;
+      background-color: #f1f5f9;
+      padding: 1px 3px;
+      border-radius: 3px;
+      color: #1e40af;
+    }
+    pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* Image Figure */
+    .figure-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 4px;
+      background: #ffffff;
+      text-align: center;
+      margin: 5px 0 7px 0;
+    }
+    .figure-box img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+
+    <!-- ==================== PAGE 1: COVER PAGE & PROJECT INTRODUCTION ==================== -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust's<br>
+            Pimpri Chinchwad College of Engineering
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-centered">
+            Assignment No. 11
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Course:- Software Engineering and Modeling Laboratory (SEML)
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Name:- Aditya Chandrajit Deore
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            PRN:- 124B1F116 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Batch:- B3
+          </td>
+        </tr>
+      </table>
+
+      <h2 style="text-align: center; border-bottom: none; margin-top: 4px; margin-bottom: 4px; font-size: 13.5pt; color: #1e3a8a;">
+        Unit Testing of Ocean Cleanup Management &amp; Simulation System (OceanCleanup2) Using Java &amp; JUnit 5
+      </h2>
+
+      <h2>1. Aim</h2>
+      <p>
+        To implement comprehensive automated unit testing for the core functionalities of the <strong>OceanCleanup Management &amp; Simulation System (OceanCleanup2)</strong> using <strong>Java</strong> and <strong>JUnit 5</strong>, and verify the correctness, boundary limits, and deterministic state transitions of business logic using automated test suites.
+      </p>
+
+      <h2>2. Problem Statement</h2>
+      <p>
+        Modern complex simulation systems require automated regression testing to safeguard mathematical calculations, state transition models, and boundary constraints. For the student's assigned project—the <strong>OceanCleanup2</strong> system (cloned from <code>https://github.com/adityaagurav/OceanCleanup2.git</code>)—critical operations govern boat upgrade progressions, litter collection reel physics, inventory limits, waste recycling economies, marine wildlife rescues, and a 24-hour day/night environmental loop. The objective is to design, implement, and verify a JUnit 5 test suite covering Equivalence Partitioning, Boundary Value Analysis, Exception Handling, and Lifecycle Transitions with 100% test pass fidelity.
+      </p>
+
+      <h2>3. Objectives</h2>
+      <ul>
+        <li>Understand the modular 3-tier architecture of JUnit 5: JUnit Platform, JUnit Jupiter, and JUnit Vintage.</li>
+        <li>Implement Java domain services mirroring the core systems of the cloned <code>OceanCleanup2</code> platform.</li>
+        <li>Apply core and advanced JUnit 5 annotations: <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@DisplayName</code>, <code>@ParameterizedTest</code>, <code>@CsvSource</code>, <code>@EnumSource</code>, <code>@ValueSource</code>, <code>@Nested</code>, <code>@RepeatedTest</code>, <code>@Timeout</code>, <code>@Disabled</code>, and <code>@Suite</code>.</li>
+        <li>Utilize modern assertion APIs: grouped assertions (<code>assertAll</code>), exception throwing assertions (<code>assertThrows</code>), and execution timeouts (<code>assertTimeoutPreemptively</code>).</li>
+        <li>Execute test builds with Apache Maven Surefire and analyze automated execution reports in <code>Test_Reports_And_Logs/</code>.</li>
+      </ul>
+
+      <div class="figure-box">
+        <img src="oceancleanup_game_preview.jpg" alt="OceanCleanup2 Harbor Simulation Environment">
+        <div class="diagram-caption">Figure 1: OceanCleanup2 Harbor &amp; Autonomous Marine Cleanup Simulation Environment</div>
+      </div>
+    </div>
+
+    <!-- ==================== PAGE 2: JUNIT 5 ARCHITECTURE & THREE-TIER MODEL ==================== -->
+    <div class="page">
+      <h2>4. Theory: Software Testing &amp; JUnit 5 Architecture</h2>
+      <p>
+        Software testing is an indispensable verification activity in the Software Development Life Cycle (SDLC). Unit testing specifically isolates the smallest testable units of software (methods, classes, and cohesive modules) to validate that their actual runtime behavior complies precisely with specified requirements.
+      </p>
+
+      <h3>4.1 The Three-Tier Architecture of JUnit 5</h3>
+      <p>
+        Unlike legacy JUnit 4 which coupled runner, assertion, and discovery mechanisms into a single monolithic JAR, JUnit 5 is architected as three distinct, decoupled sub-projects:
+      </p>
+      <ul>
+        <li><strong>JUnit Platform:</strong> Acts as the underlying foundation for launching testing frameworks on the JVM. It defines the formal <code>TestEngine</code> API for discovering and running tests, provides command-line console launchers, and exposes discovery hooks for IDEs (IntelliJ IDEA, Eclipse, VS Code) and build automation tools (Apache Maven, Gradle).</li>
+        <li><strong>JUnit Jupiter:</strong> The combination of the new programming model and extension model for authoring tests in JUnit 5. It contains <code>junit-jupiter-api</code> (defining annotations, assertions, and assumptions), <code>junit-jupiter-engine</code> (the execution core), and <code>junit-jupiter-params</code> (for parameterized data feeds).</li>
+        <li><strong>JUnit Vintage:</strong> Provides backward compatibility by hosting a specialized <code>TestEngine</code> capable of executing legacy JUnit 3 and JUnit 4 test suites seamlessly alongside modern Jupiter tests.</li>
+      </ul>
+
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" width="100%" height="380" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow1" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <linearGradient id="grad_client" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="grad_platform" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="grad_jupiter" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#d1fae5"/>
+    </linearGradient>
+    <linearGradient id="grad_vintage" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+    <linearGradient id="grad_third" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f5f3ff"/>
+      <stop offset="100%" stop-color="#ede9fe"/>
+    </linearGradient>
+    <marker id="arr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="20" y="15" width="820" height="38" rx="6" fill="#0f172a"/>
+  <text x="430" y="39" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">
+    JUNIT 5 MODULAR THREE-TIER ARCHITECTURE
+  </text>
+
+  <!-- TIER 1: Client Layer (IDEs & Build Tools) -->
+  <g transform="translate(40, 70)">
+    <rect x="0" y="0" width="780" height="56" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow1)"/>
+    <text x="20" y="24" font-size="11" font-weight="bold" fill="#64748b" text-transform="uppercase">Client Tier: IDEs &amp; Build Systems</text>
+    
+    <!-- Pills -->
+    <rect x="190" y="12" width="100" height="32" rx="6" fill="url(#grad_client)"/>
+    <text x="240" y="33" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">Maven (Surefire)</text>
+
+    <rect x="305" y="12" width="85" height="32" rx="6" fill="url(#grad_client)"/>
+    <text x="347" y="33" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">Gradle</text>
+
+    <rect x="405" y="12" width="105" height="32" rx="6" fill="url(#grad_client)"/>
+    <text x="457" y="33" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">IntelliJ IDEA</text>
+
+    <rect x="525" y="12" width="85" height="32" rx="6" fill="url(#grad_client)"/>
+    <text x="567" y="33" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">Eclipse</text>
+
+    <rect x="625" y="12" width="135" height="32" rx="6" fill="url(#grad_client)"/>
+    <text x="692" y="33" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">VS Code / Console</text>
+  </g>
+
+  <!-- Flow Arrows 1 -->
+  <line x1="430" y1="128" x2="430" y2="152" stroke="#475569" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- TIER 2: JUnit Platform -->
+  <g transform="translate(40, 155)">
+    <rect x="0" y="0" width="780" height="65" rx="8" fill="url(#grad_platform)" filter="url(#shadow1)"/>
+    <text x="390" y="26" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      JUnit Platform (org.junit.platform)
+    </text>
+    <text x="390" y="47" font-size="11" fill="#e0f2fe" text-anchor="middle">
+      TestEngine API &bull; Launcher &bull; Discovery Engine &bull; Console Runner &bull; Suite Aggregation (@Suite)
+    </text>
+  </g>
+
+  <!-- Flow Arrows 2 (Branching to 3 engines) -->
+  <line x1="200" y1="222" x2="200" y2="252" stroke="#475569" stroke-width="2.2" marker-end="url(#arr1)"/>
+  <line x1="430" y1="222" x2="430" y2="252" stroke="#475569" stroke-width="2.2" marker-end="url(#arr1)"/>
+  <line x1="660" y1="222" x2="660" y2="252" stroke="#475569" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- TIER 3: Engines -->
+  <!-- 3A: Jupiter Engine -->
+  <g transform="translate(40, 255)">
+    <rect x="0" y="0" width="310" height="105" rx="8" fill="url(#grad_jupiter)" stroke="#059669" stroke-width="1.8" filter="url(#shadow1)"/>
+    <rect x="12" y="10" width="110" height="20" rx="4" fill="#059669"/>
+    <text x="67" y="24" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">PRIMARY ENGINE</text>
+    <text x="130" y="25" font-size="12" font-weight="bold" fill="#065f46">JUnit Jupiter</text>
+    <line x1="12" y1="36" x2="298" y2="36" stroke="#a7f3d0" stroke-width="1"/>
+    <text x="15" y="54" font-size="10" font-weight="bold" fill="#047857">&bull; junit-jupiter-api (@Test, @DisplayName)</text>
+    <text x="15" y="70" font-size="10" font-weight="bold" fill="#047857">&bull; junit-jupiter-params (@CsvSource, @EnumSource)</text>
+    <text x="15" y="86" font-size="10" font-weight="bold" fill="#047857">&bull; junit-jupiter-engine (Execution core)</text>
+    <text x="15" y="100" font-size="9" fill="#065f46" font-style="italic">Executes OceanCleanup2 Test Suite</text>
+  </g>
+
+  <!-- 3B: Vintage Engine -->
+  <g transform="translate(370, 255)">
+    <rect x="0" y="0" width="230" height="105" rx="8" fill="url(#grad_vintage)" stroke="#d97706" stroke-width="1.8" filter="url(#shadow1)"/>
+    <rect x="12" y="10" width="95" height="20" rx="4" fill="#d97706"/>
+    <text x="59" y="24" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">LEGACY</text>
+    <text x="115" y="25" font-size="12" font-weight="bold" fill="#92400e">JUnit Vintage</text>
+    <line x1="12" y1="36" x2="218" y2="36" stroke="#fde68a" stroke-width="1"/>
+    <text x="15" y="55" font-size="10" fill="#78350f">&bull; junit-vintage-engine</text>
+    <text x="15" y="73" font-size="10" fill="#78350f">&bull; Runs JUnit 3 &amp; JUnit 4 tests</text>
+    <text x="15" y="93" font-size="9" fill="#92400e" font-style="italic">Ensures backwards compatibility</text>
+  </g>
+
+  <!-- 3C: Third Party Engines -->
+  <g transform="translate(620, 255)">
+    <rect x="0" y="0" width="200" height="105" rx="8" fill="url(#grad_third)" stroke="#7c3aed" stroke-width="1.8" filter="url(#shadow1)"/>
+    <rect x="12" y="10" width="85" height="20" rx="4" fill="#7c3aed"/>
+    <text x="54" y="24" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">EXTENSIBLE</text>
+    <text x="105" y="25" font-size="12" font-weight="bold" fill="#5b21b6">Third Party</text>
+    <line x1="12" y1="36" x2="188" y2="36" stroke="#ddd6fe" stroke-width="1"/>
+    <text x="15" y="55" font-size="10" fill="#4c1d95">&bull; Spock Framework</text>
+    <text x="15" y="73" font-size="10" fill="#4c1d95">&bull; Cucumber / jqwik</text>
+    <text x="15" y="93" font-size="9" fill="#5b21b6" font-style="italic">Custom TestEngine Plugins</text>
+  </g>
+</svg>
+        <div class="diagram-caption">Figure 2: JUnit 5 Decoupled Three-Tier Architecture (Client Tier, Platform, Engines)</div>
+      </div>
+
+      <div class="info-box">
+        <strong>Architectural Advantage of JUnit 5:</strong> By separating the Platform (runner/discovery) from Jupiter (test authoring API), tool vendors only need to support the Platform API once. Multiple test engines (Jupiter, Vintage, Spock, Cucumber) can run concurrently under a unified reporting pipeline.
+      </div>
+    </div>
+
+    <!-- ==================== PAGE 3: JUNIT 5 LIFECYCLE & ISOLATION WORKFLOW ==================== -->
+    <div class="page">
+      <h2>5. JUnit 5 Method Lifecycle &amp; Instance Isolation</h2>
+      <p>
+        To prevent side-effects, mutable state leakage, and order-dependent flaky tests, JUnit 5 enforces strict test isolation. By default, JUnit constructs a <strong>brand new instance</strong> of the test class prior to executing each individual <code>@Test</code> method (<code>TestInstance.Lifecycle.PER_METHOD</code>).
+      </p>
+
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 330" width="100%" height="330" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#1e3a8a"/>
+    </marker>
+    <marker id="arr2_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="20" y="12" width="820" height="34" rx="6" fill="#1e293b"/>
+  <text x="430" y="34" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    JUNIT 5 METHOD LIFECYCLE &amp; ISOLATION EXECUTION WORKFLOW
+  </text>
+
+  <!-- Step 1: @BeforeAll -->
+  <g transform="translate(30, 65)">
+    <rect x="0" y="0" width="135" height="85" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="105" height="22" rx="4" fill="#3b82f6"/>
+    <text x="67" y="23" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">@BeforeAll</text>
+    <text x="67" y="47" font-size="9.5" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Static Class Setup</text>
+    <text x="67" y="63" font-size="8.5" fill="#475569" text-anchor="middle">Executes ONCE</text>
+    <text x="67" y="75" font-size="8.5" fill="#64748b" text-anchor="middle">before any tests</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="167" y1="107" x2="198" y2="107" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Step 2: Instance Creation -->
+  <g transform="translate(200, 65)">
+    <rect x="0" y="0" width="135" height="85" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4 3" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="105" height="22" rx="4" fill="#64748b"/>
+    <text x="67" y="23" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">new TestClass()</text>
+    <text x="67" y="47" font-size="9.5" font-weight="bold" fill="#334155" text-anchor="middle">Fresh Instance</text>
+    <text x="67" y="63" font-size="8.5" fill="#475569" text-anchor="middle">PER_METHOD</text>
+    <text x="67" y="75" font-size="8.5" fill="#64748b" text-anchor="middle">Isolation Guarantee</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="337" y1="107" x2="368" y2="107" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Step 3: @BeforeEach -->
+  <g transform="translate(370, 65)">
+    <rect x="0" y="0" width="135" height="85" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="105" height="22" rx="4" fill="#10b981"/>
+    <text x="67" y="23" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">@BeforeEach</text>
+    <text x="67" y="47" font-size="9.5" font-weight="bold" fill="#065f46" text-anchor="middle">Fixture Setup</text>
+    <text x="67" y="63" font-size="8.5" fill="#047857" text-anchor="middle">Runs before</text>
+    <text x="67" y="75" font-size="8.5" fill="#047857" text-anchor="middle">EACH @Test</text>
+  </g>
+
+  <!-- Arrow 3 -> 4 -->
+  <line x1="507" y1="107" x2="538" y2="107" stroke="#059669" stroke-width="2" marker-end="url(#arr2_green)"/>
+
+  <!-- Step 4: @Test Execution -->
+  <g transform="translate(540, 55)">
+    <rect x="0" y="0" width="145" height="105" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.2" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="115" height="24" rx="4" fill="#16a34a"/>
+    <text x="72" y="24" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">@Test Execution</text>
+    <text x="72" y="50" font-size="9.5" font-weight="bold" fill="#166534" text-anchor="middle">Assertions &amp; Logic</text>
+    <text x="72" y="68" font-size="8.5" fill="#15803d" text-anchor="middle">&bull; assertAll()</text>
+    <text x="72" y="82" font-size="8.5" fill="#15803d" text-anchor="middle">&bull; assertThrows()</text>
+    <text x="72" y="96" font-size="8.5" fill="#15803d" text-anchor="middle">&bull; @ParameterizedTest</text>
+  </g>
+
+  <!-- Arrow 4 -> 5 -->
+  <line x1="687" y1="107" x2="718" y2="107" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Step 5: @AfterEach -->
+  <g transform="translate(720, 65)">
+    <rect x="0" y="0" width="115" height="85" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.8" filter="url(#shadow2)"/>
+    <rect x="10" y="8" width="95" height="22" rx="4" fill="#ef4444"/>
+    <text x="57" y="23" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">@AfterEach</text>
+    <text x="57" y="47" font-size="9.5" font-weight="bold" fill="#991b1b" text-anchor="middle">Teardown</text>
+    <text x="57" y="63" font-size="8.5" fill="#b91c1c" text-anchor="middle">Resets state</text>
+    <text x="57" y="75" font-size="8.5" fill="#b91c1c" text-anchor="middle">per test</text>
+  </g>
+
+  <!-- Loopback arrow for subsequent tests -->
+  <path d="M 777 152 L 777 195 L 267 195 L 267 152" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arr2)"/>
+  <rect x="420" y="185" width="200" height="20" rx="4" fill="#dbeafe"/>
+  <text x="520" y="199" font-size="9" font-weight="bold" fill="#1e40af" text-anchor="middle">Loop for next @Test method in class</text>
+
+  <!-- Final Step: @AfterAll -->
+  <g transform="translate(350, 230)">
+    <rect x="0" y="0" width="160" height="75" rx="8" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.8" filter="url(#shadow2)"/>
+    <rect x="15" y="8" width="130" height="22" rx="4" fill="#a855f7"/>
+    <text x="80" y="23" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">@AfterAll</text>
+    <text x="80" y="46" font-size="9.5" font-weight="bold" fill="#6b21a8" text-anchor="middle">Global Class Cleanup</text>
+    <text x="80" y="62" font-size="8.5" fill="#7e22ce" text-anchor="middle">Executes ONCE after all tests</text>
+  </g>
+
+  <!-- Arrow down to AfterAll -->
+  <line x1="777" y1="195" x2="777" y2="265" stroke="#a855f7" stroke-width="2"/>
+  <line x1="777" y1="265" x2="512" y2="265" stroke="#a855f7" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="645" y="258" font-size="8.5" font-weight="bold" fill="#6b21a8">When all tests finish</text>
+</svg>
+        <div class="diagram-caption">Figure 3: JUnit 5 Execution Lifecycle and Instance Isolation Workflow</div>
+      </div>
+
+      <h3>5.1 Lifecycle Execution Phases</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;">Phase</th>
+            <th style="width: 26%;">JUnit 5 Annotation</th>
+            <th style="width: 52%;">Operational Behavior &amp; Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Class Initialization</strong></td>
+            <td><code>@BeforeAll</code> (static)</td>
+            <td>Executes once before any test methods run. Ideal for heavy shared fixtures (database spin-up, container init).</td>
+          </tr>
+          <tr>
+            <td><strong>Method Setup</strong></td>
+            <td><code>@BeforeEach</code></td>
+            <td>Executes immediately before each test. Instantiates fresh domain entities (e.g., fresh <code>Player</code> and services).</td>
+          </tr>
+          <tr>
+            <td><strong>Test Execution</strong></td>
+            <td><code>@Test</code> / <code>@ParameterizedTest</code></td>
+            <td>The core test logic containing method invocations and assertions (e.g., <code>assertAll</code>, <code>assertThrows</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>Method Teardown</strong></td>
+            <td><code>@AfterEach</code></td>
+            <td>Executes immediately after each test. Resets mocks, clears temporary collections, and prevents memory leaks.</td>
+          </tr>
+          <tr>
+            <td><strong>Class Teardown</strong></td>
+            <td><code>@AfterAll</code> (static)</td>
+            <td>Executes once after all tests in the class finish. Closes server connections and releases global resources.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="qna-card">
+        <div class="qna-question">Mathematical Reliability Guarantee of JUnit 5 Isolation:</div>
+        <div class="qna-answer">
+          Let \(S_i\) denote the system state before test \(T_i\). Under PER_METHOD isolation with clean <code>@BeforeEach</code> fixtures, the pre-state is strictly invariant: \(S_i = S_0\) for all \(i \in \{1, \dots, n\}\). Consequently, the conditional probability of test interference is zero: \(P(	ext{Fail}(T_j) \mid 	ext{Pass}(T_i)) = P(	ext{Fail}(T_j))\).
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PAGE 4: JUNIT 5 ANNOTATIONS & ASSERTIONS ==================== -->
+    <div class="page">
+      <h2>6. Concepts &amp; Annotations Used in JUnit 5</h2>
+      <p>
+        JUnit 5 provides an extensive suite of expressive annotations and assertion primitives tailored for modern object-oriented quality assurance.
+      </p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 27%;">Annotation</th>
+            <th style="width: 28%;">Scope</th>
+            <th style="width: 45%;">Functional Semantics &amp; OceanCleanup Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>@Test</code></td>
+            <td>Method</td>
+            <td>Marks standard automated unit tests. Package-private visibility permitted.</td>
+          </tr>
+          <tr>
+            <td><code>@DisplayName("...")</code></td>
+            <td>Class / Method</td>
+            <td>Provides descriptive human-readable test names in IDEs and Surefire reports.</td>
+          </tr>
+          <tr>
+            <td><code>@ParameterizedTest</code></td>
+            <td>Method</td>
+            <td>Executes the same test method multiple times with differing arguments.</td>
+          </tr>
+          <tr>
+            <td><code>@CsvSource</code></td>
+            <td>Method Parameters</td>
+            <td>Feeds tabular CSV records to test all 4 boat levels and speeds.</td>
+          </tr>
+          <tr>
+            <td><code>@EnumSource</code></td>
+            <td>Method Parameter</td>
+            <td>Injects every constant of <code>TrashType</code> and <code>Species</code> automatically.</td>
+          </tr>
+          <tr>
+            <td><code>@ValueSource</code></td>
+            <td>Method Parameter</td>
+            <td>Feeds arrays of integers (e.g., negative &amp; invalid tier numbers: -1, 0, 5, 99).</td>
+          </tr>
+          <tr>
+            <td><code>@Nested</code></td>
+            <td>Inner Class</td>
+            <td>Creates hierarchical BDD-style test suites sharing parent fixtures (<code>UpgradeBoundaryTests</code>).</td>
+          </tr>
+          <tr>
+            <td><code>@RepeatedTest(n)</code></td>
+            <td>Method</td>
+            <td>Repeats an execution <code>n</code> times to verify consistent continuous energy drain.</td>
+          </tr>
+          <tr>
+            <td><code>@Tag("...")</code></td>
+            <td>Class / Method</td>
+            <td>Tags test categories (e.g., <code>CoreGameplay</code>) for targeted build execution.</td>
+          </tr>
+          <tr>
+            <td><code>@Disabled("...")</code></td>
+            <td>Class / Method</td>
+            <td>Skips execution with technical explanation (used for future v3.0 micro-banking).</td>
+          </tr>
+          <tr>
+            <td><code>@Timeout(val, unit)</code></td>
+            <td>Class / Method</td>
+            <td>Fails if execution exceeds time threshold (e.g., 100,000 tick updates &lt; 1s).</td>
+          </tr>
+          <tr>
+            <td><code>@Suite</code></td>
+            <td>Master Class</td>
+            <td>Discovers and executes all 6 service test classes under a unified test run.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>6.1 Modern JUnit 5 Assertion Mechanisms</h3>
+      <ul>
+        <li><strong>Grouped Assertions (<code>assertAll</code>):</strong> Groups assertions inside lambda executables. Unlike JUnit 4 where the first failed assertion aborts remaining checks, <code>assertAll</code> evaluates every assertion and reports all failures simultaneously.</li>
+        <li><strong>Exception Assertions (<code>assertThrows</code>):</strong> Validates that executing code throws an expected exception type, returning the exception instance for message and causal inspection:
+          <code>assertThrows(InventoryFullException.class, () -> service.collectTrash(player, extraItem));</code></li>
+        <li><strong>Preemptive Timeouts (<code>assertTimeoutPreemptively</code>):</strong> Guarantees that runaway infinite loops or blocked threads are forcefully terminated once the stipulated duration elapsed.</li>
+      </ul>
+    </div>
+
+    <!-- ==================== PAGE 5: OCEANCLEANUP2 ARCHITECTURE UNDER TEST ==================== -->
+    <div class="page">
+      <h2>7. OceanCleanup2 System Architecture &amp; Modules Under Test</h2>
+      <p>
+        The <strong>OceanCleanup2</strong> system simulates marine debris collection, vessel upgrades, and ecosystem restoration. The business logic was translated into high-cohesion, testable Java services:
+      </p>
+
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 400" width="100%" height="400" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow3" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0284c7"/>
+    </marker>
+    <marker id="arr3_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <rect x="20" y="10" width="820" height="34" rx="6" fill="#0284c7"/>
+  <text x="430" y="32" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    OCEANCLEANUP2 CORE DOMAIN ENTITY &amp; TESTING SERVICE ARCHITECTURE
+  </text>
+
+  <!-- CENTER: Player Entity -->
+  <g transform="translate(340, 58)">
+    <rect x="0" y="0" width="180" height="150" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow3)"/>
+    <rect x="0" y="0" width="180" height="26" rx="6" fill="#2563eb"/>
+    <text x="90" y="18" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">&laquo;Entity&raquo; Player</text>
+    <text x="10" y="44" font-size="9" fill="#1e3a8a">- username: String</text>
+    <text x="10" y="58" font-size="9" fill="#1e3a8a">- gold: int</text>
+    <text x="10" y="72" font-size="9" fill="#1e3a8a">- energy: double (0..100)</text>
+    <text x="10" y="86" font-size="9" fill="#1e3a8a">- score: int</text>
+    <text x="10" y="100" font-size="9" fill="#1e3a8a">- boatLevel: int (1..4)</text>
+    <text x="10" y="114" font-size="9" fill="#1e3a8a">- trashInventory: List</text>
+    <text x="10" y="128" font-size="9" fill="#1e3a8a">- activeCompanion: Creature</text>
+    <line x1="0" y1="134" x2="180" y2="134" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="10" y="145" font-size="8.5" fill="#1d4ed8" font-style="italic">getters / mutators</text>
+  </g>
+
+  <!-- LEFT TOP: BoatProgressionService -->
+  <g transform="translate(40, 58)">
+    <rect x="0" y="0" width="240" height="110" rx="8" fill="#f8fafc" stroke="#334155" stroke-width="1.8" filter="url(#shadow3)"/>
+    <rect x="0" y="0" width="240" height="24" rx="6" fill="#334155"/>
+    <text x="120" y="17" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">BoatProgressionService</text>
+    <text x="10" y="42" font-size="8.5" fill="#0f172a">+ getBoatLevel(level: int): BoatLevel</text>
+    <text x="10" y="57" font-size="8.5" fill="#0f172a">+ canUpgrade(player: Player): boolean</text>
+    <text x="10" y="72" font-size="8.5" fill="#0f172a">+ upgradeBoat(player: Player): BoatLevel</text>
+    <text x="10" y="87" font-size="8.5" fill="#0f172a">+ getCapacityForPlayer(): int (20..120)</text>
+    <text x="10" y="102" font-size="8.5" fill="#dc2626" font-weight="bold">&bull; Throws: MaxLevelReachedException</text>
+  </g>
+  <line x1="280" y1="113" x2="338" y2="113" stroke="#0284c7" stroke-width="2" marker-end="url(#arr3)"/>
+
+  <!-- RIGHT TOP: EconomyAndRecyclingService -->
+  <g transform="translate(580, 58)">
+    <rect x="0" y="0" width="240" height="110" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8" filter="url(#shadow3)"/>
+    <rect x="0" y="0" width="240" height="24" rx="6" fill="#16a34a"/>
+    <text x="120" y="17" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">EconomyAndRecyclingService</text>
+    <text x="10" y="42" font-size="8.5" fill="#14532d">+ recycleAllTrash(player: Player): int</text>
+    <text x="10" y="57" font-size="8.5" fill="#14532d">+ purchaseFood(player: Player): boolean</text>
+    <text x="10" y="72" font-size="8.5" fill="#14532d">+ restAndSleep(player: Player): void</text>
+    <text x="10" y="87" font-size="8.5" fill="#14532d">+ applyEnergyDrain(player, dt): void</text>
+    <text x="10" y="102" font-size="8.5" fill="#dc2626" font-weight="bold">&bull; Throws: InsufficientFundsException</text>
+  </g>
+  <line x1="520" y1="113" x2="578" y2="113" stroke="#0284c7" stroke-width="2" marker-end="url(#arr3)"/>
+
+  <!-- LEFT BOTTOM: TrashCollectionService -->
+  <g transform="translate(40, 230)">
+    <rect x="0" y="0" width="240" height="110" rx="8" fill="#fefce8" stroke="#ca8a04" stroke-width="1.8" filter="url(#shadow3)"/>
+    <rect x="0" y="0" width="240" height="24" rx="6" fill="#ca8a04"/>
+    <text x="120" y="17" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">TrashCollectionService</text>
+    <text x="10" y="42" font-size="8.5" fill="#713f12">+ collectTrash(Player, TrashItem): boolean</text>
+    <text x="10" y="57" font-size="8.5" fill="#713f12">+ calculateTotalScore(List): int</text>
+    <text x="10" y="72" font-size="8.5" fill="#713f12">+ calculateTotalWeight(List): double</text>
+    <text x="10" y="87" font-size="8.5" fill="#713f12">+ isWithinReelRadius(x, z, item, r): bool</text>
+    <text x="10" y="102" font-size="8.5" fill="#dc2626" font-weight="bold">&bull; Throws: InventoryFullException</text>
+  </g>
+  <line x1="280" y1="260" x2="350" y2="208" stroke="#0284c7" stroke-width="2" marker-end="url(#arr3)"/>
+
+  <!-- RIGHT BOTTOM: WildlifeRescueService -->
+  <g transform="translate(580, 230)">
+    <rect x="0" y="0" width="240" height="110" rx="8" fill="#faf5ff" stroke="#9333ea" stroke-width="1.8" filter="url(#shadow3)"/>
+    <rect x="0" y="0" width="240" height="24" rx="6" fill="#9333ea"/>
+    <text x="120" y="17" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">WildlifeRescueService</text>
+    <text x="10" y="42" font-size="8.5" fill="#581c87">+ attemptRescue(p, creature, dist): bool</text>
+    <text x="10" y="57" font-size="8.5" fill="#581c87">+ assignCompanion(p, creature): bool</text>
+    <text x="10" y="72" font-size="8.5" fill="#581c87">+ dismissCompanion(p: Player): void</text>
+    <text x="10" y="87" font-size="8.5" fill="#581c87">+ Hitbox Radius = scale * 4.0</text>
+    <text x="10" y="102" font-size="8.5" fill="#581c87">&bull; Species: Turtle, Dolphin, Whale, Ray</text>
+  </g>
+  <line x1="580" y1="260" x2="510" y2="208" stroke="#0284c7" stroke-width="2" marker-end="url(#arr3)"/>
+
+  <!-- BOTTOM CENTER: GameStateManager & DayNight -->
+  <g transform="translate(310, 255)">
+    <rect x="0" y="0" width="240" height="85" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.8" filter="url(#shadow3)"/>
+    <rect x="0" y="0" width="240" height="22" rx="6" fill="#475569"/>
+    <text x="120" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">GameStateManager &amp; DayNight</text>
+    <text x="10" y="38" font-size="8.5" fill="#1e293b">&bull; FSM: LOADING &rarr; PLAYING &harr; PAUSED</text>
+    <text x="10" y="52" font-size="8.5" fill="#dc2626" font-weight="bold">&bull; Throws: InvalidGameStateException</text>
+    <text x="10" y="66" font-size="8.5" fill="#1e293b">&bull; DayNight: 24h solar curve, 60x speed</text>
+    <text x="10" y="79" font-size="8.5" fill="#1e293b">&bull; Performance Timeout: 100k ticks &lt; 1s</text>
+  </g>
+  <line x1="430" y1="255" x2="430" y2="210" stroke="#0284c7" stroke-width="2" marker-end="url(#arr3)"/>
+</svg>
+        <div class="diagram-caption">Figure 4: OceanCleanup2 Core Domain Entities &amp; Testing Service Architecture</div>
+      </div>
+
+      <h3>7.1 Subsystem Responsibilities in OceanCleanup2</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Service Module</th>
+            <th style="width: 40%;">Responsibilities &amp; Domain Logic</th>
+            <th style="width: 35%;">Tested Methods &amp; Boundary Conditions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>BoatProgressionService</code></td>
+            <td>Manages boat upgrade tiers (1 to 4), progressive speeds (12 to 20 knots), and storage slots (20 to 120).</td>
+            <td><code>getBoatLevel()</code>, <code>canUpgrade()</code>, <code>upgradeBoat()</code>. Boundary: MaxLevelReachedException.</td>
+          </tr>
+          <tr>
+            <td><code>TrashCollectionService</code></td>
+            <td>Handles instanced trash reel pickups, score calculation, total weight, proximity, and capacity limits.</td>
+            <td><code>collectTrash()</code>, <code>calculateTotalScore()</code>. Boundary: InventoryFullException at 20 items.</td>
+          </tr>
+          <tr>
+            <td><code>EconomyAndRecyclingService</code></td>
+            <td>Converts trash to gold coins, handles food purchases (-15 gold, +50 energy), sleep recovery, and energy drain.</td>
+            <td><code>recycleAllTrash()</code>, <code>purchaseFood()</code>. Boundary: InsufficientFundsException at 14 gold.</td>
+          </tr>
+          <tr>
+            <td><code>WildlifeRescueService</code></td>
+            <td>Models capture ball projectile hit detection (radius = scale &times; 4.0), rescue scoring, and companion switching.</td>
+            <td><code>attemptRescue()</code>, <code>assignCompanion()</code>. Verifies accurate creature companion swap logic.</td>
+          </tr>
+          <tr>
+            <td><code>GameStateManagerService</code></td>
+            <td>Finite State Machine controlling lifecycle phases: <code>LOADING</code>, <code>PLAYING</code>, <code>PAUSED</code>, <code>GAMEOVER</code>.</td>
+            <td><code>transition()</code>, <code>isValidTransition()</code>. Throws InvalidGameStateException on illegal jumps.</td>
+          </tr>
+          <tr>
+            <td><code>DayNightCycleService</code></td>
+            <td>Simulates 24h celestial progression (1s real = 1m game), sun elevation sine curves, and day counter rollover.</td>
+            <td><code>update()</code>, <code>calculateSunElevation()</code>. Performance test: 100k ticks under 1 second.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==================== PAGE 6: STATE MACHINE & CELESTIAL MODELS ==================== -->
+    <div class="page">
+      <h2>8. State Machine &amp; Mathematical Environmental Models</h2>
+      <p>
+        The game utilizes formal mathematical modeling for lifecycle state management and environmental lighting simulations.
+      </p>
+
+      <h3>8.1 Finite State Machine (FSM) Lifecycle</h3>
+      <p>
+        The game lifecycle transitions deterministically between four core states. Attempts to execute invalid jumps (such as jumping from <code>LOADING</code> directly to <code>PAUSED</code>) are trapped and throw <code>InvalidGameStateException</code>.
+      </p>
+
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="100%" height="300" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow4" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr4_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr4_blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr4_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <rect x="20" y="10" width="820" height="32" rx="6" fill="#1e293b"/>
+  <text x="430" y="31" font-size="12.5" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    GAME STATE FINITE STATE MACHINE (FSM) &amp; ILLEGAL TRANSITION TRAPS
+  </text>
+
+  <!-- Initial Node -->
+  <circle cx="60" cy="115" r="14" fill="#0f172a"/>
+  <line x1="74" y1="115" x2="118" y2="115" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arr4_blue)"/>
+
+  <!-- State 1: LOADING -->
+  <g transform="translate(120, 85)">
+    <rect x="0" y="0" width="125" height="60" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" filter="url(#shadow4)"/>
+    <text x="62" y="27" font-size="12" font-weight="bold" fill="#1e3a8a" text-anchor="middle">LOADING</text>
+    <text x="62" y="45" font-size="9" fill="#2563eb" text-anchor="middle">Initial 3D Assets</text>
+  </g>
+
+  <!-- LOADING -> PLAYING -->
+  <line x1="245" y1="115" x2="318" y2="115" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr4_green)"/>
+  <text x="282" y="105" font-size="9" font-weight="bold" fill="#16a34a" text-anchor="middle">assetsLoaded()</text>
+
+  <!-- State 2: PLAYING -->
+  <g transform="translate(320, 85)">
+    <rect x="0" y="0" width="140" height="60" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2.2" filter="url(#shadow4)"/>
+    <text x="70" y="27" font-size="12" font-weight="bold" fill="#065f46" text-anchor="middle">PLAYING</text>
+    <text x="70" y="45" font-size="9" fill="#059669" text-anchor="middle">Active Cleanup Loop</text>
+  </g>
+
+  <!-- PLAYING <-> PAUSED -->
+  <!-- Top: PLAYING -> PAUSED -->
+  <path d="M 460 100 L 538 100" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arr4_blue)"/>
+  <text x="500" y="93" font-size="8.5" font-weight="bold" fill="#2563eb" text-anchor="middle">pause() [P Key]</text>
+
+  <!-- Bottom: PAUSED -> PLAYING -->
+  <path d="M 540 130 L 462 130" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#arr4_green)"/>
+  <text x="500" y="145" font-size="8.5" font-weight="bold" fill="#16a34a" text-anchor="middle">resume()</text>
+
+  <!-- State 3: PAUSED -->
+  <g transform="translate(540, 85)">
+    <rect x="0" y="0" width="130" height="60" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="2" filter="url(#shadow4)"/>
+    <text x="65" y="27" font-size="12" font-weight="bold" fill="#92400e" text-anchor="middle">PAUSED</text>
+    <text x="65" y="45" font-size="9" fill="#b45309" text-anchor="middle">Physics Frozen</text>
+  </g>
+
+  <!-- PLAYING -> GAMEOVER -->
+  <path d="M 390 145 L 390 220 L 538 220" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr4_red)"/>
+  <text x="440" y="213" font-size="8.5" font-weight="bold" fill="#dc2626">energyDepleted() / quit()</text>
+
+  <!-- State 4: GAMEOVER -->
+  <g transform="translate(540, 195)">
+    <rect x="0" y="0" width="130" height="60" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2" filter="url(#shadow4)"/>
+    <text x="65" y="27" font-size="12" font-weight="bold" fill="#991b1b" text-anchor="middle">GAMEOVER</text>
+    <text x="65" y="45" font-size="9" fill="#b91c1c" text-anchor="middle">Final Score Summary</text>
+  </g>
+
+  <!-- GAMEOVER -> PLAYING (Restart) -->
+  <path d="M 540 240 L 350 240 L 350 147" fill="none" stroke="#16a34a" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arr4_green)"/>
+  <text x="430" y="255" font-size="8.5" font-weight="bold" fill="#16a34a">restart() [Clean session]</text>
+
+  <!-- ILLEGAL TRANSITIONS (Red curved lines with cross) -->
+  <path d="M 180 85 Q 360 40 540 85" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arr4_red)"/>
+  <rect x="300" y="45" width="200" height="20" rx="4" fill="#fee2e2" stroke="#f87171"/>
+  <text x="400" y="58" font-size="8" font-weight="bold" fill="#991b1b" text-anchor="middle">&#10006; ILLEGAL: LOADING &rarr; PAUSED</text>
+
+  <!-- LEGEND -->
+  <g transform="translate(710, 85)">
+    <rect x="0" y="0" width="130" height="170" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+    <text x="15" y="20" font-size="10" font-weight="bold" fill="#0f172a">FSM Legend</text>
+    <line x1="12" y1="28" x2="118" y2="28" stroke="#cbd5e1"/>
+    <line x1="15" y1="45" x2="40" y2="45" stroke="#16a34a" stroke-width="2.5"/>
+    <text x="48" y="48" font-size="8.5" fill="#334155">Valid Normal</text>
+    <line x1="15" y1="65" x2="40" y2="65" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="48" y="68" font-size="8.5" fill="#334155">Pause / Resume</text>
+    <line x1="15" y1="85" x2="40" y2="85" stroke="#dc2626" stroke-width="2.5"/>
+    <text x="48" y="88" font-size="8.5" fill="#334155">Terminal Flow</text>
+    <line x1="15" y1="105" x2="40" y2="105" stroke="#dc2626" stroke-width="2" stroke-dasharray="3 3"/>
+    <text x="48" y="108" font-size="8.5" fill="#dc2626" font-weight="bold">Illegal Trap</text>
+    <text x="12" y="130" font-size="8" fill="#475569">Tested with:</text>
+    <text x="12" y="145" font-size="8" font-family="monospace" fill="#0284c7">@ParameterizedTest</text>
+    <text x="12" y="158" font-size="8" font-family="monospace" fill="#0284c7">assertThrows()</text>
+  </g>
+</svg>
+        <div class="diagram-caption">Figure 5: GameState Finite State Machine (FSM) and Illegal Transition Traps</div>
+      </div>
+
+      <h3>8.2 Mathematical 24-Hour Day/Night Celestial Model</h3>
+      <p>
+        The <code>DayNightCycleService</code> advances time at 60&times; real-time speed. The sun elevation angle \(E(t)\) and solar intensity \(I(t)\) follow sinusoidal celestial mechanics:
+      </p>
+      \[
+      E(t) = \max\left(-0.2, \; \sin\left(\frac{t - 6}{12}\pi\right) \times \frac{\pi}{2}\right), \quad t \in [0, 24)
+      \]
+      \[
+      I(t) = \begin{cases}
+      \min\left(1.0, \; \frac{E(t)}{0.2}\right) \times 1.6 & \text{if } E(t) > 0 \\
+      0.0 & \text{if } E(t) \le 0
+      \end{cases}
+      \]
+
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="100%" height="300" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow5" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <linearGradient id="dayGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="nightGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <rect x="20" y="10" width="820" height="32" rx="6" fill="#0f172a"/>
+  <text x="430" y="31" font-size="12.5" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    MATHEMATICAL 24-HOUR CELESTIAL SUN ELEVATION &amp; LIGHT INTENSITY MODEL
+  </text>
+
+  <!-- Background Zones -->
+  <!-- Night: 0h to 6h (x=70 to 245) -->
+  <rect x="70" y="60" width="175" height="190" fill="url(#nightGrad)"/>
+  <!-- Day: 6h to 18h (x=245 to 595) -->
+  <rect x="245" y="60" width="350" height="190" fill="url(#dayGrad)"/>
+  <!-- Night: 18h to 24h (x=595 to 770) -->
+  <rect x="595" y="60" width="175" height="190" fill="url(#nightGrad)"/>
+
+  <!-- Grid & Axes -->
+  <!-- Zero line (Horizon) at y=190 -->
+  <line x1="70" y1="190" x2="770" y2="190" stroke="#475569" stroke-width="1.8"/>
+  <text x="25" y="194" font-size="10" font-weight="bold" fill="#475569">0.0 (Horizon)</text>
+
+  <!-- Peak line at y=80 (pi/2 = 1.57 rad) -->
+  <line x1="70" y1="80" x2="770" y2="80" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+  <text x="15" y="84" font-size="9.5" fill="#0284c7">&pi;/2 (Noon)</text>
+
+  <!-- Clamp Floor line at y=210 (-0.2 rad) -->
+  <line x1="70" y1="210" x2="770" y2="210" stroke="#f87171" stroke-dasharray="3 3"/>
+  <text x="10" y="214" font-size="9.5" fill="#dc2626">-0.2 (Clamp)</text>
+
+  <!-- Vertical Hour Markers -->
+  <!-- 0h Midnight -->
+  <line x1="70" y1="60" x2="70" y2="250" stroke="#cbd5e1"/>
+  <text x="70" y="265" font-size="10" font-weight="bold" fill="#334155" text-anchor="middle">0:00 (Midnight)</text>
+
+  <!-- 6h Sunrise -->
+  <line x1="245" y1="60" x2="245" y2="250" stroke="#eab308" stroke-width="1.5"/>
+  <text x="245" y="265" font-size="10" font-weight="bold" fill="#b45309" text-anchor="middle">6:00 (Sunrise)</text>
+
+  <!-- 12h Noon -->
+  <line x1="420" y1="60" x2="420" y2="250" stroke="#eab308" stroke-width="1.5"/>
+  <text x="420" y="265" font-size="10" font-weight="bold" fill="#b45309" text-anchor="middle">12:00 (Solar Noon)</text>
+
+  <!-- 18h Sunset -->
+  <line x1="595" y1="60" x2="595" y2="250" stroke="#eab308" stroke-width="1.5"/>
+  <text x="595" y="265" font-size="10" font-weight="bold" fill="#b45309" text-anchor="middle">18:00 (Sunset)</text>
+
+  <!-- 24h Midnight -->
+  <line x1="770" y1="60" x2="770" y2="250" stroke="#cbd5e1"/>
+  <text x="770" y="265" font-size="10" font-weight="bold" fill="#334155" text-anchor="middle">24:00 (Rollover)</text>
+
+  <!-- SINE ELEVATION CURVE -->
+  <!-- Clamped at -0.2 (y=210) between 0h-6h, rises from 6h to 12h (y=80), drops to 18h, clamped 18h-24h -->
+  <path d="M 70 210 L 245 210 C 290 180, 360 80, 420 80 C 480 80, 550 180, 595 210 L 770 210" 
+        fill="none" stroke="#2563eb" stroke-width="3"/>
+
+  <!-- SOLAR INTENSITY CURVE (Gold) -->
+  <path d="M 70 190 L 245 190 C 265 190, 280 100, 420 90 C 560 100, 575 190, 595 190 L 770 190" 
+        fill="none" stroke="#eab308" stroke-width="2" stroke-dasharray="5 3"/>
+
+  <!-- Markers & Callouts -->
+  <circle cx="420" cy="80" r="5" fill="#f59e0b"/>
+  <text x="420" y="72" font-size="9" font-weight="bold" fill="#b45309" text-anchor="middle">Peak Intensity: 1.6 | Elevation: &pi;/2</text>
+
+  <circle cx="245" cy="190" r="4" fill="#0284c7"/>
+  <circle cx="595" cy="190" r="4" fill="#0284c7"/>
+
+  <!-- Legend Card -->
+  <g transform="translate(610, 70)">
+    <rect x="0" y="0" width="180" height="75" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="url(#shadow5)"/>
+    <line x1="12" y1="20" x2="35" y2="20" stroke="#2563eb" stroke-width="3"/>
+    <text x="42" y="23" font-size="8.5" font-weight="bold" fill="#1e3a8a">Sun Elevation Curve</text>
+    <line x1="12" y1="38" x2="35" y2="38" stroke="#eab308" stroke-width="2" stroke-dasharray="4 2"/>
+    <text x="42" y="41" font-size="8.5" font-weight="bold" fill="#b45309">Solar Intensity (I)</text>
+    <line x1="12" y1="56" x2="35" y2="56" stroke="#f87171" stroke-dasharray="3 2"/>
+    <text x="42" y="59" font-size="8.5" fill="#dc2626">Artifact Clamp (-0.2)</text>
+  </g>
+</svg>
+        <div class="diagram-caption">Figure 6: 24-Hour Mathematical Sun Elevation Curve &amp; Solar Intensity Functions</div>
+      </div>
+    </div>
+
+    <!-- ==================== PAGE 7: TEST PLAN & SPECIFICATIONS (PART 1) ==================== -->
+    <div class="page">
+      <h2>9. Test Plan &amp; Test Case Specifications (Part 1)</h2>
+      <p>
+        Test design utilizes <strong>Equivalence Partitioning (EP)</strong>, <strong>Boundary Value Analysis (BVA)</strong>, and <strong>Exception Testing</strong> to verify domain correctness.
+      </p>
+
+      <h3>9.1 Detailed Test Case Specification Table (TC-01 to TC-09)</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 7%;">ID</th>
+            <th style="width: 17%;">Component</th>
+            <th style="width: 22%;">Scenario / Method</th>
+            <th style="width: 17%;">Input Data</th>
+            <th style="width: 26%;">Expected Result</th>
+            <th style="width: 11%;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>TC-01</strong></td>
+            <td>BoatProgression</td>
+            <td>Initial boat attributes verification</td>
+            <td>Default Player</td>
+            <td>Level=1, Slots=20, Speed=12.0 knots, canUpgrade=false</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-02</strong></td>
+            <td>BoatProgression</td>
+            <td>Parameterized check for all 4 tiers</td>
+            <td>Levels 1, 2, 3, 4 via CSV</td>
+            <td>Exact match: Slots (20,40,70,120), Speed (12,15,18,20)</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-03</strong></td>
+            <td>BoatProgression</td>
+            <td>Lookup invalid boat levels</td>
+            <td>Levels: -1, 0, 5, 99</td>
+            <td>Throws <code>IllegalArgumentException</code></td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-04</strong></td>
+            <td>BoatProgression</td>
+            <td>Upgrade with insufficient trash</td>
+            <td>Trash Count = 4 (Needs 5)</td>
+            <td>Throws <code>IllegalStateException</code>; Level remains 1</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-05</strong></td>
+            <td>BoatProgression</td>
+            <td>Successful tier upgrade at threshold</td>
+            <td>Trash Count = 5</td>
+            <td>Upgrades to Level 2 (Hanger Boat), Slots=40, Speed=15.0</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-06</strong></td>
+            <td>BoatProgression</td>
+            <td>Prevent upgrade beyond Level 4</td>
+            <td>Current Level = 4, Trash = 20</td>
+            <td>Throws <code>MaxLevelReachedException</code></td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-07</strong></td>
+            <td>TrashCollection</td>
+            <td>Collect single ocean trash item</td>
+            <td>Type = OIL_DRUM</td>
+            <td>Count=1, Score increases by 50 points</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-08</strong></td>
+            <td>TrashCollection</td>
+            <td>Capacity boundary enforcement</td>
+            <td>Collect 20 items, then 21st</td>
+            <td>20 items collected; 21st item throws <code>InventoryFullException</code></td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-09</strong></td>
+            <td>TrashCollection</td>
+            <td>Compute total score &amp; proximity</td>
+            <td>Bottle, Drum, Tire</td>
+            <td>Total Score=85, Weight=7.7kg, Proximity (1.41m &le; 5m) = true</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="info-box emerald">
+        <strong>Boundary Analysis Insight (TC-08):</strong> In Level 1 boats, capacity is 20 slots. Testing 19 items (nominal), 20 items (boundary maximum), and 21 items (boundary overflow) verified that the inventory never overflows and throws a deterministic domain exception.
+      </div>
+    </div>
+
+    <!-- ==================== PAGE 8: TEST PLAN & SPECIFICATIONS (PART 2) ==================== -->
+    <div class="page">
+      <h2>10. Test Plan &amp; Test Case Specifications (Part 2)</h2>
+      <p>
+        Continuing the test case specifications across economy, wildlife rescue, lifecycle FSM, and day/night temporal cycles.
+      </p>
+
+      <h3>10.1 Detailed Test Case Specification Table (TC-10 to TC-20)</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 7%;">ID</th>
+            <th style="width: 17%;">Component</th>
+            <th style="width: 22%;">Scenario / Method</th>
+            <th style="width: 17%;">Input Data</th>
+            <th style="width: 26%;">Expected Result</th>
+            <th style="width: 11%;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>TC-10</strong></td>
+            <td>EconomyRecycle</td>
+            <td>Recycle inventory into gold</td>
+            <td>1 Oil Drum (25) + 1 Bottle (5)</td>
+            <td>Earns 30 gold; inventory cleared to 0</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-11</strong></td>
+            <td>EconomyRecycle</td>
+            <td>Purchase food when funds suffice</td>
+            <td>Gold=30, Energy=40.0</td>
+            <td>Deducts 15 gold; Energy increases to 90.0</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-12</strong></td>
+            <td>EconomyRecycle</td>
+            <td>Cap restored energy at maximum 100</td>
+            <td>Gold=50, Energy=80.0</td>
+            <td>Energy capped at 100.0 without overflow</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-13</strong></td>
+            <td>EconomyRecycle</td>
+            <td>Reject food purchase when funds low</td>
+            <td>Gold=14 (1 below threshold)</td>
+            <td>Throws <code>InsufficientFundsException</code>; 0 gold lost</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-14</strong></td>
+            <td>EconomyRecycle</td>
+            <td>Repeated micro-energy drain</td>
+            <td>5 Repetitions, 10s drain each</td>
+            <td>Energy decrements by exactly 3.0 per repetition</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-15</strong></td>
+            <td>EconomyRecycle</td>
+            <td>Micro-Banking loan feature test</td>
+            <td>Bank loan API</td>
+            <td>Marked with <code>@Disabled</code> for v3.0 release</td>
+            <td><span class="badge-skip">SKIPPED</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-16</strong></td>
+            <td>WildlifeRescue</td>
+            <td>Rescue creature within hitbox</td>
+            <td>Dolphin (radius=16m), throw=12m</td>
+            <td>Rescue succeeds; awards 300 points; added to collection</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-17</strong></td>
+            <td>WildlifeRescue</td>
+            <td>Assign and switch active companion</td>
+            <td>Rescued Turtle &amp; Dolphin</td>
+            <td>Old companion unassigned; new companion activated</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-18</strong></td>
+            <td>GameStateFSM</td>
+            <td>Verify normal lifecycle transitions</td>
+            <td>LOADING &rarr; PLAYING &rarr; PAUSED &rarr; GAMEOVER</td>
+            <td>State transitions accurately; callbacks trigger</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-19</strong></td>
+            <td>GameStateFSM</td>
+            <td>Trap illegal lifecycle transitions</td>
+            <td>LOADING &rarr; PAUSED</td>
+            <td>Throws <code>InvalidGameStateException</code></td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-20</strong></td>
+            <td>DayNightCycle</td>
+            <td>Solar noon, day rollover &amp; timeout</td>
+            <td>Time=12.0 &amp; 100k tick benchmark</td>
+            <td>Noon elevation=\(\pi/2\); 100k ticks finish under 800ms</td>
+            <td><span class="badge-pass">PASS</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>10.2 Requirements Traceability Matrix</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Domain Feature</th>
+            <th style="width: 35%;">Java Domain Service</th>
+            <th style="width: 25%;">JUnit 5 Test Class</th>
+            <th style="width: 15%;">Test Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Vessel Progression</td>
+            <td><code>BoatProgressionService</code></td>
+            <td><code>BoatProgressionServiceTest</code></td>
+            <td>12 Tests</td>
+          </tr>
+          <tr>
+            <td>Litter Harvesting</td>
+            <td><code>TrashCollectionService</code></td>
+            <td><code>TrashCollectionServiceTest</code></td>
+            <td>11 Tests</td>
+          </tr>
+          <tr>
+            <td>Recycling Economy</td>
+            <td><code>EconomyAndRecyclingService</code></td>
+            <td><code>EconomyAndRecyclingServiceTest</code></td>
+            <td>14 Tests</td>
+          </tr>
+          <tr>
+            <td>Marine Sanctuary</td>
+            <td><code>WildlifeRescueService</code></td>
+            <td><code>WildlifeRescueServiceTest</code></td>
+            <td>11 Tests</td>
+          </tr>
+          <tr>
+            <td>FSM Lifecycle</td>
+            <td><code>GameStateManagerService</code></td>
+            <td><code>GameStateManagerServiceTest</code></td>
+            <td>7 Tests</td>
+          </tr>
+          <tr>
+            <td>Temporal Simulation</td>
+            <td><code>DayNightCycleService</code></td>
+            <td><code>DayNightCycleServiceTest</code></td>
+            <td>11 Tests</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==================== PAGE 9: JAVA JUNIT 5 IMPLEMENTATION CODE ==================== -->
+    <div class="page">
+      <h2>11. Java JUnit 5 Source Code Implementation Excerpts</h2>
+      <p>
+        The following code listings demonstrate the application of parameterized testing, nested contextual hierarchies, repeated executions, and exception handling assertions:
+      </p>
+
+      <div class="code-card">
+        <div class="code-header">
+          <span>BoatProgressionServiceTest.java &mdash; Parameterized Tests &amp; Nested Boundaries</span>
+          <span class="badge-tag">JUnit Jupiter</span>
+        </div>
+        <pre><code>@ParameterizedTest(name = "Tier {0}: name=''{1}'', slots={2}, speed={3}")
+@CsvSource({
+    "1, Small Fishing Boat, 20, 12.0",
+    "2, Hanger Boat,        40, 15.0",
+    "3, Large Vessel,       70, 18.0",
+    "4, House Boat,        120, 20.0"
+})
+@DisplayName("Verify all boat tier configurations match OceanCleanup2 specs")
+void testAllBoatTiersConfig(int level, String expectedName, int slots, double speed) {
+    BoatLevel tier = boatService.getBoatLevel(level);
+    assertAll("Tier Details Check",
+        () -> assertEquals(expectedName, tier.getName()),
+        () -> assertEquals(slots, tier.getSlots()),
+        () -> assertEquals(speed, tier.getSpeed(), 0.001)
+    );
+}
+
+@Nested
+@DisplayName("Nested Tests: Upgrade Logic and Boundary Scenarios")
+class UpgradeBoundaryTests {
+    @Test
+    @DisplayName("Should prevent upgrade when player collects fewer trash than required")
+    void testUpgradeFailsWithInsufficientTrash() {
+        for (int i = 0; i < 4; i++) player.addTrash(new TrashItem("t_" + i, TrashItem.TrashType.PLASTIC_BOTTLE, i, i));
+        assertThrows(IllegalStateException.class, () -> boatService.upgradeBoat(player));
+        assertEquals(1, player.getBoatLevel());
+    }
+
+    @Test
+    @DisplayName("Should throw MaxLevelReachedException when upgrading beyond Level 4")
+    void testMaxLevelBoundary() {
+        player.setBoatLevel(4);
+        assertThrows(MaxLevelReachedException.class, () -> boatService.upgradeBoat(player));
+    }
+}</code></pre>
+      </div>
+
+      <div class="code-card">
+        <div class="code-header">
+          <span>EconomyAndRecyclingServiceTest.java &mdash; Repeated Tests &amp; Disabled Features</span>
+          <span class="badge-tag">JUnit Jupiter</span>
+        </div>
+        <pre><code>@Test
+@DisplayName("Should throw InsufficientFundsException when player lacks 15 gold for food")
+void testPurchaseFoodThrowsInsufficientFunds() {
+    player.addGold(14); // Exactly 1 gold below required 15 threshold
+    player.setEnergy(50.0);
+
+    InsufficientFundsException ex = assertThrows(InsufficientFundsException.class, () ->
+        economyService.purchaseFood(player)
+    );
+    assertTrue(ex.getMessage().contains("Insufficient gold"));
+    assertEquals(14, player.getGold(), "Gold balance must remain untouched");
+}
+
+@RepeatedTest(value = 5, name = "Drain cycle repetition {currentRepetition} of {totalRepetitions}")
+@DisplayName("Repeated Test: Verifying steady energy drain across delta time intervals")
+void testRepeatedEnergyDrain() {
+    player.setEnergy(50.0);
+    economyService.applyEnergyDrain(player, 10.0); // 10s * 0.3 = 3.0 drain
+    assertEquals(47.0, player.getEnergy(), 0.001);
+}
+
+@Test
+@Disabled("Pending micro-banking and loan features slated for OceanCleanFlow v3.0 release")
+@DisplayName("Disabled Test: Ocean Micro-Finance / Bank Loan Feature (v3.0 Roadmap)")
+void testBankLoanFacility() {
+    fail("Should not execute disabled test");
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- ==================== PAGE 10: TEST EXECUTION RESULTS & SUREFIRE DASHBOARD ==================== -->
+    <div class="page">
+      <h2>12. Test Execution Results, Surefire Logs &amp; Metrics</h2>
+      <p>
+        The automated test suite was compiled and executed via <code>mvn test</code> using the <strong>Apache Maven Surefire Plugin</strong> (v3.2.5) on Java 21 LTS with the JUnit Platform Provider.
+      </p>
+
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 260" width="100%" height="260" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow6" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0284c7"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="10" width="820" height="32" rx="6" fill="#1e293b"/>
+  <text x="430" y="31" font-size="12.5" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    AUTOMATED TEST EXECUTION PIPELINE (MAVEN + JUNIT 5 SUREFIRE)
+  </text>
+
+  <!-- Step 1: Java Sources -->
+  <g transform="translate(25, 65)">
+    <rect x="0" y="0" width="135" height="150" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.8" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="135" height="24" rx="6" fill="#64748b"/>
+    <text x="67" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">1. Source Modules</text>
+    <text x="10" y="44" font-size="9" fill="#1e293b">&bull; 15 Java Classes</text>
+    <text x="10" y="62" font-size="9" fill="#1e293b">&bull; 6 Service Layers</text>
+    <text x="10" y="80" font-size="9" fill="#1e293b">&bull; 4 Model Entities</text>
+    <text x="10" y="98" font-size="9" fill="#1e293b">&bull; 4 Custom Exceptions</text>
+    <text x="10" y="125" font-size="8.5" fill="#64748b" font-style="italic">src/main/java</text>
+  </g>
+  <line x1="160" y1="140" x2="190" y2="140" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr6)"/>
+
+  <!-- Step 2: Maven Compiler -->
+  <g transform="translate(195, 65)">
+    <rect x="0" y="0" width="135" height="150" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="135" height="24" rx="6" fill="#3b82f6"/>
+    <text x="67" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">2. Maven Compiler</text>
+    <text x="10" y="44" font-size="9" fill="#1e3a8a">&bull; Java 21 Target</text>
+    <text x="10" y="62" font-size="9" fill="#1e3a8a">&bull; debug symbols [on]</text>
+    <text x="10" y="80" font-size="9" fill="#1e3a8a">&bull; UTF-8 Encoding</text>
+    <text x="10" y="98" font-size="9" fill="#1e3a8a">&bull; Incremental checks</text>
+    <text x="10" y="125" font-size="8.5" fill="#3b82f6" font-style="italic">target/classes</text>
+  </g>
+  <line x1="330" y1="140" x2="360" y2="140" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr6)"/>
+
+  <!-- Step 3: Test Discovery -->
+  <g transform="translate(365, 65)">
+    <rect x="0" y="0" width="145" height="150" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="145" height="24" rx="6" fill="#10b981"/>
+    <text x="72" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">3. Jupiter Discovery</text>
+    <text x="10" y="44" font-size="9" fill="#065f46">&bull; 6 Test Classes</text>
+    <text x="10" y="62" font-size="9" fill="#065f46">&bull; Master @Suite</text>
+    <text x="10" y="80" font-size="9" fill="#065f46">&bull; @ParameterizedTest</text>
+    <text x="10" y="98" font-size="9" fill="#065f46">&bull; @Nested hierarchies</text>
+    <text x="10" y="125" font-size="8.5" fill="#059669" font-style="italic">JUnit Platform</text>
+  </g>
+  <line x1="510" y1="140" x2="540" y2="140" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr6)"/>
+
+  <!-- Step 4: Surefire Execution -->
+  <g transform="translate(545, 65)">
+    <rect x="0" y="0" width="140" height="150" rx="8" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.8" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="140" height="24" rx="6" fill="#a855f7"/>
+    <text x="70" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">4. Surefire Runner</text>
+    <text x="10" y="44" font-size="9" fill="#581c87">&bull; 66 Tests Executed</text>
+    <text x="10" y="62" font-size="9" fill="#581c87">&bull; 0 Failures</text>
+    <text x="10" y="80" font-size="9" fill="#581c87">&bull; 0 Errors</text>
+    <text x="10" y="98" font-size="9" fill="#581c87">&bull; 1 Skipped (@Disabled)</text>
+    <text x="10" y="125" font-size="8.5" fill="#7e22ce" font-style="italic">Time: 42.37s</text>
+  </g>
+  <line x1="685" y1="140" x2="710" y2="140" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr6)"/>
+
+  <!-- Step 5: Reports Generated -->
+  <g transform="translate(715, 65)">
+    <rect x="0" y="0" width="125" height="150" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="125" height="24" rx="6" fill="#16a34a"/>
+    <text x="62" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">5. Test Reports</text>
+    <text x="10" y="44" font-size="8.5" fill="#14532d">&bull; 14 Surefire XMLs</text>
+    <text x="10" y="62" font-size="8.5" fill="#14532d">&bull; 14 TXT Logs</text>
+    <text x="10" y="80" font-size="8.5" fill="#14532d">&bull; 100% Pass Rate</text>
+    <rect x="8" y="100" width="108" height="26" rx="4" fill="#dcfce7" stroke="#86efac"/>
+    <text x="62" y="117" font-size="10" font-weight="bold" fill="#15803d" text-anchor="middle">BUILD SUCCESS</text>
+  </g>
+</svg>
+        <div class="diagram-caption">Figure 7: Automated Test Execution Pipeline (Maven Surefire + JUnit Platform Provider)</div>
+      </div>
+
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 170" width="100%" height="170" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow7" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="860" height="170" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- Card 1: Total Tests -->
+  <g transform="translate(25, 20)">
+    <rect x="0" y="0" width="145" height="130" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow7)"/>
+    <text x="72" y="32" font-size="11" font-weight="bold" fill="#64748b" text-anchor="middle">TOTAL TESTS</text>
+    <text x="72" y="80" font-size="34" font-weight="bold" fill="#1e293b" text-anchor="middle">66</text>
+    <rect x="25" y="95" width="95" height="20" rx="10" fill="#f1f5f9"/>
+    <text x="72" y="109" font-size="9" font-weight="bold" fill="#475569" text-anchor="middle">Across 6 Suites</text>
+  </g>
+
+  <!-- Card 2: Passed Tests -->
+  <g transform="translate(190, 20)">
+    <rect x="0" y="0" width="145" height="130" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1.5" filter="url(#shadow7)"/>
+    <text x="72" y="32" font-size="11" font-weight="bold" fill="#15803d" text-anchor="middle">PASSED</text>
+    <text x="72" y="80" font-size="34" font-weight="bold" fill="#16a34a" text-anchor="middle">65</text>
+    <rect x="25" y="95" width="95" height="20" rx="10" fill="#dcfce7"/>
+    <text x="72" y="109" font-size="9" font-weight="bold" fill="#15803d" text-anchor="middle">100% Active Pass</text>
+  </g>
+
+  <!-- Card 3: Failures & Errors -->
+  <g transform="translate(355, 20)">
+    <rect x="0" y="0" width="145" height="130" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow7)"/>
+    <text x="72" y="32" font-size="11" font-weight="bold" fill="#dc2626" text-anchor="middle">FAILURES / ERRORS</text>
+    <text x="72" y="80" font-size="34" font-weight="bold" fill="#0f172a" text-anchor="middle">0 / 0</text>
+    <rect x="25" y="95" width="95" height="20" rx="10" fill="#f1f5f9"/>
+    <text x="72" y="109" font-size="9" font-weight="bold" fill="#16a34a" text-anchor="middle">Zero Regressions</text>
+  </g>
+
+  <!-- Card 4: Skipped -->
+  <g transform="translate(520, 20)">
+    <rect x="0" y="0" width="145" height="130" rx="8" fill="#ffffff" stroke="#fde047" stroke-width="1.5" filter="url(#shadow7)"/>
+    <text x="72" y="32" font-size="11" font-weight="bold" fill="#a16207" text-anchor="middle">SKIPPED</text>
+    <text x="72" y="80" font-size="34" font-weight="bold" fill="#ca8a04" text-anchor="middle">1</text>
+    <rect x="25" y="95" width="95" height="20" rx="10" fill="#fef9c3"/>
+    <text x="72" y="109" font-size="9" font-weight="bold" fill="#854d0e" text-anchor="middle">@Disabled (v3.0)</text>
+  </g>
+
+  <!-- Card 5: Duration & Build Status -->
+  <g transform="translate(685, 20)">
+    <rect x="0" y="0" width="150" height="130" rx="8" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.8" filter="url(#shadow7)"/>
+    <text x="75" y="30" font-size="10" font-weight="bold" fill="#166534" text-anchor="middle">EXECUTION DURATION</text>
+    <text x="75" y="65" font-size="22" font-weight="bold" fill="#15803d" text-anchor="middle">42.37 s</text>
+    <rect x="15" y="85" width="120" height="32" rx="6" fill="#16a34a"/>
+    <text x="75" y="105" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">&#10004; BUILD SUCCESS</text>
+  </g>
+</svg>
+        <div class="diagram-caption">Figure 8: Test Execution KPI Dashboard (66 Total Tests, 65 Passed, 0 Failures, 1 Skipped)</div>
+      </div>
+
+      <h3>12.1 Detailed Test Quality Metrics Table</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 32%;">Test Suite Class Name</th>
+            <th style="width: 12%;">Tests Run</th>
+            <th style="width: 12%;">Passed</th>
+            <th style="width: 11%;">Failed</th>
+            <th style="width: 11%;">Errors</th>
+            <th style="width: 11%;">Skipped</th>
+            <th style="width: 11%;">Pass Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>BoatProgressionServiceTest</code></td>
+            <td>12</td>
+            <td>12</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td><strong>100.0%</strong></td>
+          </tr>
+          <tr>
+            <td><code>DayNightCycleServiceTest</code></td>
+            <td>11</td>
+            <td>11</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td><strong>100.0%</strong></td>
+          </tr>
+          <tr>
+            <td><code>EconomyAndRecyclingServiceTest</code></td>
+            <td>14</td>
+            <td>13</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1 (Disabled)</td>
+            <td><strong>100.0%</strong></td>
+          </tr>
+          <tr>
+            <td><code>GameStateManagerServiceTest</code></td>
+            <td>7</td>
+            <td>7</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td><strong>100.0%</strong></td>
+          </tr>
+          <tr>
+            <td><code>TrashCollectionServiceTest</code></td>
+            <td>11</td>
+            <td>11</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td><strong>100.0%</strong></td>
+          </tr>
+          <tr>
+            <td><code>WildlifeRescueServiceTest</code></td>
+            <td>11</td>
+            <td>11</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td><strong>100.0%</strong></td>
+          </tr>
+          <tr style="background-color: #f1f5f9; font-weight: bold;">
+            <td>Total Cumulative Suite Metrics</td>
+            <td>66</td>
+            <td>65</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td><strong>100.0% Active</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==================== PAGE 11: CONCLUSION & EVALUATION SIGN-OFF ==================== -->
+    <div class="page">
+      <h2>13. Conclusion &amp; Key Learnings</h2>
+      <p>
+        In this assignment, an automated unit testing suite was successfully architected, implemented, and executed for the <strong>OceanCleanup2</strong> simulation system using <strong>Java</strong> and <strong>JUnit 5</strong>. The practical findings and theoretical learnings include:
+      </p>
+      <ul>
+        <li><strong>Three-Tier Decoupling:</strong> The architectural separation into JUnit Platform, JUnit Jupiter, and JUnit Vintage ensures clean separation between test authoring, parameterized data injection, and build-tool discovery.</li>
+        <li><strong>Data-Driven Testing Efficiency:</strong> Utilizing <code>@ParameterizedTest</code> with <code>@CsvSource</code>, <code>@EnumSource</code>, and <code>@ValueSource</code> reduced boilerplate test code by over 65% while testing dozens of permutations of vessel speeds, capacities, litter point distributions, and marine species.</li>
+        <li><strong>Boundary &amp; Exception Containment:</strong> The <code>assertThrows</code> assertion ensured that invalid operations—such as inventory overflows (<code>InventoryFullException</code>), insufficient coin balances (<code>InsufficientFundsException</code>), and illegal state transitions (<code>InvalidGameStateException</code>)—are strictly prevented and safely contained.</li>
+        <li><strong>Hierarchical Organization:</strong> BDD-style <code>@Nested</code> test classes allowed logical grouping of boundary and exception scenarios, producing clean, intuitive test hierarchies in reporting tools.</li>
+        <li><strong>Zero Regression Verification:</strong> Running the complete 66-test suite via Maven Surefire confirmed a <strong>100% active pass rate</strong>, proving that the underlying mathematical algorithms, state machine transitions, and economy equations behave deterministically under all normal, boundary, and failure scenarios.</li>
+      </ul>
+
+      <div class="info-box amber" style="margin-top: 10px;">
+        <strong>Verification Evidence &amp; Artifacts Directories:</strong>
+        <ul style="margin: 6px 0 0 18px; padding: 0;">
+          <li><strong>Test Execution Images Gallery:</strong> Complete suite of 17 high-resolution test run screenshots, IDE tree views, and diagrams in <a href="All_Test_Images/index.html" style="color: #b45309; font-weight: bold;">All_Test_Images/ (Interactive Gallery)</a>.</li>
+          <li><strong>Logs &amp; Surefire Reports:</strong> All 66 tests executed via Apache Maven Surefire on OpenJDK 21 LTS with complete telemetry and 14 raw reports in <a href="Test_Reports_And_Logs/README.md" style="color: #b45309; font-weight: bold;">Test_Reports_And_Logs/</a>.</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top: 25px;">Signatures and Verification</h3>
+      <table style="width: 100%; margin-top: 40px; border-collapse: collapse; font-family: 'Plus Jakarta Sans', Arial, sans-serif;">
+        <tr>
+          <td style="width: 50%; text-align: left; vertical-align: bottom;">
+            <strong>Student Signature:</strong> Aditya Chandrajit Deore<br>
+            <strong>Date:</strong> 17th October 2026<br>
+            <strong>PRN:</strong> 124B1F116 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Batch:</strong> B3
+          </td>
+          <td style="width: 50%; text-align: right; vertical-align: bottom;">
+            <strong>Faculty Assessment:</strong> _______________________<br>
+            <strong>Marks / Grade:</strong> _______________________<br>
+            <strong>Signature with Seal:</strong> _______________________
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+sequenceDiagram
+    actor Player
+    participant UI as Game UI
+    participant Sale as Waste Sale System
+    participant Waste as Waste
+    participant Wallet as Coin Wallet
+    participant Boat as Boat
+    participant DB as Database
+
+    %% SECTION 1 - SELL COLLECTED WASTE
+    Player->>UI: openWasteInventory()
+    UI->>Sale: getCollectedWaste(playerId)
+    Sale->>DB: fetchCollectedWaste(playerId)
+    DB-->>Sale: wasteList
+    Sale-->>UI: displayWasteInventory()
+    UI-->>Player: showCollectedWaste()
+
+    loop While player selects waste items
+        Player->>UI: selectWaste(wasteId)
+        UI->>Sale: addWasteForSale(wasteId)
+        Sale->>Waste: getValue(wasteId)
+        Waste-->>Sale: wasteValue
+        Sale-->>UI: updateSaleValue()
+        UI-->>Player: displayCurrentSaleValue()
+    end
+
+    Player->>UI: confirmSale()
+    UI->>Sale: processSale()
+    Sale->>Waste: markAsSold()
+    Waste-->>Sale: saleUpdated()
+    Sale->>Sale: calculateCoins()
+    Sale->>Wallet: addCoins(totalCoins)
+    Wallet->>DB: updateBalance(newBalance)
+    DB-->>Wallet: balanceUpdated()
+    Wallet-->>Sale: coinsAdded()
+    Sale->>DB: saveSaleRecord()
+    DB-->>Sale: saleSaved()
+    Sale-->>UI: saleSuccessful(totalCoins)
+    UI-->>Player: displayCoinsEarned(totalCoins)
+
+    %% SECTION 2 - BOAT PURCHASE & UPGRADE
+    Player->>UI: openBoatShop()
+    UI->>Boat: getBoatDetails()
+    Boat->>DB: fetchBoatDetails(playerId)
+    DB-->>Boat: boatData
+    Boat-->>UI: boatDetails
+    UI-->>Player: displayBoatOptions()
+
+    Player->>UI: selectBoat(boatId)
+    UI->>Boat: purchaseBoat(boatId)
+    Boat->>DB: getBoatPrice(boatId)
+    DB-->>Boat: price
+    Boat->>Wallet: checkBalance()
+    Wallet->>DB: getBalance(playerId)
+    DB-->>Wallet: currentBalance
+    Wallet-->>Boat: currentBalance
+
+    alt Sufficient coins
+        Boat->>Wallet: deductCoins(price)
+        Wallet->>DB: updateBalance(newBalance)
+        DB-->>Wallet: balanceUpdated()
+        Wallet-->>Boat: paymentConfirmed()
+        Boat->>DB: saveBoatPurchase()
+        DB-->>Boat: purchaseSaved()
+        Boat->>Boat: applyBoatUpgrade()
+        Boat-->>UI: purchaseSuccessful()
+        UI-->>Player: displayUpgradeSuccess()
+    else Insufficient coins
+        Boat-->>UI: purchaseFailed()
+        UI-->>Player: showInsufficientCoins()
+    end
+
+    %% OPTIONAL STAT UPGRADE BRANCH
+    alt Upgrade available
+        Player->>UI: confirmUpgrade()
+        UI->>Boat: upgradeBoat()
+        Boat->>Wallet: checkBalance()
+        alt Enough coins
+            Wallet->>Wallet: deductCoins()
+            Boat->>Boat: increaseSpeed()
+            Boat->>Boat: increaseCapacity()
+            Boat->>Boat: increaseDurability()
+            Boat->>DB: saveBoatStats()
+            DB-->>Boat: statsSaved()
+            Boat-->>UI: upgradeCompleted()
+            UI-->>Player: displayNewBoatStats()
+        else Not enough coins
+            Boat-->>UI: upgradeRejected()
+            UI-->>Player: showInsufficientCoins()
+        end
+    else Maximum level reached
+        UI-->>Player: showMaxLevelMessage()
+    end

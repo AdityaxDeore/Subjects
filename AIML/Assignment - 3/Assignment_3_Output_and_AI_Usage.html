@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIML Assignment No. 3 - Output &amp; AI Usage</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.7;
+      color: #111;
+      background: #e5e7eb;
+      padding: 28px 20px;
+    }
+    .container { max-width: 8.5in; margin: 0 auto; }
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.85in 0.95in;
+      background: #ffffff;
+      margin: 0 auto 28px auto;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    @page { size: A4 portrait; margin: 18mm 16mm; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page {
+        width: 100%; min-height: auto; margin: 0; padding: 0;
+        box-shadow: none; border-radius: 0;
+        page-break-after: always;
+      }
+      .page:last-child { page-break-after: avoid; }
+      h2, h3 { page-break-after: avoid; }
+      .console-output, .viz-wrap { page-break-inside: avoid; }
+    }
+
+    h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 26px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1.5px solid #333;
+      padding-bottom: 4px;
+    }
+    .page > h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 12pt;
+      text-align: justify;
+      margin-bottom: 12px;
+      color: #111;
+      line-height: 1.7;
+    }
+
+    /* --- Cover Table --- */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .cover-table td { border: 1.5px solid #111; padding: 7px 12px; }
+    .cover-table .college-info {
+      text-align: center; font-weight: bold;
+      font-size: 14.5pt; line-height: 1.5; color: #000;
+    }
+    .cover-table .row-centered {
+      text-align: center; font-weight: bold; font-size: 12.5pt; color: #000;
+    }
+    .cover-table .row-left {
+      text-align: left; font-weight: bold; font-size: 11.5pt; color: #000;
+    }
+    .logo-container { text-align: center; width: 15%; padding: 6px !important; }
+    .logo-container img { max-width: 80px; height: auto; display: block; margin: 0 auto; }
+
+    /* Clean terminal output without box or borders - clean academic monospace text */
+    .console-output {
+      background: transparent;
+      color: #000000;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9pt;
+      font-weight: 500;
+      padding: 4px 0;
+      border: none;
+      border-radius: 0;
+      white-space: pre;
+      line-height: 1.48;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .console-output .ok   { color: #0d8234; font-weight: bold; }
+    .console-output .head { color: #000000; font-weight: bold; }
+    .console-output .sep  { color: #000000; font-weight: bold; }
+
+    /* AI usage section */
+    .ai-tool-block {
+      border: 1.5px solid #bbb;
+      border-radius: 3px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      background: #fafafa;
+    }
+    .ai-tool-block .tool-name {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #ccc;
+    }
+    .ai-tool-block ul {
+      margin-left: 24px;
+      font-size: 11.5pt;
+      line-height: 1.7;
+      color: #222;
+    }
+    .ai-tool-block li { margin-bottom: 7px; text-align: justify; }
+
+    /* Visualisation images - displayed one after another, full width */
+    .viz-section-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 24px;
+      margin-bottom: 14px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #ccc;
+    }
+    .viz-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-top: 18px;
+      margin-bottom: 24px;
+    }
+    .viz-wrap {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 14px;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+    .viz-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .viz-caption {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11pt;
+      color: #333;
+      margin-top: 10px;
+      font-style: italic;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+
+    <!-- PAGE 1: PROGRAM EXECUTION OUTPUT (PART 1: TRAINING & EVALUATION) -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust&#39;s<br>
+            Pimpri Chinchwad College of Engineering
+          </td>
+        </tr>
+        <tr><td colspan="2" class="row-centered">Assignment No. 3 (Index: No. 6) &mdash; Program Execution Output</td></tr>
+        <tr><td colspan="2" class="row-left">Course:- Artificial Intelligence and Machine Learning</td></tr>
+        <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+        <tr><td colspan="2" class="row-left">PRN:- 124B1F116 &nbsp;&nbsp;|&nbsp;&nbsp; Batch:- B3</td></tr>
+      </table>
+
+      <h2>1. Title</h2>
+      <p style="font-weight: bold; font-size: 12pt; margin-bottom: 12px;">
+        AI-Based Computer Laboratory Fault Detection and Diagnosis Using Decision Tree Classification
+      </p>
+
+      <h2>2. Aim</h2>
+      <p style="margin-bottom: 16px; font-size: 11.5pt;">
+        To implement a Decision Tree classification algorithm for a real-life problem by developing an intelligent machine learning system that analyzes computer laboratory system parameters and automatically predicts the probable type of fault affecting a computer.
+      </p>
+
+      <h2>Program Execution Output (Part 1)</h2>
+      <p>Execution trace of Decision Tree training, stratified cross-evaluation metrics, classification report, and confusion matrix on the 400 laboratory workstation dataset:</p>
+      <div class="console-output"><span class="head">Initializing PCCOE LabFault-DT Diagnostic Engine...</span>
+<span class="sep">======================================================================================</span>
+<span class="head"> PCCOE LABFAULT-DT: COMPUTER LABORATORY FAULT DIAGNOSIS SYSTEM</span>
+ Department of Information Technology | Pimpri Chinchwad College of Engineering
+<span class="sep">======================================================================================</span>
+ Total Systems Profiled       : 400
+ Diagnostic Attributes        : 15 features (1 Identifier, 1 Target Class)
+ Target Fault Categories      : ['Hardware_Fault', 'Network_Fault', 'No_Fault', 'Software_Fault', 'Storage_Fault']
+<span class="sep">--------------------------------------------------------------------------------------</span>
+ Training Set Size            : 320 samples (80%)
+ Testing Set Size             : 80 samples (20%)
+<span class="sep">--------------------------------------------------------------------------------------</span>
+ Training Decision Tree Classifier (Criterion=Entropy, Max_Depth=5)...
+<span class="head"> DECISION TREE MODEL PERFORMANCE EVALUATION:</span>
+ &gt;&gt; Model Accuracy            : <span class="ok">96.25 %</span>
+ &gt;&gt; Weighted Precision        : <span class="ok">96.44 %</span>
+ &gt;&gt; Weighted Recall           : <span class="ok">96.25 %</span>
+ &gt;&gt; Weighted F1-Score         : <span class="ok">96.24 %</span>
+<span class="sep">--------------------------------------------------------------------------------------</span>
+<span class="head"> CLASSIFICATION REPORT PER FAULT TYPE:</span>
+                 precision    recall  f1-score   support
+ Hardware_Fault     0.9333    0.8750    0.9032        16
+  Network_Fault     1.0000    1.0000    1.0000        16
+       No_Fault     0.8889    1.0000    0.9412        16
+ Software_Fault     1.0000    0.9375    0.9677        16
+  Storage_Fault     1.0000    1.0000    1.0000        16
+
+       accuracy                         0.9625        80
+      macro avg     0.9644    0.9625    0.9624        80
+   weighted avg     0.9644    0.9625    0.9624        80
+<span class="sep">--------------------------------------------------------------------------------------</span>
+<span class="head"> CONFUSION MATRIX:</span>
+ Actual \ Pred       Hardware_F  Network_Fa    No_Fault  Software_F  Storage_Fa
+ Hardware_Fault              14           0           2           0           0
+ Network_Fault                0          16           0           0           0
+ No_Fault                     0           0          16           0           0
+ Software_Fault               1           0           0          15           0
+ Storage_Fault                0           0           0           0          16
+<span class="sep">======================================================================================</span></div>
+    </div>
+
+    <!-- PAGE 2: PROGRAM EXECUTION OUTPUT (PART 2: INFERENCE & RECOMMENDATION) -->
+    <div class="page">
+      <h2>Program Execution Output (Part 2)</h2>
+      <p>Simulated production workstation telemetry evaluation and rule-based technician maintenance prioritization:</p>
+      <div class="console-output"><span class="sep">======================================================================================</span>
+<span class="head"> INFERENCE DEMONSTRATION &amp; MAINTENANCE ACTION ENGINE:</span>
+<span class="sep">======================================================================================</span>
+ &gt;&gt; Computer: PC_127 | CPU=88°C, RAM=65%, DiskH=85%, NetStat=1, Fan=0
+    Classification : <span class="ok">[HARDWARE_FAULT]</span> (Confidence: 100.0%)
+    Recommendation : PRIORITY 1: Inspect CPU thermal paste, clean/replace fan, check heatsink.
+
+ &gt;&gt; Computer: PC_042 | CPU=54°C, RAM=95%, DiskH=92%, NetStat=1, Fan=1
+    Classification : <span class="ok">[SOFTWARE_FAULT]</span> (Confidence: 100.0%)
+    Recommendation : PRIORITY 2: Check memory-leak processes, rebuild corrupted OS profile.
+
+ &gt;&gt; Computer: PC_089 | CPU=46°C, RAM=45%, DiskH=90%, NetStat=0, Fan=1
+    Classification : <span class="ok">[NETWORK_FAULT]</span>  (Confidence: 100.0%)
+    Recommendation : PRIORITY 2: Verify RJ-45 patch cable, test switch port VLAN, reset gateway.
+
+ &gt;&gt; Computer: PC_156 | CPU=52°C, RAM=55%, DiskH=28%, NetStat=1, Fan=1
+    Classification : <span class="ok">[STORAGE_FAULT]</span>  (Confidence: 100.0%)
+    Recommendation : PRIORITY 1: Backup user data immediately; clone sector to replacement SSD.
+
+ &gt;&gt; Computer: PC_201 | CPU=44°C, RAM=40%, DiskH=96%, NetStat=1, Fan=1
+    Classification : <span class="ok">[NO_FAULT]</span>        (Confidence: 100.0%)
+    Recommendation : PRIORITY 4: Routine maintenance only; system operating within nominal limits.
+<span class="sep">======================================================================================</span>
+&gt;&gt; Status: All test evaluations completed successfully with 0 runtime exceptions.
+<span class="sep">======================================================================================</span></div>
+    </div>
+
+    <!-- PAGE 3: OUTPUT VISUALISATIONS (FIGURES 1 & 2) -->
+    <div class="page">
+      <h2>Output Visualisations (Part 1)</h2>
+      <p>The following charts were generated from the Decision Tree training and evaluation pipeline to illustrate tree decision logic and class-level prediction accuracy.</p>
+
+      <div class="viz-list">
+        <div class="viz-wrap">
+          <img src="viz_decision_tree.png" alt="Decision Tree Model Architecture" />
+          <p class="viz-caption">Figure 1: Full Decision Tree architecture and splitting rules (Criterion=Entropy, Max Depth=5).</p>
+        </div>
+        <div class="viz-wrap">
+          <img src="viz_confusion_matrix.png" alt="Confusion Matrix Heatmap" />
+          <p class="viz-caption">Figure 2: Confusion matrix heatmap evaluated on the 20% holdout test dataset.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: OUTPUT VISUALISATIONS (FIGURES 3 & 4) -->
+    <div class="page">
+      <h2>Output Visualisations (Part 2)</h2>
+
+      <div class="viz-list">
+        <div class="viz-wrap">
+          <img src="viz_feature_importance.png" alt="Feature Importance Breakdown" />
+          <p class="viz-caption">Figure 3: Feature importance breakdown calculated via Information Gain reduction.</p>
+        </div>
+        <div class="viz-wrap">
+          <img src="viz_model_metrics.png" alt="Per-Class Performance Metrics" />
+          <p class="viz-caption">Figure 4: Per-class diagnostic precision, recall, and F1-score across all 5 fault categories.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 5: AI USAGE DECLARATION -->
+    <div class="page">
+      <h2>Generative AI Usage Declaration</h2>
+
+      <div class="ai-tool-block">
+        <div class="tool-name">AI Tool Used: Gemini (Google)</div>
+        <p style="margin-bottom: 14px; font-size: 11.5pt;">The following describes the specific purposes for which Gemini was consulted during the development of this assignment:</p>
+        <ul>
+          <li>To understand the mathematical principles of Decision Tree classification algorithms, specifically Information Gain calculations, Shannon Entropy, and recursive partitioning mechanisms.</li>
+          <li>To understand hyperparameter regularisation strategies (such as <code>max_depth</code> and <code>min_samples_leaf</code>) to prevent tree overfitting while maintaining high generalization accuracy.</li>
+          <li>To clarify diagnostic telemetry attribute design and realistic laboratory fault patterns across hardware, software, storage, and networking layers.</li>
+          <li>To understand multi-class evaluation methodologies including stratified train-test splitting, confusion matrices, and macro-averaged precision, recall, and F1-scores.</li>
+          <li>To understand how to convert raw Decision Tree outputs into post-classification rule-based maintenance recommendations for IT laboratory technicians.</li>
+        </ul>
+      </div>
+
+      <h3>Interaction Summary</h3>
+      <p>The AI was used strictly as a conceptual reference and clarification tool. All code was written, structured, and debugged independently. The feature architecture, dataset design, model training pipeline, and maintenance rule engine were designed by myself with AI assistance limited to understanding the underlying theory.</p>
+    </div>
+
+  </div>
+</body>
+</html>

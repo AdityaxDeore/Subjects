@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIML Assignment No. 5 (Index: No. 7) - K-Nearest Neighbors (KNN) Classifier</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.7;
+      color: #111;
+      background: #b0b8c1;
+      padding: 28px 20px;
+    }
+
+    .container { max-width: 8.5in; margin: 0 auto; }
+
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      padding: 0.85in 0.95in;
+      background: #fff;
+      margin: 0 auto 28px auto;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+
+    .page.diagram-page {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0.7in 0.85in;
+    }
+
+    @page { size: A4 portrait; margin: 18mm 16mm; }
+    @media print {
+      body { background: #fff !important; padding: 0 !important; }
+      .container { max-width: 100% !important; }
+      .page {
+        width: 100% !important; min-height: auto !important;
+        margin: 0 !important; padding: 0 !important;
+        box-shadow: none !important; border-radius: 0 !important;
+        page-break-after: always !important; break-after: page !important;
+      }
+      .page:last-child { page-break-after: avoid !important; }
+      h2, h3 { page-break-after: avoid !important; }
+      table, .diagram-wrap { page-break-inside: avoid !important; }
+    }
+
+    /* --- Cover Table --- */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .cover-table td { border: 1.5px solid #111; padding: 7px 12px; }
+    .cover-table .college-info {
+      text-align: center; font-weight: bold;
+      font-size: 14.5pt; line-height: 1.5; color: #000;
+    }
+    .cover-table .row-centered {
+      text-align: center; font-weight: bold; font-size: 12.5pt; color: #000;
+    }
+    .cover-table .row-left {
+      text-align: left; font-weight: bold; font-size: 11.5pt; color: #000;
+    }
+    .logo-container { text-align: center; width: 15%; padding: 6px !important; }
+    .logo-container img { max-width: 80px; height: auto; display: block; margin: 0 auto; }
+
+    /* --- Headings --- */
+    h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1.5px solid #333;
+      padding-bottom: 4px;
+    }
+    .page > h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    /* --- Body text --- */
+    p {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      text-align: justify;
+      margin-bottom: 12px;
+      color: #111;
+      line-height: 1.7;
+    }
+    ul, ol {
+      margin-left: 28px;
+      font-size: 12pt;
+      margin-bottom: 12px;
+      color: #111;
+      line-height: 1.7;
+    }
+    li { margin-bottom: 6px; text-align: justify; }
+
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10.5pt;
+      background: #f3f3f3;
+      border: 1px solid #ddd;
+      padding: 1px 4px;
+      border-radius: 2px;
+    }
+
+    /* --- Math block --- */
+    .math-block {
+      text-align: center;
+      margin: 14px 0 18px 0;
+      font-size: 13pt;
+    }
+
+    /* --- Tables --- */
+    table.styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11pt;
+    }
+    table.styled-table th {
+      background: rgba(120, 125, 135, 0.22);
+      color: #111;
+      font-weight: bold;
+      text-align: center;
+      padding: 9px 10px;
+      border: 1px solid #aaa;
+    }
+    table.styled-table td {
+      border: 1px solid #bbb;
+      padding: 8px 10px;
+      color: #111;
+      vertical-align: middle;
+    }
+    table.styled-table tr:nth-child(even) { background: rgba(0, 0, 0, 0.025); }
+    table.styled-table td.center { text-align: center; }
+
+    .badge-pass {
+      display: inline-block;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9pt;
+      font-weight: bold;
+      color: #166534;
+      border: 1px solid #166534;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: #f0fdf4;
+    }
+
+    /* --- Diagram page --- */
+    .diagram-section-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 10px;
+      padding-bottom: 4px;
+      border-bottom: 1.5px solid #333;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .diagram-desc {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11.5pt;
+      color: #333;
+      line-height: 1.65;
+      text-align: justify;
+      margin-bottom: 18px;
+    }
+    .diagram-wrap {
+      width: 100%;
+      border: 1.5px solid #888;
+      background: #ffffff;
+      padding: 12px;
+      text-align: center;
+    }
+    .diagram-wrap img { width: 100%; height: auto; display: block; margin: 0 auto; }
+    .diagram-caption {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 10.5pt;
+      color: #333;
+      margin-top: 10px;
+      text-align: center;
+      font-style: italic;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+
+    <!-- PAGE 1: COVER + 1. TITLE + 2. AIM + 3. PROBLEM STATEMENT -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust&#39;s<br>
+            Pimpri Chinchwad College of Engineering
+          </td>
+        </tr>
+        <tr><td colspan="2" class="row-centered">Assignment No. 5 (Index: No. 7)</td></tr>
+        <tr><td colspan="2" class="row-left">Course:- Artificial Intelligence and Machine Learning</td></tr>
+        <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+        <tr><td colspan="2" class="row-left">PRN:- 124B1F116 &nbsp;&nbsp;|&nbsp;&nbsp; Batch:- B3</td></tr>
+      </table>
+
+      <h2>1. Title</h2>
+      <p style="font-weight: bold; font-size: 12.5pt; margin-bottom: 16px;">
+        Real-Life Medical Diagnosis Prediction Using K-Nearest Neighbors (KNN) Classifier
+      </p>
+
+      <h2>2. Aim</h2>
+      <p style="margin-bottom: 18px;">
+        To implement the <strong>K-Nearest Neighbors (KNN) classification algorithm</strong> for a real-life medical diagnosis problem, optimize the hyperparameter \(K\) using cross-validation, and compare its diagnostic performance against a baseline Decision Tree classifier using classification accuracy, precision, recall, and confusion matrix.
+      </p>
+
+      <h2>3. Problem Statement &amp; Objectives</h2>
+      <p style="font-weight: bold; font-size: 11.5pt; color: #1e3a8a; margin-bottom: 10px;">
+        Problem Statement: Implement the K-Nearest Neighbors (KNN) algorithm for a real-life classification problem to classify medical patient biopsies as Benign or Malignant, standardize diagnostic features, determine the optimal number of neighbors \(K\), and compare its classification performance with a standalone Decision Tree using accuracy and other evaluation metrics.
+      </p>
+      <p>
+        In computational medical diagnostics, accurate and non-invasive identification of cellular malignancies enables timely oncological intervention while avoiding unnecessary invasive surgical procedures. K-Nearest Neighbors is an instance-based non-parametric supervised learning algorithm that assigns an unclassified patient biopsy to the majority class among its \(K\) nearest historical cases in a multi-dimensional feature space.
+      </p>
+      <ul>
+        <li><strong>Inputs:</strong> 30 continuous clinical morphological parameters describing cell nucleus shape, area, texture, concavity, and perimeter.</li>
+        <li><strong>Output:</strong> Binary diagnostic classification: <code>Malignant</code> (Class 0, cancerous) or <code>Benign</code> (Class 1, non-cancerous).</li>
+        <li><strong>Preprocessing:</strong> Z-Score standardization via <code>StandardScaler</code> to ensure all distance dimensions contribute equally.</li>
+        <li><strong>Hyperparameter Search:</strong> 10-Fold Cross-Validation across candidate \(K \in [1, 25]\) to discover the optimal bias-variance tradeoff.</li>
+        <li><strong>Comparison Baseline:</strong> Standalone Decision Tree classifier trained on the identical standardized dataset.</li>
+        <li><strong>Evaluation Metrics:</strong> Accuracy, Weighted Precision, Recall (Sensitivity), F1-Score, Confusion Matrix, and ROC-AUC.</li>
+      </ul>
+    </div>
+
+    <!-- PAGE 2: THEORY, DISTANCE GEOMETRY & BASIC MATH -->
+    <div class="page">
+      <h2>4. Mathematical Principles of K-Nearest Neighbors (KNN)</h2>
+      <p>
+        KNN is a <strong>lazy learning algorithm</strong> that stores all available training instances and postpones decision computation until a query instance is evaluated.
+      </p>
+
+      <h3>4.1 Step 1: Feature Standardization (Z-Score Normalization)</h3>
+      <p>
+        Because KNN relies on spatial distance, features with larger numerical ranges (such as cell area up to 2500) would completely dominate features with small ranges (such as smoothness from 0.05 to 0.15). We standardize each feature \(x\) to zero mean (\(\mu = 0\)) and unit standard deviation (\(\sigma = 1\)):
+      </p>
+      <div class="math-block">
+        \[ z = \frac{x - \mu}{\sigma} \]
+      </div>
+
+      <h3>4.2 Step 2: Distance Metric Calculation</h3>
+      <p>
+        The spatial distance between an unseen query patient vector \(x = (x_1, \dots, x_p)\) and a training patient \(y = (y_1, \dots, y_p)\) is computed using the <strong>Euclidean Distance</strong>:
+      </p>
+      <div class="math-block">
+        \[ d(x, y) = \sqrt{\sum_{i=1}^{p} (x_i - y_i)^2} \]
+      </div>
+      <p>
+        Alternative distance metrics include <strong>Manhattan Distance</strong> (\(d(x,y) = \sum |x_i - y_i|\)) and generalized <strong>Minkowski Distance</strong> (\(d(x,y) = (\sum |x_i - y_i|^p)^{1/p}\)).
+      </p>
+
+      <h3>4.3 Step 3: Majority Voting &amp; Basic Metric Arithmetic</h3>
+      <p>
+        After sorting all training patients by proximity, the \(K\) nearest neighbors are identified. Plurality voting determines the final diagnosis:
+      </p>
+      <div class="math-block">
+        \[ \hat{y} = \operatorname{argmax}_{c \in \{0, 1\}} \sum_{i=1}^{K} \mathbb{I}(y_{(i)} = c) \]
+      </div>
+      <p>
+        From the test confusion matrix (39 True Malignant, 72 True Benign, 3 False Benign, 0 False Malignant), performance metrics are evaluated via simple formulas:
+      </p>
+      <div class="math-block">
+        \[ \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} \times 100 = \frac{72 + 39}{72 + 39 + 3 + 0} = \frac{111}{114} = 97.37\% \]
+      </div>
+      <div class="math-block">
+        \[ \text{Precision(Benign)} = \frac{72}{72 + 3} = 96.00\%, \quad \text{Recall(Benign)} = \frac{72}{72 + 0} = 100.00\% \]
+      </div>
+    </div>
+
+    <!-- PAGE 3: FULL PAGE HYPERPARAMETER OPTIMIZATION & CONFUSION MATRIX -->
+    <div class="page diagram-page">
+      <div class="diagram-section-title">5. Hyperparameter Optimization &amp; Confusion Matrix</div>
+      <p class="diagram-desc">
+        The chart below illustrates 10-Fold Cross-Validation accuracy across candidate \(K\) values from 1 to 25. An odd \(K=7\) achieved the highest cross-validation score (<strong>97.37%</strong>), effectively preventing tie votes while eliminating noise from local anomalies.
+      </p>
+      <div class="diagram-wrap">
+        <img src="viz_knn_k_optimization.png" alt="KNN K Optimization" />
+        <p class="diagram-caption">
+          Figure 1: Cross-validation accuracy curve identifying optimal \(K=7\) nearest neighbors.
+        </p>
+      </div>
+    </div>
+
+    <!-- PAGE 4: EXPERIMENTAL RESULTS & COMPARATIVE BENCHMARK -->
+    <div class="page">
+      <h2>6. Model Evaluation &amp; Benchmark Comparison</h2>
+      <p>
+        The optimized KNN model (\(K=7\), Euclidean metric) was evaluated on an 80/20 stratified hold-out test set comprising 114 patient biopsies (42 Malignant, 72 Benign):
+      </p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 26%;">Diagnostic Category</th>
+            <th style="width: 16%;">Precision</th>
+            <th style="width: 16%;">Recall</th>
+            <th style="width: 16%;">F1-Score</th>
+            <th style="width: 26%;">Support (Hold-out Test)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>Malignant (0)</code></td><td class="center">100.00 %</td><td class="center">92.86 %</td><td class="center">96.30 %</td><td class="center">42 patients</td></tr>
+          <tr><td><code>Benign (1)</code></td><td class="center">96.00 %</td><td class="center">100.00 %</td><td class="center">97.96 %</td><td class="center">72 patients</td></tr>
+          <tr style="font-weight: bold; background: rgba(0, 0, 0, 0.05);">
+            <td>Weighted Average</td><td class="center">97.47 %</td><td class="center">97.37 %</td><td class="center">97.35 %</td><td class="center">114 patients</td></tr>
+        </tbody>
+      </table>
+
+      <h3>6.1 Benchmark Comparison: KNN vs. Standalone Decision Tree</h3>
+      <p>
+        To directly answer the problem statement, both classifiers were trained and tested on the identical standardized splits:
+      </p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 28%;">Model Architecture</th>
+            <th style="width: 18%;">Accuracy</th>
+            <th style="width: 18%;">Precision</th>
+            <th style="width: 18%;">Recall</th>
+            <th style="width: 18%;">F1-Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Single Decision Tree</strong></td>
+            <td class="center">91.23 %</td>
+            <td class="center">91.61 %</td>
+            <td class="center">91.23 %</td>
+            <td class="center">91.30 %</td>
+          </tr>
+          <tr style="background: rgba(16, 185, 129, 0.08); font-weight: bold;">
+            <td><strong>K-Nearest Neighbors (K=7)</strong></td>
+            <td class="center"><span class="badge-pass">97.37 %</span></td>
+            <td class="center">97.47 %</td>
+            <td class="center">97.37 %</td>
+            <td class="center">97.35 %</td>
+          </tr>
+          <tr style="font-weight: bold;">
+            <td>Performance Gain</td>
+            <td class="center"><span class="badge-pass">+6.14 %</span></td>
+            <td class="center">+5.87 %</td>
+            <td class="center">+6.14 %</td>
+            <td class="center">+6.04 %</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="diagram-wrap" style="margin-top: 14px;">
+        <img src="viz_knn_confusion_matrix.png" alt="KNN Confusion Matrix" />
+        <p class="diagram-caption">
+          Figure 2: Confusion matrix heatmap confirming 0 false positives and exceptional 97.37% test accuracy.
+        </p>
+      </div>
+    </div>
+
+    <!-- PAGE 5: DISTANCE METRIC COMPARISON & CONCLUSION -->
+    <div class="page">
+      <h2>7. Distance Metric Influence &amp; Discriminative Capacity</h2>
+      <p>
+        Cross-validation across different distance norms demonstrates that smooth \(L_2\) Euclidean geometry delivers superior diagnostic fidelity for continuous cell nuclei measurements:
+      </p>
+      <div class="diagram-wrap" style="margin-bottom: 18px;">
+        <img src="viz_distance_metrics.png" alt="Distance Metrics Comparison" />
+        <p class="diagram-caption">
+          Figure 3: Cross-validated accuracy across Euclidean, Manhattan, Minkowski, and Chebyshev distance metrics.
+        </p>
+      </div>
+
+      <h2>8. Conclusion</h2>
+      <p>
+        In this assignment, a **K-Nearest Neighbors (KNN)** classification system was successfully implemented for real-life medical diagnosis:
+      </p>
+      <ol>
+        <li><strong>Standardization Impact:</strong> Applying Z-Score normalization eliminated feature-scale bias across all 30 morphological attributes.</li>
+        <li><strong>Optimal Hyperparameter:</strong> 10-Fold Cross-Validation identified \(K=7\) as the optimal balance between high variance (small \(K\)) and oversmoothing bias (large \(K\)).</li>
+        <li><strong>Comparison Verification:</strong> KNN outperformed the standalone Decision Tree by **+6.14% in accuracy** (97.37% vs. 91.23%), demonstrating that distance-based neighborhood clustering provides superior discriminative power for continuous pathological telemetry.</li>
+      </ol>
+    </div>
+
+  </div>
+</body>
+</html>

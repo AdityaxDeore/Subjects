@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIML Assignment No. 5 (Index: No. 7) - Output &amp; AI Usage</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.7;
+      color: #111;
+      background: #e5e7eb;
+      padding: 28px 20px;
+    }
+    .container { max-width: 8.5in; margin: 0 auto; }
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.85in 0.95in;
+      background: #ffffff;
+      margin: 0 auto 28px auto;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    @page { size: A4 portrait; margin: 18mm 16mm; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page {
+        width: 100%; min-height: auto; margin: 0; padding: 0;
+        box-shadow: none; border-radius: 0;
+        page-break-after: always;
+      }
+      .page:last-child { page-break-after: avoid; }
+      h2, h3 { page-break-after: avoid; }
+      .console-output, .viz-wrap { page-break-inside: avoid; }
+    }
+
+    h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 26px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1.5px solid #333;
+      padding-bottom: 4px;
+    }
+    .page > h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 12pt;
+      text-align: justify;
+      margin-bottom: 12px;
+      color: #111;
+      line-height: 1.7;
+    }
+
+    /* --- Cover Table --- */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .cover-table td { border: 1.5px solid #111; padding: 7px 12px; }
+    .cover-table .college-info {
+      text-align: center; font-weight: bold;
+      font-size: 14.5pt; line-height: 1.5; color: #000;
+    }
+    .cover-table .row-centered {
+      text-align: center; font-weight: bold; font-size: 12.5pt; color: #000;
+    }
+    .cover-table .row-left {
+      text-align: left; font-weight: bold; font-size: 11.5pt; color: #000;
+    }
+    .logo-container { text-align: center; width: 15%; padding: 6px !important; }
+    .logo-container img { max-width: 80px; height: auto; display: block; margin: 0 auto; }
+
+    /* Clean unboxed terminal output */
+    .console-output {
+      background: transparent;
+      color: #000000;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9pt;
+      font-weight: 500;
+      padding: 4px 0;
+      border: none;
+      border-radius: 0;
+      white-space: pre;
+      line-height: 1.48;
+      margin-bottom: 14px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .console-output .ok   { color: #0d8234; font-weight: bold; }
+    .console-output .head { color: #000000; font-weight: bold; }
+    .console-output .sep  { color: #000000; font-weight: bold; }
+
+    /* AI usage section */
+    .ai-tool-block {
+      border: 1.5px solid #bbb;
+      border-radius: 3px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      background: #fafafa;
+    }
+    .ai-tool-block .tool-name {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #ccc;
+    }
+    .ai-tool-block ul {
+      margin-left: 24px;
+      font-size: 11.5pt;
+      line-height: 1.7;
+      color: #222;
+    }
+    .ai-tool-block li { margin-bottom: 7px; text-align: justify; }
+
+    /* Visualisation images */
+    .viz-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-top: 18px;
+      margin-bottom: 24px;
+    }
+    .viz-wrap {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 14px;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+    .viz-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .viz-caption {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11pt;
+      color: #333;
+      margin-top: 10px;
+      font-style: italic;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+
+    <!-- PAGE 1: COVER TABLE + TITLE & AIM + PROGRAM OUTPUT (PART 1) -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust&#39;s<br>
+            Pimpri Chinchwad College of Engineering
+          </td>
+        </tr>
+        <tr><td colspan="2" class="row-centered">Assignment No. 5 (Index: No. 7) &mdash; Program Execution Output</td></tr>
+        <tr><td colspan="2" class="row-left">Course:- Artificial Intelligence and Machine Learning</td></tr>
+        <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+        <tr><td colspan="2" class="row-left">PRN:- 124B1F116 &nbsp;&nbsp;|&nbsp;&nbsp; Batch:- B3</td></tr>
+      </table>
+
+      <h2>1. Title</h2>
+      <p style="font-weight: bold; font-size: 12pt; margin-bottom: 12px;">
+        Real-Life Medical Diagnosis Prediction Using K-Nearest Neighbors (KNN) Classifier
+      </p>
+
+      <h2>2. Aim</h2>
+      <p style="margin-bottom: 16px; font-size: 11.5pt;">
+        To implement the <strong>K-Nearest Neighbors (KNN) classification algorithm</strong> for a real-life medical diagnosis problem, optimize the hyperparameter \(K\) using cross-validation, and compare its diagnostic performance against a baseline Decision Tree classifier using classification accuracy, precision, recall, and confusion matrix.
+      </p>
+
+      <h2>Program Execution Output (Part 1)</h2>
+      <p>Execution trace of KNN feature standardization, 10-Fold Cross-Validation hyperparameter tuning, model training, and confusion matrix evaluation:</p>
+      <div class="console-output"><span class="head">Initializing PCCOE MediKNN-Diag Diagnostic Engine...</span>
+<span class="sep">======================================================================================</span>
+<span class="head"> PCCOE MEDIKNN: MEDICAL DIAGNOSIS K-NEAREST NEIGHBORS CLASSIFIER</span>
+ Department of Information Technology | Pimpri Chinchwad College of Engineering
+<span class="sep">======================================================================================</span>
+&gt;&gt; Medical telemetry dataset saved to: dataset.csv (569 patient records)
+ Dataset Samples Profiled     : 569 patient biopsy records
+ Diagnostic Medical Features  : 30 morphological attributes
+ Target Diagnostic Classes    : 0 -&gt; Malignant (Tumor), 1 -&gt; Benign (Healthy/Non-cancerous)
+<span class="sep">--------------------------------------------------------------------------------------</span>
+ Training Set Size            : 455 patient records (80%)
+ Testing Set Size             : 114 patient records (20%)
+<span class="sep">--------------------------------------------------------------------------------------</span>
+ Applying Feature Standardization via StandardScaler (Z-Score Normalization)...
+ &gt;&gt; Feature scaling complete: Zero mean, unit variance achieved across all 30 dimensions.
+<span class="sep">--------------------------------------------------------------------------------------</span>
+ Performing 10-Fold Cross-Validation for Optimal K-Value Selection (K = 1 to 25)...
+ &gt;&gt; Optimal Hyperparameter    : K = 7 Nearest Neighbors
+ &gt;&gt; Cross-Validation Accuracy : <span class="ok">97.37 %</span>
+<span class="sep">--------------------------------------------------------------------------------------</span>
+ Training Final KNN Classifier with K=7 and Euclidean Distance Metric...
+<span class="head"> KNN MODEL PERFORMANCE EVALUATION:</span>
+ &gt;&gt; Model Accuracy (Holdout)  : <span class="ok">97.37 %</span>
+ &gt;&gt; Weighted Precision        : <span class="ok">97.47 %</span>
+ &gt;&gt; Weighted Recall           : <span class="ok">97.37 %</span>
+ &gt;&gt; Weighted F1-Score         : <span class="ok">97.35 %</span>
+<span class="sep">--------------------------------------------------------------------------------------</span>
+<span class="head"> CLASSIFICATION REPORT PER DIAGNOSTIC CLASS:</span>
+               precision    recall  f1-score   support
+
+    Malignant     1.0000    0.9286    0.9630        42
+       Benign     0.9600    1.0000    0.9796        72
+
+     accuracy                         0.9737       114
+    macro avg     0.9800    0.9643    0.9713       114
+ weighted avg     0.9747    0.9737    0.9735       114
+
+<span class="sep">--------------------------------------------------------------------------------------</span>
+<span class="head"> CONFUSION MATRIX:</span>
+ Actual \ Pred          Malignant        Benign
+ Malignant                     39             3
+ Benign                         0            72
+<span class="sep">======================================================================================</span></div>
+    </div>
+
+    <!-- PAGE 2: PROGRAM OUTPUT (PART 2: INFERENCE & BENCHMARK COMPARISON) -->
+    <div class="page">
+      <h2>Program Execution Output (Part 2)</h2>
+      <p>Real-life patient diagnostic triage and comparative benchmark analysis between KNN and baseline Decision Tree:</p>
+      <div class="console-output"><span class="sep">======================================================================================</span>
+<span class="head"> REAL-LIFE CLINICAL DIAGNOSTIC INFERENCE &amp; TRIAGE RECOMMENDATIONS:</span>
+<span class="sep">--------------------------------------------------------------------------------------</span>
+ &gt;&gt; Patient PATIENT_465 | Actual: Benign     | Predicted: <span class="ok">[BENIGN]</span>    (Confidence: 100.0%)
+    Triage: LOW RISK: Morphological contours align with benign cytology; schedule 6-month checkup.
+
+ &gt;&gt; Patient PATIENT_354 | Actual: Malignant  | Predicted: <span class="ok">[MALIGNANT]</span> (Confidence: 100.0%)
+    Triage: HIGH RISK: Tumor exhibits invasive cellular boundary irregularities; schedule immediate biopsy.
+
+ &gt;&gt; Patient PATIENT_267 | Actual: Benign     | Predicted: <span class="ok">[BENIGN]</span>    (Confidence: 100.0%)
+    Triage: LOW RISK: Morphological contours align with benign cytology; schedule 6-month checkup.
+
+ &gt;&gt; Patient PATIENT_508 | Actual: Benign     | Predicted: <span class="ok">[BENIGN]</span>    (Confidence: 100.0%)
+    Triage: LOW RISK: Morphological contours align with benign cytology; schedule 6-month checkup.
+
+ &gt;&gt; Patient PATIENT_238 | Actual: Malignant  | Predicted: <span class="ok">[MALIGNANT]</span> (Confidence: 100.0%)
+    Triage: HIGH RISK: Tumor exhibits invasive cellular boundary irregularities; schedule immediate biopsy.
+
+<span class="sep">--------------------------------------------------------------------------------------</span>
+<span class="head"> BENCHMARK COMPARISON: KNN CLASSIFIER (K=7) VS STANDALONE DECISION TREE:</span>
+<span class="sep">--------------------------------------------------------------------------------------</span>
+ Model Architecture          Accuracy     Precision    Recall       F1-Score    
+ Single Decision Tree        91.23 %      91.61 %      91.23 %      91.30 %     
+ K-Nearest Neighbors (K=7)   <span class="ok">97.37 %</span>      <span class="ok">97.47 %</span>      <span class="ok">97.37 %</span>      <span class="ok">97.35 %</span>     
+ Performance Delta (Gain)    <span class="ok">+6.14 %</span>      <span class="ok">+5.87 %</span>      <span class="ok">+6.14 %</span>      <span class="ok">+6.04 %</span>     
+<span class="sep">======================================================================================</span>
+&gt;&gt; Status: All 114 test evaluations and 10-Fold cross-validations completed successfully.
+<span class="sep">======================================================================================</span></div>
+    </div>
+
+    <!-- PAGE 3: OUTPUT VISUALISATIONS (PART 1) -->
+    <div class="page">
+      <h2>Output Visualisations (Part 1)</h2>
+      <p>The following graphics illustrate the 10-Fold cross-validation hyperparameter search across candidate \(K\) values, alongside the confusion matrix evaluated on the hold-out test set:</p>
+
+      <div class="viz-list">
+        <div class="viz-wrap">
+          <img src="viz_knn_k_optimization.png" alt="KNN K Optimization Curve" />
+          <p class="viz-caption">Figure 1: 10-Fold Cross-Validation accuracy curve identifying optimal \(K=7\) nearest neighbors (97.37%).</p>
+        </div>
+        <div class="viz-wrap">
+          <img src="viz_knn_confusion_matrix.png" alt="Confusion Matrix Heatmap" />
+          <p class="viz-caption">Figure 2: Confusion matrix heatmap confirming zero false benign diagnoses on the test dataset.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: OUTPUT VISUALISATIONS (PART 2) -->
+    <div class="page">
+      <h2>Output Visualisations (Part 2)</h2>
+      <p>Performance comparison across standard distance metrics, accompanied by the Receiver Operating Characteristic (ROC) curve:</p>
+
+      <div class="viz-list">
+        <div class="viz-wrap">
+          <img src="viz_distance_metrics.png" alt="Distance Metrics Comparison" />
+          <p class="viz-caption">Figure 3: Diagnostic accuracy comparison across Euclidean, Manhattan, Minkowski, and Chebyshev distance metrics.</p>
+        </div>
+        <div class="viz-wrap">
+          <img src="viz_knn_roc_curve.png" alt="ROC Diagnostic Curve" />
+          <p class="viz-caption">Figure 4: Receiver Operating Characteristic (ROC) curve demonstrating high diagnostic sensitivity (AUC = 0.9855).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 5: GENERATIVE AI USAGE DECLARATION -->
+    <div class="page">
+      <h2>Generative AI Usage Declaration</h2>
+
+      <div class="ai-tool-block">
+        <div class="tool-name">AI Tool Used: Gemini (Google)</div>
+        <p style="margin-bottom: 14px; font-size: 11.5pt;">The following describes the specific purposes for which Gemini was consulted during the development of this assignment:</p>
+        <ul>
+          <li>To understand the mathematical and theoretical concepts of the K-Nearest Neighbors (KNN) algorithm as an instance-based lazy learner.</li>
+          <li>To understand the mathematical necessity of Z-Score feature standardization (zero mean, unit variance) in distance-based models to avoid dimensional scaling bias.</li>
+          <li>To clarify distance formulations across Euclidean, Manhattan, and Minkowski metrics, and their geometric implications on multi-dimensional clinical decision boundaries.</li>
+          <li>To understand hyperparameter optimization using K-Fold cross-validation to locate the optimal bias-variance tradeoff and avoid tie votes by choosing odd values for \(K\).</li>
+          <li>To understand comparative benchmarking between instance-based KNN and tree-based decision algorithms on continuous biological telemetry.</li>
+        </ul>
+      </div>
+
+      <h3>Interaction Summary</h3>
+      <p>The AI was used strictly as a conceptual reference and clarification tool. All code was written, structured, and debugged independently. The feature normalization pipeline, cross-validation search, distance metric experiments, and triage rule engines were designed by myself with AI assistance limited to understanding the underlying theory.</p>
+    </div>
+
+  </div>
+</body>
+</html>

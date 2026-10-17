@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Ocean Cleanup — UML Activity Diagram</title>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .canvas-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: grab;
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(to right, #f1f5f9 1px, transparent 1px),
+                linear-gradient(to bottom, #f1f5f9 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .canvas-container:active {
+            cursor: grabbing;
+        }
+
+        #pan-viewport {
+            transform-origin: 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg {
+            display: block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+            user-select: none;
+        }
+
+        /* Typography */
+        text {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+        .col-header {
+            font-size: 17px;
+            font-weight: 700;
+            fill: #0f172a;
+            text-anchor: middle;
+        }
+        .sec-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            fill: #0f172a;
+            text-anchor: start;
+        }
+        .sec-sub {
+            font-size: 11px;
+            font-weight: 500;
+            fill: #475569;
+            text-anchor: start;
+        }
+        .node-text {
+            font-size: 12px;
+            font-weight: 500;
+            fill: #0f172a;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+        .node-subtext {
+            font-size: 10.5px;
+            font-weight: 400;
+            fill: #475569;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+        .diamond-text {
+            font-size: 10.5px;
+            font-weight: 600;
+            fill: #0f172a;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+        .branch-label {
+            font-size: 11px;
+            font-weight: 600;
+            fill: #0f172a;
+        }
+        .loop-tag {
+            font-size: 12px;
+            font-weight: 700;
+            fill: #0284c7;
+        }
+
+        /* Elements Styling */
+        .process-box {
+            fill: #ffffff;
+            stroke: #1e3a8a;
+            stroke-width: 1.2;
+            rx: 6px;
+            ry: 6px;
+        }
+        .decision-shape {
+            fill: #ffffff;
+            stroke: #1e3a8a;
+            stroke-width: 1.2;
+        }
+        .connector-line {
+            fill: none;
+            stroke: #1e3a8a;
+            stroke-width: 1.2;
+        }
+        .grid-line {
+            stroke: #93c5fd;
+            stroke-width: 1;
+        }
+        .dashed-grid {
+            stroke: #93c5fd;
+            stroke-width: 1;
+            stroke-dasharray: 4 3;
+        }
+        .loop-boundary {
+            fill: none;
+            stroke: #0284c7;
+            stroke-width: 1.4;
+            stroke-dasharray: 5 3;
+            rx: 8px;
+            ry: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="canvas-container" id="canvas-container">
+        <div id="pan-viewport">
+            <svg id="spacious-diagram" width="1650" height="990" viewBox="0 0 1650 990" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 1.5 L 8 5 L 0 8.5 Z" fill="#1e3a8a" />
+                    </marker>
+                </defs>
+
+                <!-- ==================== 1. SWIMLANES & HEADERS ==================== -->
+                <g id="swimlanes">
+                    <!-- Outer Boundary -->
+                    <rect x="1" y="1" width="1648" height="988" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2" />
+
+                    <!-- Header Fills (y: 1 to 50) -->
+                    <!-- Section Label Col (blank header) -->
+                    <rect x="1" y="1" width="140" height="49" fill="#ffffff" />
+                    <!-- Player Header (Pastel Blue) -->
+                    <rect x="140" y="1" width="380" height="49" fill="#dbeafe" />
+                    <text x="330" y="31" class="col-header">Player</text>
+
+                    <!-- Game System Header (Pastel Green) -->
+                    <rect x="520" y="1" width="460" height="49" fill="#dcfce7" />
+                    <text x="750" y="31" class="col-header">Game System</text>
+
+                    <!-- Ocean Environment Header (Pastel Yellow/Cream) -->
+                    <rect x="980" y="1" width="360" height="49" fill="#fef9c3" />
+                    <text x="1160" y="31" class="col-header">Ocean Environment</text>
+
+                    <!-- Database Header (Pastel Lavender/Purple) -->
+                    <rect x="1340" y="1" width="300" height="49" fill="#ede9fe" />
+                    <text x="1490" y="31" class="col-header">Database</text>
+
+                    <!-- Header Bottom Line -->
+                    <line x1="1" y1="50" x2="1649" y2="50" class="grid-line" />
+
+                    <!-- Vertical Grid Lines Separating Columns -->
+                    <line x1="140" y1="1" x2="140" y2="989" class="grid-line" />
+                    <line x1="520" y1="1" x2="520" y2="989" class="grid-line" />
+                    <line x1="980" y1="1" x2="980" y2="989" class="grid-line" />
+                    <line x1="1340" y1="1" x2="1340" y2="989" class="grid-line" />
+
+                    <!-- Horizontal Dashed Lines Separating Sections -->
+                    <!-- Sec 1 Bottom -->
+                    <line x1="1" y1="220" x2="1649" y2="220" class="dashed-grid" />
+                    <!-- Sec 2 Bottom -->
+                    <line x1="1" y1="420" x2="1649" y2="420" class="dashed-grid" />
+                    <!-- Sec 3 Bottom -->
+                    <line x1="1" y1="710" x2="1649" y2="710" class="dashed-grid" />
+                    <!-- Sec 4 Bottom -->
+                    <line x1="1" y1="915" x2="1649" y2="915" class="dashed-grid" />
+                </g>
+
+                <!-- ==================== 2. SECTION LABELS ==================== -->
+                <g id="section-labels">
+                    <!-- Section 1 (cy ≈ 135) -->
+                    <text x="12" y="128" class="sec-title">1. Authentication</text>
+                    <text x="12" y="145" class="sec-sub">(Registration &amp; Login)</text>
+
+                    <!-- Section 2 (cy ≈ 320) -->
+                    <text x="12" y="312" class="sec-title">2. Game Setup</text>
+                    <text x="12" y="329" class="sec-sub">(Select Zone &amp; Launch)</text>
+
+                    <!-- Section 3 (cy ≈ 565) -->
+                    <text x="12" y="550" class="sec-title">3. Ocean Exploration</text>
+                    <text x="12" y="567" class="sec-sub">(Collect Waste /</text>
+                    <text x="12" y="583" class="sec-sub">Rescue Marine Life)</text>
+
+                    <!-- Section 4 (cy ≈ 812) -->
+                    <text x="12" y="802" class="sec-title">4. Base Operations</text>
+                    <text x="12" y="819" class="sec-sub">(Sell Waste / Upgrade /</text>
+                    <text x="12" y="835" class="sec-sub">View Report)</text>
+
+                    <!-- Section 5 (cy ≈ 950) -->
+                    <text x="12" y="952" class="sec-title">5. Exit</text>
+                </g>
+
+                <!-- ==================== 3. CONNECTORS & ARROWS ==================== -->
+                <g id="connectors">
+                    <!-- ---------- Section 1 Connectors ---------- -->
+                    <!-- Start -> Open Game -->
+                    <path d="M 230,76 L 230,88" class="connector-line" marker-end="url(#arrow)" />
+                    <!-- Open Game -> Registered? -->
+                    <path d="M 230,118 L 230,126" class="connector-line" marker-end="url(#arrow)" />
+                    <!-- Registered? [No] -> Enter Registration Details -->
+                    <path d="M 270,145 L 325,145" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="282" y="137" class="branch-label">[No]</text>
+
+                    <!-- Enter Registration Details -> Create New User -->
+                    <path d="M 485,145 L 560,145 L 560,100 L 640,100" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Enter Registration Details -> Store User Data (Database) -->
+                    <path d="M 405,130 L 405,80 L 1420,80" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Registered? [Yes] -> Login -->
+                    <path d="M 230,164 L 230,175" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="238" y="171" class="branch-label">[Yes]</text>
+
+                    <!-- Login -> Validate Login -->
+                    <path d="M 290,190 L 560,190 L 560,145 L 640,145" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Validate Login -> Retrieve User Data (Database) -->
+                    <path d="M 780,145 L 1420,145" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Create New User -> Validate Login -->
+                    <path d="M 710,115 L 710,130" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Validate Login -> Main Menu -->
+                    <path d="M 710,160 L 710,175" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Main Menu -> Select Action (Sec 2) -->
+                    <path d="M 710,205 L 710,228 L 230,228 L 230,238" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- ---------- Section 2 Connectors ---------- -->
+                    <!-- Select Action distribution bus to 4 actions -->
+                    <path d="M 230,268 L 230,280 L 780,280" class="connector-line" />
+                    <!-- Branch down to Start Game -->
+                    <path d="M 215,280 L 215,292" class="connector-line" marker-end="url(#arrow)" />
+                    <!-- Branch down to View Leaderboard -->
+                    <path d="M 365,280 L 365,292" class="connector-line" marker-end="url(#arrow)" />
+                    <!-- Branch down to Configure Settings -->
+                    <path d="M 610,280 L 610,292" class="connector-line" marker-end="url(#arrow)" />
+                    <!-- Branch down to Exit Game -->
+                    <path d="M 780,280 L 780,292" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Start Game -> Select Ocean Zone -->
+                    <path d="M 215,322 L 215,348" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Select Ocean Zone -> Zone Unlocked? -->
+                    <path d="M 280,363 L 340,363" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Zone Unlocked? [No] -> Prepare Boat -->
+                    <path d="M 420,363 L 485,363" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="440" y="355" class="branch-label">[No]</text>
+
+                    <!-- Zone Unlocked? [Yes] -> Detect Environment (Sec 3) -->
+                    <path d="M 380,381 L 380,500" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="388" y="398" class="branch-label">[Yes]</text>
+
+                    <!-- Prepare Boat -> Boat Ready? -->
+                    <path d="M 605,363 L 650,363" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Boat Ready? [No] -> Show Repair Message -->
+                    <path d="M 730,363 L 795,363" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="750" y="355" class="branch-label">[No]</text>
+
+                    <!-- Boat Ready? [Yes] -> Launch Boat -->
+                    <path d="M 690,381 L 690,396" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="700" y="390" class="branch-label">[Yes]</text>
+
+                    <!-- Show Repair Message -> Load Boat Data (Database) -->
+                    <path d="M 945,363 L 1420,363" class="connector-line" marker-end="url(#arrow)" />
+                    <!-- Show Repair Message -> Launch Boat feedback loop -->
+                    <path d="M 945,363 L 965,363 L 965,410 L 760,410" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- View Leaderboard -> Load Zone Data (Database) -->
+                    <path d="M 435,307 L 1420,307" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Launch Boat -> Detect Environment (Sec 3) -->
+                    <path d="M 620,410 L 440,410 L 440,500" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Exit Game connector routing all the way down to Section 5 Logout / Close Game -->
+                    <path d="M 780,322 L 780,928 L 240,928 L 240,935" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- ---------- Section 3 Connectors ---------- -->
+                    <!-- Control Boat -> Detect Environment -->
+                    <path d="M 285,520 L 350,520" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Detect Environment -> Object Detected? -->
+                    <path d="M 480,520 L 590,520" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Object Detected? -> 4 branches with generous separation -->
+                    <!-- [Waste] -->
+                    <path d="M 635,502 L 635,465 L 750,465" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="655" y="458" class="branch-label">[Waste]</text>
+
+                    <!-- [Marine Life] -->
+                    <path d="M 680,520 L 750,520" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="690" y="513" class="branch-label">[Marine Life]</text>
+
+                    <!-- [Obstacle] -->
+                    <path d="M 635,538 L 635,575 L 750,575" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="655" y="570" class="branch-label">[Obstacle]</text>
+
+                    <!-- [None] -->
+                    <path d="M 635,538 L 635,635 L 710,635" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="645" y="625" class="branch-label">[None]</text>
+
+                    <!-- 3 actions merge cleanly into Update Score & Progress (no thick vertical bar!) -->
+                    <path d="M 885,465 L 940,465 L 940,520 L 1020,520" class="connector-line" marker-end="url(#arrow)" />
+                    <path d="M 890,520 L 940,520" class="connector-line" />
+                    <path d="M 885,575 L 940,575 L 940,520" class="connector-line" />
+
+                    <!-- Continue Exploring -> Update Score & Progress -->
+                    <path d="M 850,635 L 1085,635 L 1085,538" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Update Score & Progress -> Continue Exploring? -->
+                    <path d="M 1150,520 L 1185,520" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Continue Exploring? -> Save Game Progress (Database) -->
+                    <path d="M 1265,520 L 1420,520" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Continue Exploring? [No] -> End Exploration -->
+                    <path d="M 1225,538 L 1225,585" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="1235" y="562" class="branch-label">[No]</text>
+
+                    <!-- Exploration Loop back to Control Boat -->
+                    <path d="M 1150,600 L 215,600 L 215,536" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="650" y="594" class="branch-label">[Yes / Resume Loop]</text>
+
+                    <!-- End Exploration -> Base Operations (Sec 4) -->
+                    <path d="M 1225,615 L 1225,875 L 890,875" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- ---------- Section 4 Connectors ---------- -->
+                    <!-- Distribution bus at top of Sec 4 -->
+                    <path d="M 1225,720 L 1225,724 L 260,724" class="connector-line" />
+                    <!-- Drops to the 3 distinct functional groups -->
+                    <path d="M 260,724 L 260,735" class="connector-line" marker-end="url(#arrow)" />
+                    <path d="M 525,724 L 525,735" class="connector-line" marker-end="url(#arrow)" />
+                    <path d="M 825,724 L 825,735" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Group A (Waste): Sell -> Confirm -> Update Coins -->
+                    <path d="M 260,765 L 260,780" class="connector-line" marker-end="url(#arrow)" />
+                    <path d="M 260,810 L 260,825" class="connector-line" marker-end="url(#arrow)" />
+                    <path d="M 260,855 L 260,875 L 750,875" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Group B (Upgrade): Upgrade -> Check Cost -> Enough Coins? -->
+                    <path d="M 525,765 L 525,775" class="connector-line" marker-end="url(#arrow)" />
+                    <path d="M 525,805 L 525,815" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Enough Coins? [Yes] -> Apply Upgrade -->
+                    <path d="M 525,849 L 525,858" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="502" y="855" class="branch-label">[Yes]</text>
+
+                    <!-- Apply Upgrade -> Update Boat Stats -->
+                    <path d="M 525,884 L 525,890" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Update Boat Stats -> Return to Main Menu -->
+                    <path d="M 590,902 L 675,902 L 675,875 L 750,875" class="connector-line" />
+
+                    <!-- Enough Coins? [No] -> Show Insufficient Coins -->
+                    <path d="M 565,832 L 640,832" class="connector-line" marker-end="url(#arrow)" />
+                    <text x="585" y="824" class="branch-label">[No]</text>
+
+                    <!-- Show Insufficient Coins -> Return to Main Menu -->
+                    <path d="M 710,848 L 710,875 L 750,875" class="connector-line" />
+
+                    <!-- Group C (Report): View -> Generate & Display -> Store Report -->
+                    <path d="M 825,765 L 825,780" class="connector-line" marker-end="url(#arrow)" />
+                    <path d="M 825,810 L 825,860" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Database Connectors in Section 4 (Clean dedicated lines) -->
+                    <!-- Update Coins -> Update Player Coins (Database) -->
+                    <path d="M 330,840 L 1420,840" class="connector-line" marker-end="url(#arrow)" />
+                    <!-- Update Boat Stats -> Update Boat Data (Database) -->
+                    <path d="M 590,902 L 1420,902 L 1420,810" class="connector-line" marker-end="url(#arrow)" />
+                    <!-- Generate & Display -> Store Player Report (Database) -->
+                    <path d="M 900,795 L 1420,795" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- ---------- Section 5 Connectors ---------- -->
+                    <!-- Return to Main Menu -> Logout / Close Game -->
+                    <path d="M 820,890 L 820,928" class="connector-line" />
+
+                    <!-- Logout / Close Game -> Save Game Session -->
+                    <path d="M 315,950 L 640,950" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Save Game Session -> Store Game Session -->
+                    <path d="M 780,950 L 1380,950" class="connector-line" marker-end="url(#arrow)" />
+
+                    <!-- Store Game Session -> End -->
+                    <path d="M 1520,950 L 1570,950" class="connector-line" marker-end="url(#arrow)" />
+                </g>
+
+                <!-- ==================== 4. SECTION 1 NODES ==================== -->
+                <g id="authentication">
+                    <!-- Start Node: Solid Black Circle -->
+                    <circle cx="230" cy="68" r="8" fill="#0f172a" />
+
+                    <!-- Open Game -->
+                    <rect x="165" y="88" width="130" height="30" class="process-box" />
+                    <text x="230" y="107" class="node-text">Open Game</text>
+
+                    <!-- Registered? Decision Diamond -->
+                    <polygon points="230,126 270,145 230,164 190,145" class="decision-shape" />
+                    <text x="230" y="149" class="diamond-text">Registered?</text>
+
+                    <!-- Enter Registration Details -->
+                    <rect x="325" y="130" width="160" height="30" class="process-box" />
+                    <text x="405" y="149" class="node-text">Enter Registration Details</text>
+
+                    <!-- Login -->
+                    <rect x="165" y="175" width="130" height="30" class="process-box" />
+                    <text x="230" y="194" class="node-text">Login</text>
+
+                    <!-- Create New User -->
+                    <rect x="640" y="85" width="140" height="30" class="process-box" />
+                    <text x="710" y="104" class="node-text">Create New User</text>
+
+                    <!-- Validate Login -->
+                    <rect x="640" y="130" width="140" height="30" class="process-box" />
+                    <text x="710" y="149" class="node-text">Validate Login</text>
+
+                    <!-- Main Menu -->
+                    <rect x="640" y="175" width="140" height="30" class="process-box" />
+                    <text x="710" y="194" class="node-text">Main Menu</text>
+
+                    <!-- Store User Data (Database) -->
+                    <rect x="1420" y="65" width="140" height="30" class="process-box" />
+                    <text x="1490" y="84" class="node-text">Store User Data</text>
+
+                    <!-- Retrieve User Data (Database) -->
+                    <rect x="1420" y="130" width="140" height="30" class="process-box" />
+                    <text x="1490" y="149" class="node-text">Retrieve User Data</text>
+                </g>
+
+                <!-- ==================== 5. SECTION 2 NODES ==================== -->
+                <g id="game-setup">
+                    <!-- Select Action -->
+                    <rect x="165" y="238" width="130" height="30" class="process-box" />
+                    <text x="230" y="257" class="node-text">Select Action</text>
+
+                    <!-- Start Game -->
+                    <rect x="150" y="292" width="130" height="30" class="process-box" />
+                    <text x="215" y="311" class="node-text">Start Game</text>
+
+                    <!-- View Leaderboard -->
+                    <rect x="300" y="292" width="135" height="30" class="process-box" />
+                    <text x="367" y="311" class="node-text">View Leaderboard</text>
+
+                    <!-- Configure Settings -->
+                    <rect x="540" y="292" width="140" height="30" class="process-box" />
+                    <text x="610" y="311" class="node-text">Configure Settings</text>
+
+                    <!-- Exit Game -->
+                    <rect x="715" y="292" width="130" height="30" class="process-box" />
+                    <text x="780" y="311" class="node-text">Exit Game</text>
+
+                    <!-- Select Ocean Zone -->
+                    <rect x="150" y="348" width="130" height="30" class="process-box" />
+                    <text x="215" y="367" class="node-text">Select Ocean Zone</text>
+
+                    <!-- Zone Unlocked? Decision Diamond -->
+                    <polygon points="380,345 420,363 380,381 340,363" class="decision-shape" />
+                    <text x="380" y="366" class="diamond-text">Zone Unlocked?</text>
+
+                    <!-- Prepare Boat -->
+                    <rect x="485" y="348" width="120" height="30" class="process-box" />
+                    <text x="545" y="367" class="node-text">Prepare Boat</text>
+
+                    <!-- Boat Ready? Decision Diamond -->
+                    <polygon points="690,345 730,363 690,381 650,363" class="decision-shape" />
+                    <text x="690" y="366" class="diamond-text">Boat Ready?</text>
+
+                    <!-- Show Repair Message -->
+                    <rect x="795" y="348" width="150" height="30" class="process-box" />
+                    <text x="870" y="367" class="node-text">Show Repair: Message</text>
+
+                    <!-- Launch Boat -->
+                    <rect x="620" y="396" width="140" height="28" class="process-box" />
+                    <text x="690" y="414" class="node-text">Launch Boat</text>
+
+                    <!-- Load Zone Data (Database) -->
+                    <rect x="1420" y="292" width="140" height="30" class="process-box" />
+                    <text x="1490" y="311" class="node-text">Load Zone Data</text>
+
+                    <!-- Load Boat Data (Database) -->
+                    <rect x="1420" y="348" width="140" height="30" class="process-box" />
+                    <text x="1490" y="367" class="node-text">Load Boat Data</text>
+                </g>
+
+                <!-- ==================== 6. SECTION 3 NODES ==================== -->
+                <g id="ocean-exploration">
+                    <!-- Dashed Ocean Exploration Loop Container -->
+                    <rect x="145" y="435" width="1150" height="255" class="loop-boundary" />
+                    <!-- Loop Header Tab -->
+                    <path d="M 145,445 L 145,432 Q 145,425 152,425 L 315,425 Q 322,425 322,432 L 322,445 Z" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" />
+                    <text x="233" y="438" text-anchor="middle" class="loop-tag">Ocean Exploration Loop</text>
+
+                    <!-- Control Boat (Move / Navigate) -->
+                    <rect x="155" y="505" width="130" height="32" class="process-box" />
+                    <text x="220" y="520" class="node-text">Control Boat</text>
+                    <text x="220" y="531" class="node-subtext">(Move / Navigate)</text>
+
+                    <!-- Detect Environment -->
+                    <rect x="350" y="505" width="130" height="32" class="process-box" />
+                    <text x="415" y="525" class="node-text">Detect Environment</text>
+
+                    <!-- Object Detected? Decision Diamond -->
+                    <polygon points="635,496 680,520 635,544 590,520" class="decision-shape" />
+                    <text x="635" y="523" class="diamond-text">Object Detected?</text>
+
+                    <!-- Collect Waste -->
+                    <rect x="750" y="450" width="135" height="30" class="process-box" />
+                    <text x="817" y="469" class="node-text">Collect Waste</text>
+
+                    <!-- Rescue Marine Life -->
+                    <rect x="750" y="505" width="140" height="30" class="process-box" />
+                    <text x="820" y="524" class="node-text">Rescue Marine Life</text>
+
+                    <!-- Avoid Obstacle -->
+                    <rect x="750" y="560" width="135" height="30" class="process-box" />
+                    <text x="817" y="579" class="node-text">Avoid Obstacle</text>
+
+                    <!-- Continue Exploring (Branch [None]) -->
+                    <rect x="710" y="620" width="140" height="30" class="process-box" />
+                    <text x="780" y="639" class="node-text">Continue Exploring</text>
+
+                    <!-- Update Score & Progress -->
+                    <rect x="1020" y="504" width="130" height="34" class="process-box" />
+                    <text x="1085" y="519" class="node-text">Update Score &amp;</text>
+                    <text x="1085" y="531" class="node-text">Progress</text>
+
+                    <!-- Continue Exploring? Decision Diamond -->
+                    <polygon points="1225,502 1265,520 1225,538 1185,520" class="decision-shape" />
+                    <text x="1225" y="517" class="diamond-text">Continue</text>
+                    <text x="1225" y="527" class="diamond-text">Exploring?</text>
+
+                    <!-- End Exploration (Return to Base) -->
+                    <rect x="1150" y="585" width="150" height="32" class="process-box" />
+                    <text x="1225" y="600" class="node-text">End Exploration</text>
+                    <text x="1225" y="611" class="node-subtext">(Return to Base)</text>
+
+                    <!-- Save Game Progress (Database) -->
+                    <rect x="1420" y="505" width="140" height="30" class="process-box" />
+                    <text x="1490" y="524" class="node-text">Save Game Progress</text>
+                </g>
+
+                <!-- ==================== 7. SECTION 4 NODES ==================== -->
+                <g id="base-operations">
+                    <!-- GROUP A: Sell Waste -->
+                    <rect x="195" y="735" width="130" height="30" class="process-box" />
+                    <text x="260" y="754" class="node-text">Sell Collected Waste</text>
+
+                    <rect x="200" y="780" width="120" height="30" class="process-box" />
+                    <text x="260" y="799" class="node-text">Confirm Sale</text>
+
+                    <rect x="200" y="825" width="120" height="30" class="process-box" />
+                    <text x="260" y="844" class="node-text">Update Coins</text>
+
+                    <!-- GROUP B: Upgrade Boat -->
+                    <rect x="460" y="735" width="130" height="30" class="process-box" />
+                    <text x="525" y="754" class="node-text">Upgrade Boat</text>
+
+                    <rect x="455" y="775" width="140" height="30" class="process-box" />
+                    <text x="525" y="794" class="node-text">Check Upgrade Cost</text>
+
+                    <polygon points="525,815 565,832 525,849 485,832" class="decision-shape" />
+                    <text x="525" y="835" class="diamond-text">Enough Coins?</text>
+
+                    <rect x="460" y="858" width="130" height="26" class="process-box" />
+                    <text x="525" y="875" class="node-text">Apply Upgrade</text>
+
+                    <rect x="460" y="890" width="130" height="26" class="process-box" />
+                    <text x="525" y="907" class="node-text">Update Boat Stats</text>
+
+                    <rect x="640" y="818" width="140" height="30" class="process-box" />
+                    <text x="710" y="837" class="node-text">Show Insufficient Coins</text>
+
+                    <!-- GROUP C: Player Report & Menu Return -->
+                    <rect x="760" y="735" width="130" height="30" class="process-box" />
+                    <text x="825" y="754" class="node-text">View Player Report</text>
+
+                    <rect x="750" y="780" width="150" height="30" class="process-box" />
+                    <text x="825" y="799" class="node-text">Generate &amp; Display Report</text>
+
+                    <rect x="750" y="860" width="150" height="30" class="process-box" />
+                    <text x="825" y="879" class="node-text">Return to Main Menu</text>
+
+                    <!-- Database Nodes (Section 4) -->
+                    <rect x="1420" y="740" width="140" height="30" class="process-box" />
+                    <text x="1490" y="759" class="node-text">Update Player Coins</text>
+
+                    <rect x="1420" y="795" width="140" height="30" class="process-box" />
+                    <text x="1490" y="814" class="node-text">Update Boat Data</text>
+
+                    <rect x="1420" y="850" width="140" height="30" class="process-box" />
+                    <text x="1490" y="869" class="node-text">Store Player Report</text>
+                </g>
+
+                <!-- ==================== 8. SECTION 5 NODES ==================== -->
+                <g id="exit">
+                    <!-- Logout / Close Game -->
+                    <rect x="175" y="935" width="140" height="30" class="process-box" />
+                    <text x="245" y="954" class="node-text">Logout / Close Game</text>
+
+                    <!-- Save Game Session -->
+                    <rect x="640" y="935" width="140" height="30" class="process-box" />
+                    <text x="710" y="954" class="node-text">Save Game Session</text>
+
+                    <!-- Store Game Session (Database) -->
+                    <rect x="1380" y="935" width="140" height="30" class="process-box" />
+                    <text x="1450" y="954" class="node-text">Store Game Session</text>
+
+                    <!-- Terminal End Symbol: Bullseye (Outer ring + filled black circle) -->
+                    <circle cx="1580" cy="950" r="11" fill="none" stroke="#0f172a" stroke-width="1.8" />
+                    <circle cx="1580" cy="950" r="6.5" fill="#0f172a" />
+                    <text x="1602" y="954" font-size="12px" font-weight="700" fill="#0f172a">End</text>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Panzoom Interactive Controls -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const viewport = document.getElementById("pan-viewport");
+            const container = document.getElementById("canvas-container");
+            
+            const panzoom = Panzoom(viewport, {
+                maxScale: 4.0,
+                minScale: 0.3,
+                step: 0.12,
+                contain: false
+            });
+
+            container.addEventListener("wheel", function(event) {
+                panzoom.zoomWithWheel(event);
+            }, { passive: false });
+
+            // Fit nicely into the viewport on initial open
+            function fitToScreen() {
+                const scaleX = (window.innerWidth - 40) / 1650;
+                const scaleY = (window.innerHeight - 40) / 990;
+                const initialScale = Math.min(scaleX, scaleY, 1.0);
+                
+                const initialX = Math.max(10, (window.innerWidth - 1650 * initialScale) / 2);
+                const initialY = Math.max(10, (window.innerHeight - 990 * initialScale) / 2);
+
+                panzoom.zoom(initialScale);
+                panzoom.pan(initialX, initialY);
+            }
+
+            fitToScreen();
+
+            // Double click to reset framing
+            container.addEventListener("dblclick", function() {
+                fitToScreen();
+            });
+        });
+    </script>
+</body>
+</html>

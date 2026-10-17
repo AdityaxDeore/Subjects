@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OceanCleanup2 Test Images & Visual Evidence Suite | PCCOE SEML</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b1120;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --success: #22c55e;
+      --success-bg: #064e3b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      padding: 30px 24px 60px;
+      min-height: 100vh;
+    }
+    .header {
+      max-width: 1400px;
+      margin: 0 auto 30px;
+      text-align: center;
+    }
+    .badge-top {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 9999px;
+      color: #7dd3fc;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .sub {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.6;
+    }
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .stat-pill {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stat-num {
+      color: #38bdf8;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Filter buttons */
+    .filter-bar {
+      max-width: 1400px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #ffffff;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s, box-shadow 0.25s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: #38bdf8;
+      box-shadow: 0 12px 28px rgba(56, 189, 248, 0.2);
+    }
+    .preview-box {
+      width: 100%;
+      height: 240px;
+      background: #090d16;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+    .preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .preview-box:hover img {
+      transform: scale(1.03);
+    }
+    .hover-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s;
+    }
+    .preview-box:hover .hover-overlay {
+      opacity: 1;
+    }
+    .hover-overlay span {
+      background: #0284c7;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .card-body {
+      padding: 16px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-num {
+      font-size: 11px;
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      color: #38bdf8;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+      flex: 1;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #334155;
+      padding-top: 12px;
+      margin-top: auto;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+    }
+    .badge-success { background: #064e3b; color: #4ade80; border: 1px solid #059669; }
+    .badge-info { background: #0c4a6e; color: #38bdf8; border: 1px solid #0284c7; }
+    .badge-warning { background: #713f12; color: #fde047; border: 1px solid #ca8a04; }
+    .view-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      background: #0284c7;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .view-link:hover {
+      background: #0369a1;
+    }
+
+    /* Lightbox Modal */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 9999;
+      padding: 30px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 85vh;
+      object-fit: contain;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #f8fafc;
+      font-size: 36px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+    .lightbox-caption {
+      margin-top: 14px;
+      color: #e2e8f0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="badge-top">SEML ASSIGNMENT 11 &bull; AUTOMATED TEST EVIDENCE</div>
+    <h1>OceanCleanup2 Test Verification Suite</h1>
+    <p class="sub">
+      <strong>Student:</strong> Aditya Chandrajit Deore &bull; 
+      <strong>PRN:</strong> 124B1F116 &bull; 
+      <strong>Batch:</strong> B3 &bull; 
+      <strong>Department:</strong> Computer Engineering, PCCOE Pune
+    </p>
+    <div class="stats-bar">
+      <div class="stat-pill"><span>Total Tests Run:</span> <span class="stat-num">66</span></div>
+      <div class="stat-pill"><span>Passed:</span> <span class="stat-num" style="color: #4ade80;">65 (98.5%)</span></div>
+      <div class="stat-pill"><span>Skipped (@Disabled):</span> <span class="stat-num" style="color: #fde047;">1</span></div>
+      <div class="stat-pill"><span>Failures / Errors:</span> <span class="stat-num" style="color: #4ade80;">0</span></div>
+      <div class="stat-pill"><span>Execution Duration:</span> <span class="stat-num">42.37s</span></div>
+      <div class="stat-pill"><span>Framework:</span> <span class="stat-num">JUnit 5.10.2 (Jupiter)</span></div>
+    </div>
+  </header>
+
+  <nav class="filter-bar">
+    <button class="filter-btn active" onclick="filterCategory('all', this)">All Evidence (17)</button>
+    <button class="filter-btn" onclick="filterCategory('terminal', this)">Build & Terminal (3)</button>
+    <button class="filter-btn" onclick="filterCategory('suites', this)">Service Test Suites (6)</button>
+    <button class="filter-btn" onclick="filterCategory('diagrams', this)">Architecture Diagrams (7)</button>
+    <button class="filter-btn" onclick="filterCategory('simulation', this)">3D Simulation (1)</button>
+  </nav>
+
+  <main class="gallery-grid" id="galleryGrid">
+
+    <!-- 01 Terminal -->
+    <article class="card" data-category="terminal">
+      <div class="preview-box" onclick="openLightbox('01_Maven_Test_Terminal_Build_Success.png', 'Maven Clean Test Terminal Build Success')">
+        <img src="01_Maven_Test_Terminal_Build_Success.png" alt="Maven Build Success">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 01 &bull; CLI EXECUTION</div>
+        <div class="card-title">Maven Test Terminal Build Success</div>
+        <div class="card-desc">Authentic terminal session showing <code>mvn clean test</code> with OpenJDK 21 LTS and Surefire plugin. All 66 tests executed in 42.376s with 0 failures and 0 errors.</div>
+        <div class="card-footer">
+          <span class="badge badge-success">BUILD SUCCESS</span>
+          <a href="01_Maven_Test_Terminal_Build_Success.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 02 Tree Explorer -->
+    <article class="card" data-category="terminal">
+      <div class="preview-box" onclick="openLightbox('02_JUnit5_Test_Runner_Tree_Explorer.png', 'JUnit 5 Test Runner Tree Explorer')">
+        <img src="02_JUnit5_Test_Runner_Tree_Explorer.png" alt="Test Tree Explorer">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 02 &bull; IDE RUNNER</div>
+        <div class="card-title">JUnit 5 Test Runner Tree Explorer</div>
+        <div class="card-desc">Visual test runner tree hierarchy displaying all 6 test suites and individual test methods with green pass indicators and execution timing.</div>
+        <div class="card-footer">
+          <span class="badge badge-success">65 PASS / 1 SKIP</span>
+          <a href="02_JUnit5_Test_Runner_Tree_Explorer.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 03 KPI Dashboard -->
+    <article class="card" data-category="terminal">
+      <div class="preview-box" onclick="openLightbox('03_Test_KPI_Metrics_Dashboard.png', 'Executive KPI Quality Dashboard')">
+        <img src="03_Test_KPI_Metrics_Dashboard.png" alt="KPI Metrics Dashboard">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 03 &bull; METRICS</div>
+        <div class="card-title">Executive Test Quality KPI Dashboard</div>
+        <div class="card-desc">SonarQube / Allure quality dashboard summarizing active test pass rate (100%), coverage metrics, suite breakdown, and zero-defect quality gate.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">100% ACTIVE PASS</span>
+          <a href="03_Test_KPI_Metrics_Dashboard.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 04 Boat Progression -->
+    <article class="card" data-category="suites">
+      <div class="preview-box" onclick="openLightbox('04_BoatProgressionService_Tests_Passed.png', 'BoatProgressionService Test Suite (12/12 Passed)')">
+        <img src="04_BoatProgressionService_Tests_Passed.png" alt="Boat Progression Tests">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 04 &bull; SERVICE SUITE</div>
+        <div class="card-title">BoatProgressionService Test Results</div>
+        <div class="card-desc">12/12 unit tests passed. Covers CSV parameterized tier upgrades, speed multipliers, trash storage capacity ceilings, and MaxLevelBoundaryException handling.</div>
+        <div class="card-footer">
+          <span class="badge badge-success">12/12 PASSED</span>
+          <a href="04_BoatProgressionService_Tests_Passed.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 05 Trash Collection -->
+    <article class="card" data-category="suites">
+      <div class="preview-box" onclick="openLightbox('05_TrashCollectionService_Tests_Passed.png', 'TrashCollectionService Test Suite (11/11 Passed)')">
+        <img src="05_TrashCollectionService_Tests_Passed.png" alt="Trash Collection Tests">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 05 &bull; SERVICE SUITE</div>
+        <div class="card-title">TrashCollectionService Test Results</div>
+        <div class="card-desc">11/11 unit tests passed. Covers EnumSource trash types (PLASTIC, OIL, CHEMICAL, TIRE), payload weights, capacity checks, and InventoryFullException throwing.</div>
+        <div class="card-footer">
+          <span class="badge badge-success">11/11 PASSED</span>
+          <a href="05_TrashCollectionService_Tests_Passed.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 06 Economy -->
+    <article class="card" data-category="suites">
+      <div class="preview-box" onclick="openLightbox('06_EconomyAndRecyclingService_Tests_Passed.png', 'EconomyAndRecyclingService Test Suite (13 Passed, 1 Skipped)')">
+        <img src="06_EconomyAndRecyclingService_Tests_Passed.png" alt="Economy Tests">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 06 &bull; SERVICE SUITE</div>
+        <div class="card-title">EconomyAndRecyclingService Test Results</div>
+        <div class="card-desc">13 passed, 1 skipped (@Disabled experimental shop discount). Covers waste-to-gold recycling rates, food purchases, energy depletion, and InsufficientFundsException.</div>
+        <div class="card-footer">
+          <span class="badge badge-warning">13 PASS / 1 SKIP</span>
+          <a href="06_EconomyAndRecyclingService_Tests_Passed.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 07 Wildlife Rescue -->
+    <article class="card" data-category="suites">
+      <div class="preview-box" onclick="openLightbox('07_WildlifeRescueService_Tests_Passed.png', 'WildlifeRescueService Test Suite (11/11 Passed)')">
+        <img src="07_WildlifeRescueService_Tests_Passed.png" alt="Wildlife Rescue Tests">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 07 &bull; SERVICE SUITE</div>
+        <div class="card-title">WildlifeRescueService Test Results</div>
+        <div class="card-desc">11/11 unit tests passed. Covers capture ball projectile hit radius physics, rescue point rewards, dolphin companion unlock, and companion switching logic.</div>
+        <div class="card-footer">
+          <span class="badge badge-success">11/11 PASSED</span>
+          <a href="07_WildlifeRescueService_Tests_Passed.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 08 Game State Manager -->
+    <article class="card" data-category="suites">
+      <div class="preview-box" onclick="openLightbox('08_GameStateManagerService_Tests_Passed.png', 'GameStateManagerService Test Suite (7/7 Passed)')">
+        <img src="08_GameStateManagerService_Tests_Passed.png" alt="Game State Manager Tests">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 08 &bull; SERVICE SUITE</div>
+        <div class="card-title">GameStateManagerService Test Results</div>
+        <div class="card-desc">7/7 unit tests passed. Verifies Finite State Machine lifecycle: INTRO -> PLAYING -> HARBOR_DOCK -> UPGRADE_MENU -> PAUSED, enter/exit hooks, and illegal state traps.</div>
+        <div class="card-footer">
+          <span class="badge badge-success">7/7 PASSED</span>
+          <a href="08_GameStateManagerService_Tests_Passed.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 09 Day Night Cycle -->
+    <article class="card" data-category="suites">
+      <div class="preview-box" onclick="openLightbox('09_DayNightCycleService_Tests_Passed.png', 'DayNightCycleService Test Suite (11/11 Passed)')">
+        <img src="09_DayNightCycleService_Tests_Passed.png" alt="Day Night Cycle Tests">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 09 &bull; SERVICE SUITE</div>
+        <div class="card-title">DayNightCycleService Test Results</div>
+        <div class="card-desc">11/11 unit tests passed. Verifies 24h celestial progression, peak solar noon elevation (1.0), midnight intensity (0.05), and 100,000 tick performance under @Timeout(1s).</div>
+        <div class="card-footer">
+          <span class="badge badge-success">11/11 PASSED</span>
+          <a href="09_DayNightCycleService_Tests_Passed.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 10 Diagram Architecture -->
+    <article class="card" data-category="diagrams">
+      <div class="preview-box" onclick="openLightbox('10_JUnit5_ThreeTier_Architecture.svg', 'JUnit 5 Three-Tier Architecture')">
+        <img src="10_JUnit5_ThreeTier_Architecture.svg" alt="JUnit 5 Architecture">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 10 &bull; ARCHITECTURE DIAGRAM</div>
+        <div class="card-title">JUnit 5 Three-Tier Model Architecture</div>
+        <div class="card-desc">Formal SVG architectural model depicting JUnit Platform (Launcher & Discovery Engine), JUnit Jupiter Engine, and JUnit Vintage legacy subsystem.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">VECTOR SVG</span>
+          <a href="10_JUnit5_ThreeTier_Architecture.svg" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 11 Diagram Lifecycle -->
+    <article class="card" data-category="diagrams">
+      <div class="preview-box" onclick="openLightbox('11_JUnit5_Method_Lifecycle_Flow.svg', 'JUnit 5 Test Lifecycle Flowchart')">
+        <img src="11_JUnit5_Method_Lifecycle_Flow.svg" alt="Lifecycle Flow">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 11 &bull; LIFECYCLE FLOWCHART</div>
+        <div class="card-title">JUnit 5 Execution Lifecycle Flow</div>
+        <div class="card-desc">Execution workflow detailing sequence of @BeforeAll static setup, instance instantiation, @BeforeEach pre-conditions, @Test execution, @AfterEach teardown, and @AfterAll.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">VECTOR SVG</span>
+          <a href="11_JUnit5_Method_Lifecycle_Flow.svg" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 12 Diagram Domain -->
+    <article class="card" data-category="diagrams">
+      <div class="preview-box" onclick="openLightbox('12_OceanCleanup_Domain_Architecture.svg', 'OceanCleanup2 Domain Class Architecture')">
+        <img src="12_OceanCleanup_Domain_Architecture.svg" alt="Domain Architecture">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 12 &bull; DOMAIN UML</div>
+        <div class="card-title">OceanCleanup2 Domain Architecture</div>
+        <div class="card-desc">UML architectural model showing domain entities (Boat, TrashItem, WildlifeTarget, GameState), service orchestrators, custom domain exceptions, and relationships.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">VECTOR SVG</span>
+          <a href="12_OceanCleanup_Domain_Architecture.svg" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 13 Diagram FSM -->
+    <article class="card" data-category="diagrams">
+      <div class="preview-box" onclick="openLightbox('13_GameState_FSM_State_Diagram.svg', 'GameState FSM Transition Diagram')">
+        <img src="13_GameState_FSM_State_Diagram.svg" alt="GameState FSM">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 13 &bull; STATE MACHINE</div>
+        <div class="card-title">GameState FSM State Diagram</div>
+        <div class="card-desc">State machine diagram visualizing deterministic valid state transitions, game loop cycle, and exception boundaries for illegal state mutations.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">VECTOR SVG</span>
+          <a href="13_GameState_FSM_State_Diagram.svg" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 14 Diagram DayNight -->
+    <article class="card" data-category="diagrams">
+      <div class="preview-box" onclick="openLightbox('14_DayNight_Celestial_Curve_Chart.svg', 'Day-Night Celestial Mathematical Curve')">
+        <img src="14_DayNight_Celestial_Curve_Chart.svg" alt="Day Night Curves">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 14 &bull; MATHEMATICAL CURVE</div>
+        <div class="card-title">Day/Night Celestial Curve Chart</div>
+        <div class="card-desc">24-hour trigonometric curve chart plotting Sun elevation, light intensity, and twilight transitions verified via automated JUnit asserts.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">VECTOR SVG</span>
+          <a href="14_DayNight_Celestial_Curve_Chart.svg" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 15 Diagram CI Pipeline -->
+    <article class="card" data-category="diagrams">
+      <div class="preview-box" onclick="openLightbox('15_Test_Automation_Pipeline.svg', 'Maven CI Test Automation Pipeline')">
+        <img src="15_Test_Automation_Pipeline.svg" alt="Test Automation Pipeline">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 15 &bull; CI/CD PIPELINE</div>
+        <div class="card-title">Maven Test Automation Pipeline</div>
+        <div class="card-desc">End-to-end automated pipeline flowchart showing compile phase, Surefire test runner, report generation, and deployment quality gate.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">VECTOR SVG</span>
+          <a href="15_Test_Automation_Pipeline.svg" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 16 Diagram KPI Standalone -->
+    <article class="card" data-category="diagrams">
+      <div class="preview-box" onclick="openLightbox('16_Test_Execution_KPI_Dashboard.svg', 'Standalone Test KPI Dashboard')">
+        <img src="16_Test_Execution_KPI_Dashboard.svg" alt="KPI Dashboard SVG">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 16 &bull; QUALITY WIDGET</div>
+        <div class="card-title">Test Quality Executive KPI Widget</div>
+        <div class="card-desc">Vector SVG KPI metric widget reporting 100% active test pass rate, 65 green tests, 0 failures, and comprehensive code coverage.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">VECTOR SVG</span>
+          <a href="16_Test_Execution_KPI_Dashboard.svg" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 17 Simulation Render -->
+    <article class="card" data-category="simulation">
+      <div class="preview-box" onclick="openLightbox('17_OceanCleanup2_Game_Simulation.png', 'OceanCleanup2 3D Game Environment Simulation')">
+        <img src="17_OceanCleanup2_Game_Simulation.png" alt="OceanCleanup2 3D Game Simulation">
+        <div class="hover-overlay"><span>🔍 Click to Enlarge</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">IMG 17 &bull; SIMULATION</div>
+        <div class="card-title">OceanCleanup2 3D Harbor Simulation</div>
+        <div class="card-desc">High-resolution 3D render of the simulated marine environment showing the cleanup vessel, harbor docks, floating debris, and ocean terrain.</div>
+        <div class="card-footer">
+          <span class="badge badge-info">1200x675 HD</span>
+          <a href="17_OceanCleanup2_Game_Simulation.png" target="_blank" class="view-link">Open Full Size &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightboxModal" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightboxImg" src="" alt="Full Preview" onclick="event.stopPropagation()">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <script>
+    function openLightbox(src, caption) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightboxCaption').textContent = caption;
+      document.getElementById('lightboxModal').classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightboxModal').classList.remove('active');
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    function filterCategory(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        if (cat === 'all' || card.getAttribute('data-category') === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

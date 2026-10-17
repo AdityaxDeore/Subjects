@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arrow_j" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+  <!-- Two Incoming Angled Arrows -->
+  <line x1="45" y1="20" x2="76" y2="62" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_j)"/>
+  <line x1="135" y1="20" x2="104" y2="62" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_j)"/>
+  
+  <!-- Thick Horizontal Bar -->
+  <rect x="25" y="70" width="130" height="8" rx="2" fill="#0f172a"/>
+  
+  <!-- Single Outgoing Arrow -->
+  <line x1="90" y1="78" x2="90" y2="128" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_j)"/>
+  
+  <!-- Bold Centered Label -->
+  <text x="90" y="162" font-size="20" font-weight="bold" fill="#0f172a" text-anchor="middle">Join</text>
+</svg>

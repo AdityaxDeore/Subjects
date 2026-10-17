@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIML Assignment No. 6 - Chess Knight Escape: AI Pathfinding Game</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ── Pasted / dropped image containment ────────────────────────── */
+    .page img:not(.logo-container img) {
+      max-width: 100% !important;
+      width: auto !important;
+      height: auto !important;
+      max-height: 5in;
+      display: block;
+      margin: 10px auto 14px auto;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+    .page img { box-sizing: border-box; overflow: hidden; }
+    .img-caption {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 10.5pt; font-style: italic; color: #444;
+      text-align: center; margin: -8px 0 14px 0;
+    }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt; line-height: 1.7; color: #111;
+      background: #b0b8c1; padding: 28px 20px;
+    }
+
+    }
+    .container { max-width: 8.5in; margin: 0 auto; }
+    .page {
+      width: 8.5in; min-height: 11in; padding: 0.85in 0.95in;
+      background: #fff; margin: 0 auto 28px auto;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+      border-radius: 3px; box-sizing: border-box;
+    }
+    .page.diagram-page {
+      display: flex; flex-direction: column;
+      align-items: stretch; justify-content: flex-start;
+      padding: 0.7in 0.85in;
+    }
+    @page { size: A4 portrait; margin: 18mm 16mm; }
+    @media print {
+      body { background: #fff !important; padding: 0 !important; }
+      .container { max-width: 100% !important; }
+      .page {
+        width: 100% !important; min-height: auto !important;
+        margin: 0 !important; padding: 0 !important;
+        box-shadow: none !important; border-radius: 0 !important;
+        page-break-after: always !important; break-after: page !important;
+      }
+      .page:last-child { page-break-after: avoid !important; }
+      h2, h3 { page-break-after: avoid !important; }
+      table, .diagram-wrap { page-break-inside: avoid !important; }
+    }
+    /* Cover Table */
+    .cover-table {
+      width: 100%; border-collapse: collapse; margin-bottom: 20px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .cover-table td { border: 1.5px solid #111; padding: 7px 12px; }
+    .cover-table .college-info {
+      text-align: center; font-weight: bold; font-size: 14.5pt; line-height: 1.5; color: #000;
+    }
+    .cover-table .row-centered { text-align: center; font-weight: bold; font-size: 12.5pt; color: #000; }
+    .cover-table .row-left { text-align: left; font-weight: bold; font-size: 11.5pt; color: #000; }
+    .logo-container { text-align: center; width: 15%; padding: 6px !important; }
+    .logo-container img { max-width: 80px; height: auto; display: block; margin: 0 auto; }
+    /* Headings */
+    h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13.5pt; font-weight: bold; color: #111;
+      margin-top: 24px; margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: 0.03em;
+      border-bottom: 1.5px solid #333; padding-bottom: 4px;
+    }
+    .page > h2:first-child { margin-top: 0; }
+    h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt; font-weight: bold; color: #111;
+      margin-top: 18px; margin-bottom: 8px;
+    }
+    /* Body */
+    p {
+      font-family: 'Times New Roman', Times, serif; font-size: 12pt;
+      text-align: justify; margin-bottom: 12px; color: #111; line-height: 1.7;
+    }
+    ul, ol { margin-left: 28px; font-size: 12pt; margin-bottom: 12px; color: #111; line-height: 1.7; }
+    li { margin-bottom: 6px; text-align: justify; }
+    code {
+      font-family: 'Courier New', Courier, monospace; font-size: 10.5pt;
+      background: #f3f3f3; border: 1px solid #ddd; padding: 1px 4px; border-radius: 2px;
+    }
+    .math-block { text-align: center; margin: 14px 0 18px 0; font-size: 13pt; }
+    /* Tables */
+    table.styled-table {
+      width: 100%; border-collapse: collapse; margin: 14px 0 20px 0;
+      font-family: 'Times New Roman', Times, serif; font-size: 11pt;
+    }
+    table.styled-table th {
+      background: rgba(120,125,135,0.22); color: #111; font-weight: bold;
+      text-align: center; padding: 9px 10px; border: 1px solid #aaa;
+    }
+    table.styled-table td {
+      border: 1px solid #bbb; padding: 8px 10px; color: #111; vertical-align: middle;
+    }
+    table.styled-table tr:nth-child(even) { background: rgba(0,0,0,0.025); }
+    table.styled-table td.center { text-align: center; }
+    /* Badge */
+    .badge-pass {
+      display: inline-block; font-family: 'Courier New', monospace;
+      font-size: 9pt; font-weight: bold; color: #166534;
+      border: 1px solid #166534; padding: 2px 7px; border-radius: 3px; background: #f0fdf4;
+    }
+    .badge-warn {
+      display: inline-block; font-family: 'Courier New', monospace;
+      font-size: 9pt; font-weight: bold; color: #92400e;
+      border: 1px solid #92400e; padding: 2px 7px; border-radius: 3px; background: #fffbeb;
+    }
+    /* Diagram page styles */
+    .diagram-section-title {
+      font-family: 'Times New Roman', Times, serif; font-size: 13.5pt;
+      font-weight: bold; color: #111; margin-bottom: 10px; padding-bottom: 4px;
+      border-bottom: 1.5px solid #333; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .diagram-desc {
+      font-family: 'Times New Roman', Times, serif; font-size: 11.5pt;
+      color: #333; line-height: 1.65; text-align: justify; margin-bottom: 18px;
+    }
+    .diagram-wrap {
+      width: 100%; border: 1.5px solid #888; background: #fff;
+      padding: 10px; text-align: center;
+    }
+    .diagram-wrap img { width: 100%; height: auto; display: block; margin: 0 auto; }
+    .diagram-caption {
+      font-family: 'Times New Roman', Times, serif; font-size: 10.5pt;
+      color: #333; margin-top: 10px; text-align: center;
+      font-style: italic; line-height: 1.5;
+    }
+    /* State-space box */
+    .ss-table {
+      width: 100%; border-collapse: collapse; margin: 14px 0 16px 0;
+      font-family: 'Times New Roman', Times, serif; font-size: 11.5pt;
+    }
+    .ss-table td {
+      border: 1.5px solid #555; padding: 10px 12px; vertical-align: top;
+    }
+    .ss-table .ss-label {
+      background: #1e3a8a; color: #fff; font-weight: bold;
+      text-align: center; width: 22%; font-size: 11pt; letter-spacing: 0.04em;
+    }
+    .ss-table .ss-value { background: #f8f9ff; color: #111; }
+    /* Algorithm comparison two-col */
+    .algo-compare {
+      display: flex; gap: 20px; margin: 14px 0 18px 0;
+    }
+    .algo-box {
+      flex: 1; border: 1.5px solid #888; padding: 12px 14px;
+    }
+    .algo-box h4 {
+      font-family: 'Times New Roman', serif; font-size: 12pt;
+      font-weight: bold; margin-bottom: 8px; text-align: center;
+      border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #1e3a8a;
+    }
+    .algo-box ol {
+      font-size: 11pt; margin-left: 18px; color: #111; line-height: 1.7;
+    }
+    .algo-box ol li { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+<div class="container" contenteditable="true">
+
+<!-- ═══════════════════════════════ PAGE 1: COVER + TITLE + AIM + PROBLEM STATEMENT -->
+<div class="page">
+  <table class="cover-table">
+    <tr>
+      <td class="logo-container">
+        <img src="../pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+      </td>
+      <td class="college-info">
+        Pimpri Chinchwad Education Trust&#39;s<br>
+        Pimpri Chinchwad College of Engineering
+      </td>
+    </tr>
+    <tr><td colspan="2" class="row-centered">Assignment No. 6</td></tr>
+    <tr><td colspan="2" class="row-left">Course:- Artificial Intelligence and Machine Learning</td></tr>
+    <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+    <tr><td colspan="2" class="row-left">PRN:- 124B1F116 &nbsp;&nbsp;|&nbsp;&nbsp; Batch:- B3</td></tr>
+  </table>
+
+  <h2>1. Title</h2>
+  <p style="font-weight: bold; font-size: 12.5pt; margin-bottom: 16px;">
+    Chess Knight Escape: An Interactive AI Pathfinding Game Using State-Space Search, BFS, and A*
+  </p>
+
+  <h2>2. Aim</h2>
+  <p style="margin-bottom: 18px;">
+    To represent the <strong>Chess Knight Escape game as a formal state-space search problem</strong> by defining its states, legal actions, transition function, and terminal conditions, and to implement <strong>Breadth-First Search (BFS)</strong> and <strong>A* Search</strong> algorithms to find the shortest sequence of valid knight moves from a starting square to a goal square on an 8&#215;8 chessboard while avoiding blocked cells. Additionally, to compare both algorithms on search efficiency across multiple board configurations.
+  </p>
+
+  <h2>3. Problem Statement &amp; Objectives</h2>
+  <p style="font-weight: bold; font-size: 11.5pt; color: #1e3a8a; margin-bottom: 10px;">
+    Problem Statement: Implement an interactive Chess Knight Escape game that is formally modelled as a state-space search problem with defined states, legal actions, transition rules, and goal/terminal states. Use BFS (uninformed) and A* Search (informed, Chebyshev heuristic) to solve the search and compare their optimality and exploration efficiency across 5 distinct board configurations.
+  </p>
+  <p>
+    Representing games as state-space search problems is a foundational technique in Artificial Intelligence. A game state encodes all information needed to decide the next action; legal actions define how the state can transition; and terminal conditions specify when the game ends. For the Chess Knight, the irregular L-shaped movement creates a sparse, non-uniform graph that clearly illustrates why informed search (A*) can outperform uninformed search (BFS) without sacrificing optimality.
+  </p>
+  <ul>
+    <li><strong>State-Space Representation:</strong> Each board position (row, col) of the knight is a unique state. The complete problem is encoded as a tuple of the current state, blocked cells, and goal state.</li>
+    <li><strong>Legal Actions:</strong> The 8 L-shaped knight move offsets \((\pm2, \pm1), (\pm1, \pm2)\) filtered by boundary and obstacle constraints.</li>
+    <li><strong>Transition Function:</strong> Maps (state, action) &#8594; next state, verifying the resulting cell is within bounds and not blocked.</li>
+    <li><strong>Terminal States:</strong> <em>Goal terminal</em> &#8212; knight reaches the designated target cell. <em>Failure terminal</em> &#8212; no reachable successors remain (unreachable goal).</li>
+    <li><strong>Algorithms:</strong> BFS (FIFO queue, no heuristic) and A* (min-heap, Chebyshev heuristic \(h(n) = \max(\Delta r, \Delta c) / 2\)).</li>
+    <li><strong>Evaluation:</strong> Path length (moves) and nodes explored across 5 test scenarios (clear board, partial obstacles, dense obstacles, alternate positions, blocked goal).</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 2: STATE-SPACE FORMULATION -->
+<div class="page">
+  <h2>4. State-Space Search Problem Formulation</h2>
+  <p>
+    Game implementation in AI begins by rigorously defining the problem as a <strong>state-space search</strong>. A state-space is a directed graph \((S, A, T, s_0, S_G)\) where each node is a state, each edge is a legal action, \(T\) is the transition function, \(s_0\) is the initial state, and \(S_G\) is the set of goal (terminal) states. For the Chess Knight Escape, this formulation maps directly to the board.
+  </p>
+
+  <h3>4.1 Formal State-Space Components</h3>
+  <table class="ss-table">
+    <tr>
+      <td class="ss-label">State Space S</td>
+      <td class="ss-value">
+        Each <strong>state \(s \in S\)</strong> is a pair \((r, c)\) representing the knight&#8217;s current row and column on the 8&#215;8 board. With no additional information needed per state (the board layout is fixed), the total state space is \(|S| = 64\) for an empty board, reduced by the number of blocked cells. Formally:
+        \[ S = \{(r, c) \mid 0 \le r \le 7,\ 0 \le c \le 7,\ (r,c) \notin \text{Blocked}\} \]
+      </td>
+    </tr>
+    <tr>
+      <td class="ss-label">Initial State s&#8320;</td>
+      <td class="ss-value">
+        The <strong>initial state</strong> is the starting position of the knight, defaulting to <strong>a8 = (0, 0)</strong> (top-left corner). The user may configure any non-blocked, non-goal cell as the initial state via the GUI.
+        \[ s_0 = (0,\ 0) \quad \text{[a8 by default]} \]
+      </td>
+    </tr>
+    <tr>
+      <td class="ss-label">Legal Actions A(s)</td>
+      <td class="ss-value">
+        At state \(s = (r, c)\), the <strong>legal actions</strong> are the subset of the 8 possible knight-move offsets \((\Delta r, \Delta c)\) that result in a valid, non-blocked cell:
+        \[ A(s) = \{(\Delta r, \Delta c) \mid (r+\Delta r, c+\Delta c) \in S\} \]
+        where \((\Delta r, \Delta c) \in \{(\pm2,\pm1),\ (\pm1,\pm2)\}\). Corner cells have 2 actions; edge cells 3&#8211;4; interior cells up to 8. Blocked cells reduce the action set further.
+      </td>
+    </tr>
+    <tr>
+      <td class="ss-label">Transition Function T</td>
+      <td class="ss-value">
+        The <strong>transition function</strong> \(T(s, a)\) maps a current state and a legal action to the resulting next state. It is deterministic &#8212; the knight always lands on exactly the target cell:
+        \[ T\bigl((r,c),\ (\Delta r, \Delta c)\bigr) = (r + \Delta r,\ c + \Delta c) \]
+        The transition is only applied when the action is legal (target is in \(S\)). Each transition has uniform cost \(c = 1\) (one move).
+      </td>
+    </tr>
+    <tr>
+      <td class="ss-label">Goal State S&#8321;</td>
+      <td class="ss-value">
+        The <strong>goal state</strong> is the designated target cell, defaulting to <strong>h1 = (7, 7)</strong>. A state \(s\) is a <em>goal state</em> if:
+        \[ s = s_{\text{goal}} = (7,\ 7) \quad \text{[h1 by default]} \]
+        The search terminates when the goal state is reached. The optimal solution is the shortest sequence of actions from \(s_0\) to \(s_{\text{goal}}\).
+      </td>
+    </tr>
+    <tr>
+      <td class="ss-label">Terminal States</td>
+      <td class="ss-value">
+        The search problem has <strong>two types of terminal states</strong>:
+        <ol style="margin: 6px 0 0 18px;">
+          <li><strong>Goal terminal:</strong> \(s = s_{\text{goal}}\). The algorithm returns the reconstructed path from \(s_0\) to \(s_{\text{goal}}\). The game is <em>won</em>.</li>
+          <li><strong>Failure terminal:</strong> The search frontier becomes empty before reaching the goal. This means \(s_{\text{goal}}\) is not reachable from \(s_0\) (e.g., the goal is completely surrounded by blocked cells). The algorithm reports &#8220;No path found&#8221;. The game is <em>unsolvable</em> in the current configuration.</li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td class="ss-label">Path Cost</td>
+      <td class="ss-value">
+        Because each knight move costs exactly <strong>1</strong>, the total path cost equals the number of moves &#8212; the path length. Minimising path cost is equivalent to minimising the number of moves. This uniform cost property is what makes BFS optimal (no need for Dijkstra&#8217;s general cost handling).
+        \[ \text{Cost of path } \langle s_0, s_1, \ldots, s_n \rangle = n \quad \text{(number of moves)} \]
+      </td>
+    </tr>
+  </table>
+
+  <h3>4.2 Why This is Not a Minimax Problem</h3>
+  <p>
+    The Knight Escape is a <strong>single-agent, fully observable, deterministic search problem</strong> &#8212; not a two-player adversarial game. <strong>Minimax</strong> applies to adversarial games (e.g., Chess, Tic-Tac-Toe) where a MAX player maximises score against a MIN opponent who minimises it. Since Chess Knight Escape has only one agent (the knight) with no adversary, <strong>BFS and A*</strong> &#8212; single-agent graph search algorithms &#8212; are the correct and more efficient choice.
+  </p>
+
+  <table class="styled-table">
+    <thead>
+      <tr><th>Property</th><th>Knight Escape (This Assignment)</th><th>Adversarial Game (Minimax)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Number of agents</strong></td><td class="center">1 (knight only)</td><td class="center">2 (MAX and MIN)</td></tr>
+      <tr><td><strong>Environment type</strong></td><td class="center">Deterministic</td><td class="center">Deterministic / Stochastic</td></tr>
+      <tr><td><strong>Opponent</strong></td><td class="center">None &#8212; only obstacles</td><td class="center">Active adversary</td></tr>
+      <tr><td><strong>Goal</strong></td><td class="center">Reach target in minimum moves</td><td class="center">Maximise score against opponent</td></tr>
+      <tr><td><strong>Correct algorithm</strong></td><td class="center">BFS / A* Search</td><td class="center">Minimax / Alpha-Beta Pruning</td></tr>
+      <tr><td><strong>Tree type</strong></td><td class="center">Search tree (single agent)</td><td class="center">Game tree (two agents, alternating)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 3: ALGORITHMS + HEURISTIC MATHS -->
+<div class="page">
+  <h2>5. Search Algorithms: BFS and A*</h2>
+  <p>
+    Both algorithms explore the state-space graph defined in Section 4. They differ in <em>how they prioritise which state to expand next</em>. BFS uses no domain knowledge (uninformed); A* uses the Chebyshev heuristic (informed) to prefer states that are geometrically closer to the goal.
+  </p>
+
+  <div class="algo-compare">
+    <div class="algo-box">
+      <h4>Breadth-First Search (BFS)</h4>
+      <ol>
+        <li>Initialise a <strong>FIFO queue</strong> with \(s_0\). Mark \(s_0\) visited.</li>
+        <li>Dequeue state \(u\).</li>
+        <li>If \(u = s_{\text{goal}}\): reconstruct path via <code>came_from</code> and return. (<em>Goal terminal</em>)</li>
+        <li>For each legal action \(a \in A(u)\), compute \(v = T(u, a)\).</li>
+        <li>If \(v\) is unvisited: set <code>came_from[v] = u</code>, mark visited, enqueue \(v\).</li>
+        <li>Repeat from step 2 until queue is empty &#8212; then report failure. (<em>Failure terminal</em>)</li>
+      </ol>
+    </div>
+    <div class="algo-box">
+      <h4>A* Search</h4>
+      <ol>
+        <li>Initialise a <strong>min-heap</strong> with \((f(s_0), 0, s_0)\). Set \(g(s_0)=0\).</li>
+        <li>Pop state \(u\) with minimum \(f = g + h\).</li>
+        <li>If \(u = s_{\text{goal}}\): reconstruct path and return. (<em>Goal terminal</em>)</li>
+        <li>For each legal action \(a \in A(u)\), compute \(v = T(u, a)\).</li>
+        <li>If \(g(u)+1 < g(v)\): update \(g(v)\), set <code>came_from[v] = u</code>, push \((g(v)+h(v),\ g(v),\ v)\).</li>
+        <li>Repeat from step 2. Empty heap &#8212; report failure. (<em>Failure terminal</em>)</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3>5.1 Chebyshev Heuristic &#8212; Admissibility Proof</h3>
+  <p>
+    Define the Chebyshev distance from state \(n = (r_n, c_n)\) to goal \(g = (r_g, c_g)\) as \(\max(|\Delta r|, |\Delta c|)\). Per single knight move, the Chebyshev distance can decrease by <em>at most 2</em>. Dividing by 2 gives an admissible lower bound on moves required:
+  </p>
+  <div class="math-block">
+    \[ h(n) = \frac{\max\!\bigl(|r_n - r_g|,\; |c_n - c_g|\bigr)}{2} \;\le\; h^*(n) \quad \forall n \in S \]
+  </div>
+  <p>
+    Since \(h(n)\) never overestimates the true cost \(h^*(n)\), A* with this heuristic is <strong>admissible and therefore optimal</strong>.
+  </p>
+
+  <h3>5.2 Step-by-Step f, g, h Calculation (a8 &#8594; h1)</h3>
+  <table class="styled-table">
+    <thead>
+      <tr><th>Step</th><th>State \(s\)</th><th>\(g(n)\) (moves so far)</th><th>\(\Delta r\)</th><th>\(\Delta c\)</th><th>\(h(n) = \max/2\)</th><th>\(f(n) = g+h\)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="center">Initial</td><td class="center">(0,0) a8</td><td class="center">0</td><td class="center">7</td><td class="center">7</td><td class="center"><strong>3.5</strong></td><td class="center">3.5</td></tr>
+      <tr><td class="center">Move 1</td><td class="center">(1,2) c7</td><td class="center">1</td><td class="center">6</td><td class="center">5</td><td class="center"><strong>3.0</strong></td><td class="center">4.0</td></tr>
+      <tr><td class="center">Move 2</td><td class="center">(3,3) d5</td><td class="center">2</td><td class="center">4</td><td class="center">4</td><td class="center"><strong>2.0</strong></td><td class="center">4.0</td></tr>
+      <tr><td class="center">Move 3</td><td class="center">(4,4) e4</td><td class="center">3</td><td class="center">3</td><td class="center">3</td><td class="center"><strong>1.5</strong></td><td class="center">4.5</td></tr>
+      <tr><td class="center">Move 4&#8211;5</td><td class="center">(5,6) g3</td><td class="center">5</td><td class="center">2</td><td class="center">1</td><td class="center"><strong>1.0</strong></td><td class="center">6.0</td></tr>
+      <tr><td class="center">Move 6</td><td class="center">(7,7) h1</td><td class="center">6</td><td class="center">0</td><td class="center">0</td><td class="center"><strong>0.0</strong></td><td class="center">6.0 &#9989;</td></tr>
+    </tbody>
+  </table>
+  <p>
+    The heuristic \(h(n)\) decreases monotonically toward 0 as the knight approaches the goal, ensuring A* always expands the most promising state first. This keeps \(f(n)\) near-constant (consistent heuristic), preventing re-expansion of already-visited nodes.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 4: DIAGRAM — KNIGHT MOVES (state graph) -->
+<div class="page diagram-page">
+  <div class="diagram-section-title">6. State-Space Graph Visualisation &#8212; Knight at d4</div>
+  <p class="diagram-desc">
+    The diagram below visualises the <strong>local state-space graph</strong> centred on the knight at <strong>d4 (row 4, col 3)</strong>. Each blue-highlighted cell is a <em>successor state</em> reachable by a single legal action (L-shaped jump). Arrows show the directed transition \(T(s, a)\) from the current state to each successor. The goal state (green &#9733;) is visible at the top-right, and the heuristic \(h(n)\) decreases for successors geometrically closer to it, directing A* to expand those first.
+  </p>
+  <div class="diagram-wrap">
+    <img src="viz_knight_moves.png" alt="Knight state-space graph at d4" />
+    <p class="diagram-caption">
+      Figure 1: Local state-space graph &#8212; knight at d4. Blue cells = successor states (legal actions). Arrows = transition function \(T(s,a)\). Each transition costs 1 move. Interior squares yield 8 successors; corner/edge squares fewer.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 5: DIAGRAM — BFS vs A* CLEAR BOARD -->
+<div class="page diagram-page">
+  <div class="diagram-section-title">7. State-Space Search Comparison &#8212; Clear Board (a8 &#8594; h1)</div>
+  <p class="diagram-desc">
+    The side-by-side maps compare the <strong>explored state sets</strong> of BFS (left) and A* (right) on a clear board. Both algorithms reach the same <em>goal terminal state</em> h1 in exactly <strong>6 moves</strong> (optimal), confirming both are complete and optimal for this single-agent state-space. However, BFS expanded <strong>all 64 states</strong> (no domain knowledge &#8212; it cannot distinguish states closer to the goal from those further away), while A* used the Chebyshev heuristic to focus on 42 states &#8212; a <strong>34% reduction</strong>. Lavender cells were expanded but not on the final path; orange-red cells form the solution path.
+  </p>
+  <div class="diagram-wrap">
+    <img src="viz_bfs_vs_astar_clear.png" alt="BFS vs A* clear board" />
+    <p class="diagram-caption">
+      Figure 2: BFS (left, 64 states expanded) vs A* (right, 42 states expanded) on a clear board &#8212; a8 &#8594; h1. Both reach the goal terminal state in 6 moves. A* explores 34% fewer states by prioritising successors with lower \(f = g + h\).
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 6: DIAGRAM — BFS vs A* OBSTACLES -->
+<div class="page diagram-page">
+  <div class="diagram-section-title">8. State-Space Search with Blocked States (10 Obstacles, a8 &#8594; h1)</div>
+  <p class="diagram-desc">
+    Blocked cells <strong>remove states from the state space</strong> and eliminate associated legal actions. With 10 obstacles placed, the effective state space shrinks from 64 to 54 states. Both algorithms correctly navigate around blocked states, still reaching the <em>goal terminal</em> h1 in <strong>6 moves</strong>. A* now explores only <strong>29 states</strong> vs BFS&#8217;s <strong>54</strong> &#8212; a <strong>46% reduction</strong>. The heuristic becomes even more valuable with obstacles because it avoids exploring blocked dead-ends in the wrong direction.
+  </p>
+  <div class="diagram-wrap">
+    <img src="viz_bfs_vs_astar_obstacles.png" alt="BFS vs A* with 10 obstacles" />
+    <p class="diagram-caption">
+      Figure 3: BFS (left, 54 states) vs A* (right, 29 states) with 10 blocked states &#8212; a8 &#8594; h1. Dark cells with &#10005; are removed from the state space. Both find the 6-move optimal path; A* explores 46% fewer states.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 7: DIAGRAM — PERFORMANCE CHART -->
+<div class="page diagram-page">
+  <div class="diagram-section-title">9. Performance Across All Test Scenarios</div>
+  <p class="diagram-desc">
+    The charts compare BFS and A* across four solvable board configurations (a fifth scenario with a surrounded goal results in a <em>failure terminal state</em> for both algorithms). The left chart shows <strong>states explored</strong> (lower = more efficient use of the state space); the right shows <strong>path length</strong> (both always agree &#8212; confirming mutual optimality). A* consistently outperforms BFS in exploration efficiency across all configurations while never sacrificing path quality.
+  </p>
+  <div class="diagram-wrap">
+    <img src="viz_performance_comparison.png" alt="Performance comparison bar charts" />
+    <p class="diagram-caption">
+      Figure 4: States explored (left) and path length (right) for BFS vs A* across 4 solvable scenarios. A* explores 29&#8211;46% fewer states in all cases. Path lengths are always identical, confirming both algorithms are optimal state-space search methods for this problem.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 8: RESULTS + CONCLUSION -->
+<div class="page">
+  <h2>10. Experimental Results &#8212; All 5 Test Cases</h2>
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>Scenario</th>
+        <th>Start &#8594; Goal</th>
+        <th>Blocked States</th>
+        <th>BFS Moves</th>
+        <th>BFS States</th>
+        <th>A* Moves</th>
+        <th>A* States</th>
+        <th>Reduction</th>
+        <th>Terminal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1. Clear board</td>
+        <td class="center">a8 &#8594; h1</td>
+        <td class="center">0</td>
+        <td class="center">6</td>
+        <td class="center">64</td>
+        <td class="center">6</td>
+        <td class="center"><span class="badge-pass">42</span></td>
+        <td class="center">&#8722;34%</td>
+        <td class="center">Goal &#9989;</td>
+      </tr>
+      <tr>
+        <td>2. Sparse obstacles</td>
+        <td class="center">a8 &#8594; h1</td>
+        <td class="center">10</td>
+        <td class="center">6</td>
+        <td class="center">54</td>
+        <td class="center">6</td>
+        <td class="center"><span class="badge-pass">29</span></td>
+        <td class="center">&#8722;46%</td>
+        <td class="center">Goal &#9989;</td>
+      </tr>
+      <tr>
+        <td>3. Alternate positions</td>
+        <td class="center">b8 &#8594; g2</td>
+        <td class="center">0</td>
+        <td class="center">5</td>
+        <td class="center">64</td>
+        <td class="center">5</td>
+        <td class="center"><span class="badge-pass">37</span></td>
+        <td class="center">&#8722;42%</td>
+        <td class="center">Goal &#9989;</td>
+      </tr>
+      <tr>
+        <td>4. Dense obstacles</td>
+        <td class="center">a8 &#8594; h1</td>
+        <td class="center">15</td>
+        <td class="center">6</td>
+        <td class="center">49</td>
+        <td class="center">6</td>
+        <td class="center"><span class="badge-pass">35</span></td>
+        <td class="center">&#8722;29%</td>
+        <td class="center">Goal &#9989;</td>
+      </tr>
+      <tr>
+        <td>5. Goal surrounded</td>
+        <td class="center">a8 &#8594; h1</td>
+        <td class="center">4 (around goal)</td>
+        <td class="center"><span class="badge-warn">No path</span></td>
+        <td class="center">59</td>
+        <td class="center"><span class="badge-warn">No path</span></td>
+        <td class="center">59</td>
+        <td class="center">0%</td>
+        <td class="center">Failure &#10060;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>10.1 BFS vs A* &#8212; Complete Comparison</h3>
+  <table class="styled-table">
+    <thead>
+      <tr><th>Property</th><th>BFS</th><th>A* Search</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Search type</strong></td><td class="center">Uninformed (no heuristic)</td><td class="center">Informed: \(f(n) = g(n) + h(n)\)</td></tr>
+      <tr><td><strong>Completeness</strong></td><td class="center">&#10003; Always finds path if one exists</td><td class="center">&#10003; Always finds path if one exists</td></tr>
+      <tr><td><strong>Optimality</strong></td><td class="center">&#10003; (uniform edge cost = 1)</td><td class="center">&#10003; (admissible Chebyshev heuristic)</td></tr>
+      <tr><td><strong>Failure detection</strong></td><td class="center">&#10003; Reports when frontier is empty</td><td class="center">&#10003; Reports when heap is empty</td></tr>
+      <tr><td><strong>Average states explored</strong></td><td class="center">57.8 (4 solved cases)</td><td class="center"><span class="badge-pass">35.8 (&#8722;38%)</span></td></tr>
+      <tr><td><strong>Best case reduction (A*)</strong></td><td class="center">&#8212;</td><td class="center"><span class="badge-pass">&#8722;46% (Scenario 2)</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>11. Conclusion</h2>
+  <p>
+    The <strong>Chess Knight Escape</strong> game was successfully formulated as a formal state-space search problem and implemented with a Tkinter GUI supporting Manual Play, AI&#8209;BFS, and AI&#8209;A* modes.
+  </p>
+  <ol>
+    <li><strong>State-Space Formulation:</strong> The game was rigorously defined with 64 states (board cells), 8 legal actions (L-shaped knight offsets), a deterministic transition function, one goal terminal state (target cell reached), and one failure terminal state (frontier exhausted without reaching goal).</li>
+    <li><strong>Algorithm Selection:</strong> Since Knight Escape is a single-agent deterministic search problem (not adversarial), BFS and A* are the correct algorithms. Minimax would be inappropriate as there is no opponent or game tree.</li>
+    <li><strong>Optimality of Both Algorithms:</strong> BFS is optimal due to uniform edge cost (1 move per action). A* is optimal due to the admissible Chebyshev heuristic \(h(n) \le h^*(n)\). Both always agree on minimum path length across all 5 test cases.</li>
+    <li><strong>A* Efficiency:</strong> By exploiting domain knowledge through the heuristic, A* explored 29&#8211;46% fewer states than BFS across solvable scenarios, clearly demonstrating the power of informed state-space search over uninformed search without sacrificing optimality or completeness.</li>
+  </ol>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

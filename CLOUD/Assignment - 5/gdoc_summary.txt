@@ -1,0 +1,31 @@
+Lab 5: Deploy Two Websites on a Single Cloud VM
+Cloud platform: Amazon Web Services (AWS) | Region: ap-south-1 (Mumbai) | Service: EC2
+Part A — Theory
+1. What is a Virtual Machine (VM) in a cloud environment?
+A Virtual Machine is a software-emulated computer that runs on shared physical hardware inside a cloud provider’s data center. A hypervisor partitions the host’s CPU, memory, storage and network into isolated virtual computers, each with its own operating system. In the cloud a VM (e.g., an AWS EC2 instance) is provisioned on demand in minutes through a console or API, can be resized, stopped, snapshotted and terminated at will, and is billed only for the time it runs.
+2. Difference between a physical server and a virtual server.
+Physical server: a dedicated hardware machine — fixed CPU/RAM/disk, provisioned manually over days, high upfront cost, and capacity sits idle when traffic is low. Virtual server: a slice of shared hardware created by a hypervisor — provisioned in minutes, elastic (resizable up/down), pay-as-you-go, isolated from neighbours on the same host, and portable via images/snapshots. The trade-off: a VM shares the underlying host, so noisy neighbours and the hypervisor add a small overhead, while a physical server gives full hardware control.
+3. Advantages of deploying web applications on cloud-based VMs.
+• Elasticity: scale instances up/down or in/out with demand instead of over-provisioning hardware.
+• Cost: pay-as-you-go, no upfront hardware purchase; stop instances when not needed.
+• Availability: spread instances across Availability Zones; snapshots and AMIs make backup and recovery trivial.
+• Speed: a production-ready server is launched in minutes from a prebuilt image.
+• Global reach: deploy close to users in any region.
+• Managed infrastructure: networking, firewalls (security groups), load balancers and monitoring are built-in services — no physical maintenance.
+4. Define web hosting. How does it work in a cloud setup?
+Web hosting is the service of storing a website’s files on a server and serving them to browsers over HTTP/HTTPS. In a cloud setup: (1) website files live on a cloud VM (e.g., EC2) running a web server such as Apache or Nginx; (2) the VM gets a public IP (often fronted by a load balancer); (3) DNS maps the domain name to that address; (4) the web server answers each browser request with the site’s pages, optionally over TLS. The provider manages the physical hardware, power and network; the user manages the OS, web server and site content. Scaling, backups and TLS can be added as managed services.
+5. Concept of hosting multiple websites on one server (multi-hosting).
+Multi-hosting (virtual hosting) is serving several independent websites from a single server and IP address. The web server inspects each incoming HTTP request and decides which site’s files to serve: by the Host header (domain name), by the port number, or by the URL path. Each site keeps its own document root, so the sites stay independent while sharing the machine’s CPU, RAM and bandwidth — which cuts cost and simplifies management for small/low-traffic sites.
+6. Possible ways to host multiple websites on a single VM.
+(a) Using different ports — one site answers on port 80 (http://IP/) and another on port 8080 (http://IP:8080). Simple to configure; downside is non-standard URLs and firewall rules per port.
+(b) Using different domain names / subdomains — name-based virtual hosts: site1.com and site2.com point to the same IP, and the server routes by the HTTP Host header. Clean URLs; needs DNS records for each name.
+(c) Using different directories — one site lives at http://IP/site1 and another at http://IP/site2, each a folder under the same document root. Simplest option, no DNS or extra ports needed; both sites share one domain.
+Approach used in this lab: (c) different directories — two independent sites served as /site1 and /site2 from a single Apache instance, plus a landing page linking both.
+Part B — Practical: two websites on one EC2 instance
+Steps with screenshots follow as the lab is executed.
+Step 1 — Launch a single EC2 instance (lab5-web-2, t3.micro, Amazon Linux 2023)
+[IMAGE: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABPAA...]
+Step 2 — Website 1 live: http://<public-ip>/site1/ (Aditya’s Portfolio)
+[IMAGE: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABPAA...]
+Step 3 — Website 2 live: http://<public-ip>/site2/ (Campus Eats)
+[IMAGE: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABPAA...]

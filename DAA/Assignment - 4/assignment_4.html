@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assignment No.4 - DAA</title>
+  
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11.5pt;
+      line-height: 1.45;
+      color: #000;
+      background: #e5e7eb;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 8.5in;
+      margin: 0 auto;
+    }
+
+    /* Screen Preview: Fixed 8.5in x 11in page boxes with padding */
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.65in 0.75in;
+      background: #ffffff;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Print settings */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0;
+        box-shadow: none;
+      }
+      .page {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 0.4in 0.5in;
+        box-shadow: none;
+        border: none;
+        page-break-after: always;
+      }
+    }
+
+    /* Cover Page Table Styles */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .cover-table td {
+      border: 1px solid #000;
+      padding: 6px 10px;
+    }
+
+    .cover-table .college-info {
+      text-align: center;
+      font-weight: bold;
+      font-size: 15pt;
+      line-height: 1.35;
+    }
+
+    .cover-table .row-centered {
+      text-align: center;
+      font-weight: bold;
+      font-size: 13pt;
+    }
+
+    .cover-table .row-left {
+      text-align: left;
+      font-weight: bold;
+      font-size: 12pt;
+    }
+
+    .logo-container {
+      text-align: center;
+      width: 18%;
+      padding: 4px !important;
+    }
+
+    .logo-container img {
+      max-width: 85px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Section Styles */
+    h2 {
+      font-family: Arial, sans-serif;
+      font-size: 14pt;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      color: #1e3a8a;
+      border-bottom: 1.5px solid #bfdbfe;
+      padding-bottom: 3px;
+    }
+
+    h3 {
+      font-family: Arial, sans-serif;
+      font-size: 12pt;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      color: #0f172a;
+    }
+
+    p {
+      font-family: Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.45;
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-left: 22px;
+      margin-bottom: 8px;
+      font-family: Arial, sans-serif;
+      font-size: 10.5pt;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    table.styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      margin-bottom: 10px;
+      font-size: 10pt;
+    }
+    table.styled-table th, table.styled-table td {
+      border: 1px solid #cbd5e1;
+      padding: 5px 8px;
+      text-align: left;
+    }
+    table.styled-table th {
+      background-color: #f1f5f9;
+      color: #1e3a8a;
+      font-weight: bold;
+    }
+
+    /* Diagram Containers */
+    .diagram-container {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px;
+      margin: 8px 0;
+      text-align: center;
+    }
+
+    .diagram-caption {
+      font-size: 9.5pt;
+      font-style: italic;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 1px 6px;
+      font-weight: bold;
+      border-radius: 4px;
+      font-size: 9pt;
+    }
+    .badge-cong { background-color: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+
+    /* =========================================================
+       CLEAN WHITE / LIGHT THEME FOR SINGLE UNIFIED JAVA CODE
+       ========================================================= */
+    .code-window-light {
+      background-color: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin: 6px 0 10px 0;
+      overflow: hidden;
+      border: 1px solid #d1d5db;
+    }
+
+    .code-header-light {
+      background-color: #f3f4f6;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 5px;
+      margin-right: 10px;
+    }
+
+    .code-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-red { background-color: #ff5f56; }
+    .dot-yellow { background-color: #ffbd2e; }
+    .dot-green { background-color: #27c93f; }
+
+    .code-title-light {
+      color: #374151;
+      font-size: 8.5pt;
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 600;
+    }
+
+    pre.code-body-light {
+      background-color: #ffffff;
+      color: #1f2937;
+      padding: 8px 12px;
+      overflow-x: auto;
+      font-size: 7.8pt;
+      font-family: 'Consolas', 'Courier New', monospace;
+      line-height: 1.28;
+      margin: 0;
+      border: none;
+      white-space: pre;
+    }
+
+    /* Light Theme Syntax Colors */
+    .k-blue { color: #0000ff; font-weight: bold; }       /* Keywords */
+    .k-purple { color: #7c3aed; font-weight: bold; }     /* Control */
+    .c-teal { color: #0891b2; font-weight: 600; }        /* Classes */
+    .m-gold { color: #b45309; }                          /* Methods */
+    .s-red { color: #b91c1c; }                           /* Strings */
+    .n-green { color: #15803d; font-weight: 600; }       /* Numbers */
+    .comm-green { color: #16a34a; font-style: italic; }  /* Comments */
+    .v-navy { color: #1e3a8a; }                          /* Variables */
+
+    /* =========================================================
+       TERMINAL OUTPUT THEME
+       ========================================================= */
+    .terminal-window {
+      background-color: #000000;
+      color: #cccccc;
+      padding: 12px;
+      font-family: 'Consolas', 'Lucida Console', 'Courier New', monospace;
+      font-size: 9.5pt;
+      line-height: 1.35;
+      margin: 10px 0 15px 0;
+      white-space: pre;
+      overflow-x: auto;
+      border: 1px solid #333;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+    
+    <!-- =========================================================
+         PAGE 1: COVER PAGE & OBJECTIVES
+         ========================================================= -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust's<br>
+            Pimpri Chinchwad College of Engineering
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-centered">
+            Assignment No. 4
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Course:- Design & Analysis of Algorithms Laboratory (BIT25PC04)
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Name:- Aditya Chandrajit Deore
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            PRN:- 124B1F116
+          </td>
+        </tr>
+      </table>
+
+      <h2>1. Title</h2>
+      <p>
+        <strong>Smart Traffic Management for Emergency Vehicles</strong> using Dijkstra's Single Source Shortest Path Algorithm with Dynamic Traffic Updates and Route Visualization.
+      </p>
+
+      <h2>2. Aim</h2>
+      <p>
+        To design, implement, and analyze an intelligent traffic routing system for emergency vehicles (ambulances) across an urban road network, dynamically recalculating the fastest path to a hospital in response to real-time traffic congestion fluctuations using Dijkstra’s Algorithm.
+      </p>
+
+      <h2>3. Problem Statement</h2>
+      <p>
+        A smart city is implementing an intelligent traffic management system to assist ambulances in reaching hospitals as quickly as possible. The city's road network is represented as a graph where:
+      </p>
+      <ul>
+        <li><strong>Intersections (junctions):</strong> Represented as nodes \(J_0, J_1, \dots, J_{n-1}\).</li>
+        <li><strong>Roads between intersections:</strong> Represented as edges with weights indicating travel time (in minutes).</li>
+        <li><strong>Source (S):</strong> Ambulance location (\(J_0\)).</li>
+        <li><strong>Destination (D):</strong> Hospital location (\(J_5\)).</li>
+        <li><strong>Dynamic Traffic:</strong> Edge weights dynamically change in real time due to traffic congestion.</li>
+      </ul>
+
+      <h2>4. Primary Objectives</h2>
+      <ul>
+        <li>Implement Dijkstra's Algorithm with a Min-Priority Queue (\(O((V+E)\log V)\)) to determine the shortest path from the ambulance to the hospital.</li>
+        <li>Account for dynamic weight updates when traffic conditions change on road segments.</li>
+        <li>Optimize the graph representation using an Adjacency List of weighted edges.</li>
+        <li>Provide visual representation of the road network, ambulance (Blue), hospital (Green), and the optimal emergency route (Red).</li>
+      </ul>
+    </div>
+
+    <!-- =========================================================
+         PAGE 2: THEORETICAL FOUNDATIONS & VECTOR ROAD NETWORK DIAGRAM
+         ========================================================= -->
+    <div class="page">
+      <h2>5. Algorithm Design & Theoretical Background</h2>
+      <p>
+        Dijkstra's Algorithm is a greedy single-source shortest path algorithm that operates on graphs with non-negative edge weights. It iteratively selects the vertex \(u\) with the smallest known tentative distance from the source, settles it, and relaxes all adjacent outgoing edges \((u, v)\).
+      </p>
+
+      <h3>5.1 Relaxation Property</h3>
+      <p style="text-align: center; font-weight: bold; background: #f1f5f9; padding: 6px; border-radius: 4px; margin-bottom: 6px;">
+        $$\text{If } d[u] + w(u, v) < d[v] \implies d[v] = d[u] + w(u, v), \quad \text{parent}[v] = u$$
+      </p>
+
+      <h3>5.2 Road Network Dataset & Topology (6 Junctions)</h3>
+      <table class="styled-table">
+        <tr>
+          <th>Road Segment</th>
+          <th>Initial Travel Time</th>
+          <th>Updated Travel Time</th>
+          <th>Condition</th>
+        </tr>
+        <tr><td>\(0 \to 1\)</td><td>4 minutes</td><td>4 minutes</td><td>Normal Road</td></tr>
+        <tr><td>\(0 \to 2\)</td><td>2 minutes</td><td>2 minutes</td><td>Normal Road</td></tr>
+        <tr><td>\(1 \to 3\)</td><td>5 minutes</td><td>5 minutes</td><td>Normal Road</td></tr>
+        <tr><td>\(2 \to 3\)</td><td><strong>1 minute</strong></td><td><strong style="color:#b91c1c;">8 minutes</strong></td><td><span class="badge badge-cong">Traffic Congestion</span></td></tr>
+        <tr><td>\(3 \to 4\)</td><td>3 minutes</td><td>3 minutes</td><td>Normal Road</td></tr>
+        <tr><td>\(4 \to 5\)</td><td>2 minutes</td><td>2 minutes</td><td>Normal Road</td></tr>
+        <tr><td>\(2 \to 5\)</td><td>10 minutes</td><td>10 minutes</td><td>Bypass Highway</td></tr>
+      </table>
+
+      <!-- ROAD NETWORK TRAFFIC CONDITIONS DIAGRAM -->
+      <div class="diagram-container">
+        <img src="traffic_update_diagram.png" alt="Smart Traffic Management - Road Network" style="width: 100%; max-width: 700px; display: block; margin: 0 auto; border-radius: 6px;">
+        <div class="diagram-caption">Figure 4.1: Initial Traffic Condition &amp; Dynamic Rerouting After Traffic Update</div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         PAGE 3: COMPLETE SINGLE JAVA SOURCE CODE
+         ========================================================= -->
+    <div class="page">
+      <h2>6. Java Source Code Implementation</h2>
+      
+      <div class="code-window-light">
+        <div class="code-header-light">
+          <div class="code-dots">
+            <span class="code-dot dot-red"></span>
+            <span class="code-dot dot-yellow"></span>
+            <span class="code-dot dot-green"></span>
+          </div>
+          <span class="code-title-light">SmartTraffic.java (Complete Code)</span>
+        </div>
+        <pre class="code-body-light"><span class="k-purple">import</span> <span class="v-navy">java.util.*</span>;
+<span class="k-purple">import</span> <span class="v-navy">javax.swing.*</span>;
+<span class="k-purple">import</span> <span class="v-navy">java.awt.*</span>;
+
+<span class="k-blue">public class</span> <span class="c-teal">SmartTraffic</span> {
+
+    <span class="comm-green">// Edge represents a road</span>
+    <span class="k-blue">static class</span> <span class="c-teal">Edge</span> {
+        <span class="k-blue">int</span> <span class="v-navy">to</span>;
+        <span class="k-blue">int</span> <span class="v-navy">weight</span>;
+
+        <span class="c-teal">Edge</span>(<span class="k-blue">int</span> <span class="v-navy">to</span>, <span class="k-blue">int</span> <span class="v-navy">weight</span>) {
+            <span class="k-blue">this</span>.<span class="v-navy">to</span> = <span class="v-navy">to</span>;
+            <span class="k-blue">this</span>.<span class="v-navy">weight</span> = <span class="v-navy">weight</span>;
+        }
+    }
+
+    <span class="k-blue">static</span> <span class="c-teal">ArrayList</span>&lt;<span class="c-teal">Edge</span>&gt;[] <span class="v-navy">graph</span>;
+    <span class="k-blue">static int</span>[] <span class="v-navy">parent</span>;
+
+    <span class="comm-green">// Add road</span>
+    <span class="k-blue">static void</span> <span class="m-gold">addRoad</span>(<span class="k-blue">int</span> <span class="v-navy">u</span>, <span class="k-blue">int</span> <span class="v-navy">v</span>, <span class="k-blue">int</span> <span class="v-navy">weight</span>) {
+        <span class="v-navy">graph</span>[<span class="v-navy">u</span>].<span class="m-gold">add</span>(<span class="k-purple">new</span> <span class="c-teal">Edge</span>(<span class="v-navy">v</span>, <span class="v-navy">weight</span>));
+    }
+
+    <span class="comm-green">// Dijkstra's Algorithm</span>
+    <span class="k-blue">static int</span>[] <span class="m-gold">dijkstra</span>(<span class="k-blue">int</span> <span class="v-navy">source</span>) {
+
+        <span class="k-blue">int</span> <span class="v-navy">n</span> = <span class="v-navy">graph</span>.<span class="v-navy">length</span>;
+        <span class="k-blue">int</span>[] <span class="v-navy">distance</span> = <span class="k-purple">new int</span>[<span class="v-navy">n</span>];
+        <span class="v-navy">parent</span> = <span class="k-purple">new int</span>[<span class="v-navy">n</span>];
+
+        <span class="c-teal">Arrays</span>.<span class="m-gold">fill</span>(<span class="v-navy">distance</span>, <span class="c-teal">Integer</span>.<span class="v-navy">MAX_VALUE</span>);
+        <span class="c-teal">Arrays</span>.<span class="m-gold">fill</span>(<span class="v-navy">parent</span>, -<span class="n-green">1</span>);
+
+        <span class="c-teal">PriorityQueue</span>&lt;<span class="k-blue">int</span>[]&gt; <span class="v-navy">pq</span> =
+                <span class="k-purple">new</span> <span class="c-teal">PriorityQueue</span>&lt;&gt;(
+                        <span class="c-teal">Comparator</span>.<span class="m-gold">comparingInt</span>(<span class="v-navy">a</span> -&gt; <span class="v-navy">a</span>[<span class="n-green">1</span>])
+                );
+
+        <span class="v-navy">distance</span>[<span class="v-navy">source</span>] = <span class="n-green">0</span>;
+        <span class="v-navy">pq</span>.<span class="m-gold">add</span>(<span class="k-purple">new int</span>[]{<span class="v-navy">source</span>, <span class="n-green">0</span>});
+
+        <span class="k-purple">while</span> (!<span class="v-navy">pq</span>.<span class="m-gold">isEmpty</span>()) {
+
+            <span class="k-blue">int</span>[] <span class="v-navy">current</span> = <span class="v-navy">pq</span>.<span class="m-gold">poll</span>();
+
+            <span class="k-blue">int</span> <span class="v-navy">u</span> = <span class="v-navy">current</span>[<span class="n-green">0</span>];
+            <span class="k-blue">int</span> <span class="v-navy">dist</span> = <span class="v-navy">current</span>[<span class="n-green">1</span>];
+
+            <span class="k-purple">if</span> (<span class="v-navy">dist</span> &gt; <span class="v-navy">distance</span>[<span class="v-navy">u</span>])
+                <span class="k-purple">continue</span>;
+
+            <span class="k-purple">for</span> (<span class="c-teal">Edge</span> <span class="v-navy">edge</span> : <span class="v-navy">graph</span>[<span class="v-navy">u</span>]) {
+
+                <span class="k-blue">int</span> <span class="v-navy">v</span> = <span class="v-navy">edge</span>.<span class="v-navy">to</span>;
+                <span class="k-blue">int</span> <span class="v-navy">newDist</span> = <span class="v-navy">dist</span> + <span class="v-navy">edge</span>.<span class="v-navy">weight</span>;
+
+                <span class="k-purple">if</span> (<span class="v-navy">newDist</span> &lt; <span class="v-navy">distance</span>[<span class="v-navy">v</span>]) {
+
+                    <span class="v-navy">distance</span>[<span class="v-navy">v</span>] = <span class="v-navy">newDist</span>;
+                    <span class="v-navy">parent</span>[<span class="v-navy">v</span>] = <span class="v-navy">u</span>;
+
+                    <span class="v-navy">pq</span>.<span class="m-gold">add</span>(<span class="k-purple">new int</span>[]{<span class="v-navy">v</span>, <span class="v-navy">newDist</span>});
+                }
+            }
+        }
+
+        <span class="k-purple">return</span> <span class="v-navy">distance</span>;
+    }
+
+    <span class="comm-green">// Print shortest path</span>
+    <span class="k-blue">static void</span> <span class="m-gold">printPath</span>(<span class="k-blue">int</span> <span class="v-navy">source</span>, <span class="k-blue">int</span> <span class="v-navy">destination</span>) {
+
+        <span class="c-teal">ArrayList</span>&lt;<span class="c-teal">Integer</span>&gt; <span class="v-navy">path</span> = <span class="k-purple">new</span> <span class="c-teal">ArrayList</span>&lt;&gt;();
+        <span class="k-blue">int</span> <span class="v-navy">current</span> = <span class="v-navy">destination</span>;
+
+        <span class="k-purple">while</span> (<span class="v-navy">current</span> != -<span class="n-green">1</span>) {
+            <span class="v-navy">path</span>.<span class="m-gold">add</span>(<span class="v-navy">current</span>);
+            <span class="v-navy">current</span> = <span class="v-navy">parent</span>[<span class="v-navy">current</span>];
+        }
+
+        <span class="c-teal">Collections</span>.<span class="m-gold">reverse</span>(<span class="v-navy">path</span>);
+        <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">print</span>(<span class="s-red">"Path: "</span>);
+
+        <span class="k-purple">for</span> (<span class="k-blue">int</span> <span class="v-navy">i</span> = <span class="n-green">0</span>; <span class="v-navy">i</span> &lt; <span class="v-navy">path</span>.<span class="m-gold">size</span>(); <span class="v-navy">i</span>++) {
+            <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">print</span>(<span class="v-navy">path</span>.<span class="m-gold">get</span>(<span class="v-navy">i</span>));
+            <span class="k-purple">if</span> (<span class="v-navy">i</span> &lt; <span class="v-navy">path</span>.<span class="m-gold">size</span>() - <span class="n-green">1</span>)
+                <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">print</span>(<span class="s-red">" -> "</span>);
+        }
+    }
+
+    <span class="comm-green">// Update road weight</span>
+    <span class="k-blue">static void</span> <span class="m-gold">updateRoad</span>(<span class="k-blue">int</span> <span class="v-navy">u</span>, <span class="k-blue">int</span> <span class="v-navy">v</span>, <span class="k-blue">int</span> <span class="v-navy">newWeight</span>) {
+        <span class="k-purple">for</span> (<span class="c-teal">Edge</span> <span class="v-navy">edge</span> : <span class="v-navy">graph</span>[<span class="v-navy">u</span>]) {
+            <span class="k-purple">if</span> (<span class="v-navy">edge</span>.<span class="v-navy">to</span> == <span class="v-navy">v</span>) {
+                <span class="v-navy">edge</span>.<span class="v-navy">weight</span> = <span class="v-navy">newWeight</span>;
+                <span class="k-purple">return</span>;
+            }
+        }
+    }
+
+    <span class="comm-green">// Simple visualization</span>
+    <span class="k-blue">static void</span> <span class="m-gold">showGraph</span>(<span class="k-blue">int</span>[] <span class="v-navy">path</span>, <span class="k-blue">int</span> <span class="v-navy">source</span>, <span class="k-blue">int</span> <span class="v-navy">hospital</span>) {
+        <span class="c-teal">JFrame</span> <span class="v-navy">frame</span> = <span class="k-purple">new</span> <span class="c-teal">JFrame</span>(<span class="s-red">"Smart Traffic Management"</span>);
+        <span class="v-navy">frame</span>.<span class="m-gold">setSize</span>(<span class="n-green">900</span>, <span class="n-green">600</span>);
+        <span class="v-navy">frame</span>.<span class="m-gold">setDefaultCloseOperation</span>(<span class="c-teal">JFrame</span>.<span class="v-navy">DISPOSE_ON_CLOSE</span>);
+
+        <span class="c-teal">JPanel</span> <span class="v-navy">panel</span> = <span class="k-purple">new</span> <span class="c-teal">JPanel</span>() {
+            <span class="k-blue">protected void</span> <span class="m-gold">paintComponent</span>(<span class="c-teal">Graphics</span> <span class="v-navy">g</span>) {
+                <span class="k-blue">super</span>.<span class="m-gold">paintComponent</span>(<span class="v-navy">g</span>);
+                <span class="k-blue">int</span>[][] <span class="v-navy">pos</span> = { {<span class="n-green">100</span>, <span class="n-green">250</span>}, {<span class="n-green">250</span>, <span class="n-green">120</span>}, {<span class="n-green">250</span>, <span class="n-green">380</span>}, {<span class="n-green">450</span>, <span class="n-green">250</span>}, {<span class="n-green">650</span>, <span class="n-green">120</span>}, {<span class="n-green">650</span>, <span class="n-green">380</span>} };
+
+                <span class="v-navy">g</span>.<span class="m-gold">setColor</span>(<span class="c-teal">Color</span>.<span class="v-navy">GRAY</span>);
+                <span class="k-purple">for</span> (<span class="k-blue">int</span> <span class="v-navy">u</span> = <span class="n-green">0</span>; <span class="v-navy">u</span> &lt; <span class="v-navy">graph</span>.<span class="v-navy">length</span>; <span class="v-navy">u</span>++) {
+                    <span class="k-purple">for</span> (<span class="c-teal">Edge</span> <span class="v-navy">e</span> : <span class="v-navy">graph</span>[<span class="v-navy">u</span>]) {
+                        <span class="v-navy">g</span>.<span class="m-gold">drawLine</span>(<span class="v-navy">pos</span>[<span class="v-navy">u</span>][<span class="n-green">0</span>], <span class="v-navy">pos</span>[<span class="v-navy">u</span>][<span class="n-green">1</span>], <span class="v-navy">pos</span>[<span class="v-navy">e</span>.<span class="v-navy">to</span>][<span class="n-green">0</span>], <span class="v-navy">pos</span>[<span class="v-navy">e</span>.<span class="v-navy">to</span>][<span class="n-green">1</span>]);
+                    }
+                }
+
+                <span class="v-navy">g</span>.<span class="m-gold">setColor</span>(<span class="c-teal">Color</span>.<span class="v-navy">RED</span>);
+                <span class="k-purple">for</span> (<span class="k-blue">int</span> <span class="v-navy">i</span> = <span class="n-green">0</span>; <span class="v-navy">i</span> &lt; <span class="v-navy">path</span>.<span class="v-navy">length</span> - <span class="n-green">1</span>; <span class="v-navy">i</span>++) {
+                    <span class="v-navy">g</span>.<span class="m-gold">drawLine</span>(<span class="v-navy">pos</span>[<span class="v-navy">path</span>[<span class="v-navy">i</span>]][<span class="n-green">0</span>], <span class="v-navy">pos</span>[<span class="v-navy">path</span>[<span class="v-navy">i</span>]][<span class="n-green">1</span>], <span class="v-navy">pos</span>[<span class="v-navy">path</span>[<span class="v-navy">i</span>+<span class="n-green">1</span>]][<span class="n-green">0</span>], <span class="v-navy">pos</span>[<span class="v-navy">path</span>[<span class="v-navy">i</span>+<span class="n-green">1</span>]][<span class="n-green">1</span>]);
+                }
+
+                <span class="k-purple">for</span> (<span class="k-blue">int</span> <span class="v-navy">i</span> = <span class="n-green">0</span>; <span class="v-navy">i</span> &lt; <span class="v-navy">pos</span>.<span class="v-navy">length</span>; <span class="v-navy">i</span>++) {
+                    <span class="k-purple">if</span> (<span class="v-navy">i</span> == <span class="v-navy">source</span>) <span class="v-navy">g</span>.<span class="m-gold">setColor</span>(<span class="c-teal">Color</span>.<span class="v-navy">BLUE</span>);
+                    <span class="k-purple">else if</span> (<span class="v-navy">i</span> == <span class="v-navy">hospital</span>) <span class="v-navy">g</span>.<span class="m-gold">setColor</span>(<span class="c-teal">Color</span>.<span class="v-navy">GREEN</span>);
+                    <span class="k-purple">else</span> <span class="v-navy">g</span>.<span class="m-gold">setColor</span>(<span class="c-teal">Color</span>.<span class="v-navy">BLACK</span>);
+
+                    <span class="v-navy">g</span>.<span class="m-gold">fillOval</span>(<span class="v-navy">pos</span>[<span class="v-navy">i</span>][<span class="n-green">0</span>] - <span class="n-green">15</span>, <span class="v-navy">pos</span>[<span class="v-navy">i</span>][<span class="n-green">1</span>] - <span class="n-green">15</span>, <span class="n-green">30</span>, <span class="n-green">30</span>);
+                    <span class="v-navy">g</span>.<span class="m-gold">setColor</span>(<span class="c-teal">Color</span>.<span class="v-navy">BLACK</span>);
+                    <span class="v-navy">g</span>.<span class="m-gold">drawString</span>(<span class="s-red">"J"</span> + <span class="v-navy">i</span>, <span class="v-navy">pos</span>[<span class="v-navy">i</span>][<span class="n-green">0</span>] - <span class="n-green">5</span>, <span class="v-navy">pos</span>[<span class="v-navy">i</span>][<span class="n-green">1</span>] - <span class="n-green">20</span>);
+                }
+            }
+        };
+        <span class="v-navy">frame</span>.<span class="m-gold">add</span>(<span class="v-navy">panel</span>); <span class="v-navy">frame</span>.<span class="m-gold">setVisible</span>(<span class="k-purple">true</span>);
+    }
+
+    <span class="k-blue">public static void</span> <span class="m-gold">main</span>(<span class="c-teal">String</span>[] <span class="v-navy">args</span>) {
+        <span class="k-blue">int</span> <span class="v-navy">n</span> = <span class="n-green">6</span>;
+        <span class="v-navy">graph</span> = <span class="k-purple">new</span> <span class="c-teal">ArrayList</span>[<span class="v-navy">n</span>];
+        <span class="k-purple">for</span> (<span class="k-blue">int</span> <span class="v-navy">i</span> = <span class="n-green">0</span>; <span class="v-navy">i</span> &lt; <span class="v-navy">n</span>; <span class="v-navy">i</span>++) <span class="v-navy">graph</span>[<span class="v-navy">i</span>] = <span class="k-purple">new</span> <span class="c-teal">ArrayList</span>&lt;&gt;();
+
+        <span class="m-gold">addRoad</span>(<span class="n-green">0</span>, <span class="n-green">1</span>, <span class="n-green">4</span>); <span class="m-gold">addRoad</span>(<span class="n-green">0</span>, <span class="n-green">2</span>, <span class="n-green">2</span>); <span class="m-gold">addRoad</span>(<span class="n-green">1</span>, <span class="n-green">3</span>, <span class="n-green">5</span>);
+        <span class="m-gold">addRoad</span>(<span class="n-green">2</span>, <span class="n-green">3</span>, <span class="n-green">1</span>); <span class="m-gold">addRoad</span>(<span class="n-green">3</span>, <span class="n-green">4</span>, <span class="n-green">3</span>); <span class="m-gold">addRoad</span>(<span class="n-green">4</span>, <span class="n-green">5</span>, <span class="n-green">2</span>);
+        <span class="m-gold">addRoad</span>(<span class="n-green">2</span>, <span class="n-green">5</span>, <span class="n-green">10</span>);
+
+        <span class="k-blue">int</span> <span class="v-navy">source</span> = <span class="n-green">0</span>, <span class="v-navy">hospital</span> = <span class="n-green">5</span>;
+        <span class="k-blue">int</span>[] <span class="v-navy">distance</span> = <span class="m-gold">dijkstra</span>(<span class="v-navy">source</span>);
+        <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">println</span>(<span class="s-red">"----- Initial Traffic -----"</span>);
+        <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">println</span>(<span class="s-red">"Shortest distance to hospital: "</span> + <span class="v-navy">distance</span>[<span class="v-navy">hospital</span>] + <span class="s-red">" minutes"</span>);
+        <span class="m-gold">printPath</span>(<span class="v-navy">source</span>, <span class="v-navy">hospital</span>);
+
+        <span class="comm-green">// Dynamic traffic update</span>
+        <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">println</span>(<span class="s-red">"\n\n----- Traffic Update -----"</span>);
+        <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">println</span>(<span class="s-red">"Road 2 -&gt; 3 is congested.\nTravel time changed from 1 to 8 minutes."</span>);
+        <span class="m-gold">updateRoad</span>(<span class="n-green">2</span>, <span class="n-green">3</span>, <span class="n-green">8</span>);
+
+        <span class="v-navy">distance</span> = <span class="m-gold">dijkstra</span>(<span class="v-navy">source</span>);
+        <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">println</span>(<span class="s-red">"\n----- Updated Traffic -----"</span>);
+        <span class="c-teal">System</span>.<span class="v-navy">out</span>.<span class="m-gold">println</span>(<span class="s-red">"New shortest distance: "</span> + <span class="v-navy">distance</span>[<span class="v-navy">hospital</span>] + <span class="s-red">" minutes"</span>);
+        <span class="m-gold">printPath</span>(<span class="v-navy">source</span>, <span class="v-navy">hospital</span>);
+    }
+}</pre>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         PAGE 4: PROGRAM OUTPUT (SLEEK BLACK THEME) & CONCLUSION
+         ========================================================= -->
+    <div class="page">
+      <h2>7. Program Output & Execution Results</h2>
+      <p>
+        The terminal output below illustrates Dijkstra's algorithm determining the initial shortest route to the hospital, followed by dynamic edge weight alteration and real-time rerouting.
+      </p>
+
+      <!-- TERMINAL OUTPUT -->
+      <pre class="terminal-window">PS C:\Users\adity\Desktop\Subjects\DAA\Assignment - 4&gt; javac SmartTraffic.java
+PS C:\Users\adity\Desktop\Subjects\DAA\Assignment - 4&gt; java SmartTraffic
+
+----- Initial Traffic -----
+Shortest distance to hospital: 8 minutes
+Path: 0 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5
+
+----- Traffic Update -----
+Road 2 -&gt; 3 is congested.
+Travel time changed from 1 to 8 minutes.
+
+----- Updated Traffic -----
+New shortest distance: 12 minutes
+Path: 0 -&gt; 2 -&gt; 5</pre>
+
+      <div class="diagram-container">
+        <img src="network_diagram.png" alt="Smart Ambulance Routing Network" style="width: 100%; max-width: 700px; display: block; margin: 0 auto; border-radius: 6px;">
+        <div class="diagram-caption">Figure 4.2: Smart Traffic Management &ndash; Road Network Analysis</div>
+      </div>
+
+      <h2>8. Conclusion & Key Takeaways</h2>
+      <p>
+        The implementation of Dijkstra's Algorithm in <code>SmartTraffic.java</code> successfully calculates the minimum travel time across the road network. When dynamic congestion occurs on segment \(J_2 \to J_3\), the system immediately detects that the bypass path \(0 \to 2 \to 5\) (12 minutes) is faster than continuing through the bottleneck (\(2+8+3+2 = 15\) minutes), ensuring uninterrupted emergency transit.
+      </p>
+    </div>
+
+  </div>
+</body>
+</html>

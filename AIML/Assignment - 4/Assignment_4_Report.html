@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIML Assignment No. 4 - Bagging with Random Forest</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.7;
+      color: #111;
+      background: #b0b8c1;
+      padding: 28px 20px;
+    }
+
+    .container { max-width: 8.5in; margin: 0 auto; }
+
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      padding: 0.85in 0.95in;
+      background: #fff;
+      margin: 0 auto 28px auto;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+
+    .page.diagram-page {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0.7in 0.85in;
+    }
+
+    @page { size: A4 portrait; margin: 18mm 16mm; }
+    @media print {
+      body { background: #fff !important; padding: 0 !important; }
+      .container { max-width: 100% !important; }
+      .page {
+        width: 100% !important; min-height: auto !important;
+        margin: 0 !important; padding: 0 !important;
+        box-shadow: none !important; border-radius: 0 !important;
+        page-break-after: always !important; break-after: page !important;
+      }
+      .page:last-child { page-break-after: avoid !important; }
+      h2, h3 { page-break-after: avoid !important; }
+      table, .diagram-wrap { page-break-inside: avoid !important; }
+    }
+
+    /* --- Cover Table --- */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .cover-table td { border: 1.5px solid #111; padding: 7px 12px; }
+    .cover-table .college-info {
+      text-align: center; font-weight: bold;
+      font-size: 14.5pt; line-height: 1.5; color: #000;
+    }
+    .cover-table .row-centered {
+      text-align: center; font-weight: bold; font-size: 12.5pt; color: #000;
+    }
+    .cover-table .row-left {
+      text-align: left; font-weight: bold; font-size: 11.5pt; color: #000;
+    }
+    .logo-container { text-align: center; width: 15%; padding: 6px !important; }
+    .logo-container img { max-width: 80px; height: auto; display: block; margin: 0 auto; }
+
+    /* --- Headings --- */
+    h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1.5px solid #333;
+      padding-bottom: 4px;
+    }
+    .page > h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    /* --- Body text --- */
+    p {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      text-align: justify;
+      margin-bottom: 12px;
+      color: #111;
+      line-height: 1.7;
+    }
+    ul, ol {
+      margin-left: 28px;
+      font-size: 12pt;
+      margin-bottom: 12px;
+      color: #111;
+      line-height: 1.7;
+    }
+    li { margin-bottom: 6px; text-align: justify; }
+
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10.5pt;
+      background: #f3f3f3;
+      border: 1px solid #ddd;
+      padding: 1px 4px;
+      border-radius: 2px;
+    }
+
+    /* --- Math block --- */
+    .math-block {
+      text-align: center;
+      margin: 14px 0 18px 0;
+      font-size: 13pt;
+    }
+
+    /* --- Tables --- */
+    table.styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11pt;
+    }
+    table.styled-table th {
+      background: rgba(120, 125, 135, 0.22);
+      color: #111;
+      font-weight: bold;
+      text-align: center;
+      padding: 9px 10px;
+      border: 1px solid #aaa;
+    }
+    table.styled-table td {
+      border: 1px solid #bbb;
+      padding: 8px 10px;
+      color: #111;
+      vertical-align: middle;
+    }
+    table.styled-table tr:nth-child(even) { background: rgba(0, 0, 0, 0.025); }
+    table.styled-table td.center { text-align: center; }
+
+    .badge-pass {
+      display: inline-block;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9pt;
+      font-weight: bold;
+      color: #166534;
+      border: 1px solid #166534;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: #f0fdf4;
+    }
+
+    /* --- Diagram page --- */
+    .diagram-section-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 10px;
+      padding-bottom: 4px;
+      border-bottom: 1.5px solid #333;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .diagram-desc {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11.5pt;
+      color: #333;
+      line-height: 1.65;
+      text-align: justify;
+      margin-bottom: 18px;
+    }
+    .diagram-wrap {
+      width: 100%;
+      border: 1.5px solid #888;
+      background: #ffffff;
+      padding: 12px;
+      text-align: center;
+    }
+    .diagram-wrap img { width: 100%; height: auto; display: block; margin: 0 auto; }
+    .diagram-caption {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 10.5pt;
+      color: #333;
+      margin-top: 10px;
+      text-align: center;
+      font-style: italic;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+
+    <!-- PAGE 1: COVER + 1. TITLE + 2. AIM + 3. PROBLEM STATEMENT -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust&#39;s<br>
+            Pimpri Chinchwad College of Engineering
+          </td>
+        </tr>
+        <tr><td colspan="2" class="row-centered">Assignment No. 4 (Index: No. 7)</td></tr>
+        <tr><td colspan="2" class="row-left">Course:- Artificial Intelligence and Machine Learning</td></tr>
+        <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+        <tr><td colspan="2" class="row-left">PRN:- 124B1F116 &nbsp;&nbsp;|&nbsp;&nbsp; Batch:- B3</td></tr>
+      </table>
+
+      <h2>1. Title</h2>
+      <p style="font-weight: bold; font-size: 12.5pt; margin-bottom: 16px;">
+        Breast Cancer Diagnosis Prediction Using Bagging with Random Forest
+      </p>
+
+      <h2>2. Aim</h2>
+      <p style="margin-bottom: 18px;">
+        To implement the <strong>Bagging technique using the Random Forest algorithm</strong> for classifying breast tumors as benign or malignant using the predefined Breast Cancer Wisconsin Diagnostic dataset available in Python&#39;s Scikit-learn library, and to evaluate the ensemble model using suitable classification performance measures.
+      </p>
+
+      <h2>3. Problem Statement &amp; Objectives</h2>
+      <p style="font-weight: bold; font-size: 11.5pt; color: #1e3a8a; margin-bottom: 10px;">
+        Problem Statement: Implement the Bagging technique using the Random Forest algorithm to classify breast tumors as benign or malignant on the predefined Breast Cancer Wisconsin Diagnostic dataset, and compare its performance with a single Decision Tree classifier using classification accuracy, precision, recall, F1-score, and confusion matrix.
+      </p>
+      <p>
+        Individual Decision Trees are prone to high variance, sensitivity to training set fluctuations, and overfitting when processing high-dimensional biological telemetry. This assignment implements an ensemble classification model that employs the <strong>Bagging (Bootstrap Aggregation) technique with Random Forest</strong>. By constructing an ensemble of 100 de-correlated Decision Trees on independent bootstrap samples with random feature subspacing and aggregating their predictions via majority voting, the system achieves superior generalization performance over an individual Decision Tree on unseen patient biopsies.
+      </p>
+      <ul>
+        <li><strong>Inputs:</strong> 30 continuous morphological attributes computed from digitized fine needle aspirate (FNA) images of breast-cell nuclei (mean, error, and worst dimensions).</li>
+        <li><strong>Output:</strong> Binary diagnostic classification: <code>Malignant</code> (Class 0, cancerous) or <code>Benign</code> (Class 1, non-cancerous).</li>
+        <li><strong>Predefined Dataset:</strong> Scikit-Learn&#39;s <code>load_breast_cancer()</code> (Wisconsin Diagnostic Breast Cancer, 569 patient biopsy profiles).</li>
+        <li><strong>Machine Learning Models:</strong> Random Forest Classifier (100 de-correlated Estimators, Gini Impurity, \(\sqrt{p}\) subspacing) compared against a standalone baseline Decision Tree.</li>
+        <li><strong>Evaluation Metrics:</strong> Classification Accuracy, Weighted Precision, Recall (Sensitivity), F1-Score, Out-of-Bag (OOB) Score, Multi-Class Confusion Matrix, and ROC-AUC.</li>
+      </ul>
+    </div>
+
+    <!-- PAGE 2: THEORY, BAGGING WORKFLOW & DATASET ATTRIBUTES -->
+    <div class="page">
+      <h2>4. Ensemble Learning &amp; Bagging Principles</h2>
+      <p>
+        <strong>Bagging (Bootstrap Aggregating)</strong> is an ensemble technique that trains multiple decision trees independently on random subsets of the training data and aggregates their outputs to achieve a more accurate and stable prediction.
+      </p>
+
+      <h3>4.1 Step 1: Bootstrap Sampling (Data Resampling)</h3>
+      <p>
+        From an original training dataset of \(N\) patient samples, we create \(B = 100\) bootstrap subsets by sampling \(N\) times <em>with replacement</em>:
+      </p>
+      <ul>
+        <li>Some patient records appear multiple times in a bootstrap set (approx. <strong>63.2%</strong> unique records).</li>
+        <li>The remaining unselected records (approx. <strong>36.8%</strong>) form the <strong>Out-of-Bag (OOB)</strong> set, used to test each tree without needing separate validation data.</li>
+      </ul>
+
+      <h3>4.2 Step 2: Random Feature Selection</h3>
+      <p>
+        At each split in a tree, instead of checking all 30 features, the Random Forest randomly selects only a small subset:
+      </p>
+      <div class="math-block">
+        \[ m = \sqrt{p} = \sqrt{30} \approx 5 \text{ features per split} \]
+      </div>
+      <p>
+        This prevents one dominant feature (like tumor area) from dominating every single tree, ensuring the 100 trees learn different aspects of the disease.
+      </p>
+
+      <h3>4.3 Step 3: Majority Voting &amp; Basic Metric Calculations</h3>
+      <p>
+        To classify a new patient biopsy, all 100 trees cast an individual vote, and the majority decision wins:
+      </p>
+      <div class="math-block">
+        \[ \text{Final Prediction} = \begin{cases} \text{Benign (1)}, & \text{if Votes(Benign)} > \text{Votes(Malignant)} \\ \text{Malignant (0)}, & \text{otherwise} \end{cases} \]
+      </div>
+      <p>
+        From the confusion matrix counts (True Positives \(TP\), True Negatives \(TN\), False Positives \(FP\), False Negatives \(FN\)), performance is calculated using standard formulas:
+      </p>
+      <div class="math-block">
+        \[ \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} \times 100 = \frac{70 + 39}{70 + 39 + 3 + 2} = \frac{109}{114} = 95.61\% \]
+      </div>
+
+      <h2>5. Predefined Diagnostic Telemetry Dataset</h2>
+      <p>
+        The Scikit-Learn Wisconsin Breast Cancer dataset encapsulates 569 biopsies described across 10 nuclear characteristics computed for three distinct measurement types: Mean, Standard Error (SE), and "Worst" (extreme maximum values), totaling 30 quantitative features:
+      </p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Biomarker Attribute</th>
+            <th style="width: 15%;">Feature Type</th>
+            <th style="width: 20%;">Clinical Range</th>
+            <th style="width: 40%;">Diagnostic Significance in Oncology</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>worst area</code></td><td>Continuous</td><td class="center">185.2 &ndash; 4254.0</td><td>Extreme cross-sectional area of nuclei; strong tumor mass marker.</td></tr>
+          <tr><td><code>worst concave points</code></td><td>Continuous</td><td class="center">0.00 &ndash; 0.291</td><td>Severity of cellular boundary indentations in aggressive malignancy.</td></tr>
+          <tr><td><code>worst radius</code></td><td>Continuous</td><td class="center">7.93 &ndash; 36.04</td><td>Largest nucleus radius; enlargement is a hallmark of dysplasia.</td></tr>
+          <tr><td><code>mean concave points</code></td><td>Continuous</td><td class="center">0.00 &ndash; 0.201</td><td>Average count of nuclear contour concavities across cell cluster.</td></tr>
+          <tr><td><code>worst perimeter</code></td><td>Continuous</td><td class="center">50.4 &ndash; 251.2</td><td>Severe perimeter distortion indicating invasive cellular growth.</td></tr>
+          <tr><td><code>mean texture</code></td><td>Continuous</td><td class="center">9.71 &ndash; 39.28</td><td>Standard deviation of gray-scale pixel intensities in FNA imaging.</td></tr>
+          <tr><td><code>Diagnosis (Target)</code></td><td>Binary</td><td class="center">Malignant / Benign</td><td>0 = Malignant (212 cases, 37.3%), 1 = Benign (357 cases, 62.7%).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGE 3: FULL PAGE ARCHITECTURE & CONFUSION MATRIX -->
+    <div class="page diagram-page">
+      <div class="diagram-section-title">6. Ensemble Architecture &amp; Confusion Matrix Evaluation</div>
+      <p class="diagram-desc">
+        The Random Forest ensemble was evaluated on an 80/20 stratified hold-out test set comprising 114 biopsy profiles (42 Malignant, 72 Benign). The confusion matrix confirms exceptional diagnostic sensitivity, yielding 70 True Benign, 39 True Malignant, with only 3 False Benign and 2 False Malignant classifications.
+      </p>
+      <div class="diagram-wrap">
+        <img src="viz_confusion_matrix.png" alt="Random Forest Confusion Matrix" />
+        <p class="diagram-caption">
+          Figure 1: High-contrast confusion matrix heatmap showing 95.61% overall test classification accuracy.
+        </p>
+      </div>
+    </div>
+
+    <!-- PAGE 4: FEATURE IMPORTANCE & ROC ANALYSIS -->
+    <div class="page">
+      <h2>7. Model Evaluation &amp; Experimental Findings</h2>
+      <p>
+        The trained Random Forest model was thoroughly validated across both hold-out test metrics and Out-of-Bag (OOB) internal validation:
+      </p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 26%;">Tumor Category</th>
+            <th style="width: 16%;">Precision</th>
+            <th style="width: 16%;">Recall</th>
+            <th style="width: 16%;">F1-Score</th>
+            <th style="width: 26%;">Support (Test Set)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>Malignant (0)</code></td><td class="center">95.12 %</td><td class="center">92.86 %</td><td class="center">93.98 %</td><td class="center">42 biopsies</td></tr>
+          <tr><td><code>Benign (1)</code></td><td class="center">95.89 %</td><td class="center">97.22 %</td><td class="center">96.55 %</td><td class="center">72 biopsies</td></tr>
+          <tr style="font-weight: bold; background: rgba(0, 0, 0, 0.05);">
+            <td>Weighted Average</td><td class="center">95.61 %</td><td class="center">95.61 %</td><td class="center">95.60 %</td><td class="center">114 biopsies</td></tr>
+        </tbody>
+      </table>
+
+      <h3>7.1 Comparative Performance: Random Forest vs. Single Decision Tree</h3>
+      <p>
+        To evaluate the variance reduction and performance gain delivered by the Bagging technique, a standalone baseline Decision Tree was trained on the identical 80% split and evaluated on the same 20% test dataset:
+      </p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Model Classifier</th>
+            <th style="width: 15%;">Accuracy</th>
+            <th style="width: 15%;">Precision</th>
+            <th style="width: 15%;">Recall</th>
+            <th style="width: 15%;">F1-Score</th>
+            <th style="width: 15%;">False Negatives</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Single Decision Tree</strong></td>
+            <td class="center">91.23 %</td>
+            <td class="center">91.61 %</td>
+            <td class="center">91.23 %</td>
+            <td class="center">91.30 %</td>
+            <td class="center">7 cases</td>
+          </tr>
+          <tr style="background: rgba(16, 185, 129, 0.08); font-weight: bold;">
+            <td><strong>Random Forest (Bagging)</strong></td>
+            <td class="center"><span class="badge-pass">95.61 %</span></td>
+            <td class="center">95.61 %</td>
+            <td class="center">95.61 %</td>
+            <td class="center">95.60 %</td>
+            <td class="center"><span class="badge-pass">2 cases</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <strong>Key Observation:</strong> The Random Forest ensemble outperforms the single Decision Tree by <strong>+4.38% in accuracy</strong> and reduces false negative tumor misclassifications from 7 cases down to just 2 cases, directly illustrating the clinical power of Bagging variance reduction.
+      </p>
+
+      <h3>7.2 Out-of-Bag (OOB) Generalization Score</h3>
+      <p>
+        Because each tree is constructed from ~63.2% of the training data, the remaining ~36.8% of instances act as an unbiased hold-out test set for that specific tree. Aggregating out-of-bag predictions across all 100 trees yielded an <strong>OOB Score of 95.38%</strong>, validating that the ensemble achieves robust generalization without cross-validation overhead.
+      </p>
+
+      <h2>8. Clinical Biomarker Gini Feature Importance</h2>
+      <p>
+        Feature importance in Random Forest measures the total reduction in Gini impurity brought about by a feature across all trees, normalized over all splits:
+      </p>
+      <div class="math-block">
+        \[ I_G(f) = \frac{1}{B} \sum_{b=1}^{B} \sum_{t \in T_b : v(s_t) = f} \Delta I(s_t, t) \]
+      </div>
+      <p>
+        The empirical ranking reveals that morphological boundary anomalies—specifically <code>worst area</code> (14.00%), <code>worst concave points</code> (12.95%), and <code>worst radius</code> (9.77%)—exert the strongest predictive influence in isolating malignant neoplasms.
+      </p>
+      <div class="diagram-wrap" style="margin-top: 14px;">
+        <img src="viz_feature_importance.png" alt="Top 12 Biomarkers" />
+        <p class="diagram-caption">
+          Figure 2: Gini impurity reduction ranking for the top-12 morphological biomarkers.
+        </p>
+      </div>
+    </div>
+
+    <!-- PAGE 5: ROC CURVE & CONCLUSION -->
+    <div class="page">
+      <h2>9. ROC-AUC Discriminative Diagnostic Performance</h2>
+      <p>
+        The Receiver Operating Characteristic (ROC) curve evaluates diagnostic discrimination across all operational probability decision thresholds:
+      </p>
+      <div class="diagram-wrap" style="margin-bottom: 20px;">
+        <img src="viz_roc_curve.png" alt="ROC Curve" />
+        <p class="diagram-caption">
+          Figure 3: ROC Curve demonstrating exceptional oncological diagnostic discrimination with an AUC of 0.9904.
+        </p>
+      </div>
+
+      <h2>10. Conclusion</h2>
+      <p>
+        In this assignment, an ensemble classification pipeline using the <strong>Bagging technique with Random Forest</strong> was successfully designed, trained, and comprehensively evaluated on the predefined Wisconsin Breast Cancer dataset:
+      </p>
+      <ol>
+        <li><strong>Variance Mitigation:</strong> By aggregating 100 bootstrap-trained Decision Trees, the model eliminates high variance and sample sensitivity characteristic of single decision trees.</li>
+        <li><strong>Generalization Rigor:</strong> The ensemble achieved <strong>95.61% test accuracy</strong> and an <strong>OOB score of 95.38%</strong>, demonstrating high generalization reliability on unseen patient biopsies.</li>
+        <li><strong>Clinical Interpretability:</strong> Feature importance analysis conclusively identified nuclear boundary deformation (<code>worst area</code>, <code>worst concave points</code>, and <code>worst radius</code>) as the paramount pathological biomarkers distinguishing malignant tumors from benign masses.</li>
+      </ol>
+    </div>
+
+  </div>
+</body>
+</html>

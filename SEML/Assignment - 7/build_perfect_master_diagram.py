@@ -1,0 +1,493 @@
+import os
+import base64
+
+dir_path = r"c:\Users\adity\Desktop\Subjects\SEML\Assignment - 7"
+
+# ==============================================================================
+# 1. GENERATE PERFECT MASTER ACTIVITY DIAGRAM (5 SWIMLANES, 1400 x 1580)
+# ==============================================================================
+master_svg_content = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1580" width="1400" height="1580" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arrow_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrow_amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="25" y="14" width="1350" height="42" rx="6" fill="#0f172a"/>
+  <text x="700" y="40" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    UML 2.0 Activity Diagram &#8212; OceanCleanFlow Department Marine Cleanup Management System
+  </text>
+
+  <!-- ==================== 5 SWIMLANE COLUMNS (Each 270px wide) ==================== -->
+  <!-- Col 1: Operator / Player (Student) -->
+  <rect x="25" y="62" width="270" height="1500" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="25" y="62" width="270" height="38" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+  <text x="160" y="86" font-size="12" font-weight="bold" fill="#0369a1" text-anchor="middle">1. Operator / Player (Student)</text>
+
+  <!-- Col 2: OceanCleanFlow System -->
+  <rect x="295" y="62" width="270" height="1500" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="295" y="62" width="270" height="38" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+  <text x="430" y="86" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">2. OceanCleanFlow System</text>
+
+  <!-- Col 3: External Recycling Auditor -->
+  <rect x="565" y="62" width="270" height="1500" fill="#f0fdfa" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="565" y="62" width="270" height="38" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.5"/>
+  <text x="700" y="86" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="middle">3. External Recycling Auditor</text>
+
+  <!-- Col 4: Faculty Mentor (Supervisor) -->
+  <rect x="835" y="62" width="270" height="1500" fill="#fefce8" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="835" y="62" width="270" height="38" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="970" y="86" font-size="12" font-weight="bold" fill="#92400e" text-anchor="middle">4. Faculty Mentor (Supervisor)</text>
+
+  <!-- Col 5: Harbor Director (HOD) -->
+  <rect x="1105" y="62" width="270" height="1500" fill="#faf5ff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="1105" y="62" width="270" height="38" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="1240" y="86" font-size="12" font-weight="bold" fill="#6b21a8" text-anchor="middle">5. Harbor Director (HOD)</text>
+
+  <!-- ==================== PHASE 1: OPERATOR AUTHENTICATION & PROPOSAL ==================== -->
+  <!-- Initial Node (Col 1) -->
+  <circle cx="160" cy="125" r="12" fill="#0f172a"/>
+  <line x1="160" y1="137" x2="160" y2="155" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Merge Node for Login Retry (Point 8) -->
+  <polygon points="160,155 172,165 160,175 148,165" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+  <line x1="160" y1="175" x2="160" y2="195" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Login to OceanCleanFlow Portal (Col 1) -->
+  <rect x="65" y="195" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="213" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Login to</text>
+  <text x="160" y="227" font-size="10" fill="#0369a1" text-anchor="middle">OceanCleanFlow Portal</text>
+
+  <!-- Arrow to System: Verify Login -->
+  <path d="M 255,216 L 335,216" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Verify Login Credentials (Col 2) -->
+  <rect x="335" y="195" width="190" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <text x="430" y="213" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Verify Login</text>
+  <text x="430" y="227" font-size="10" fill="#334155" text-anchor="middle">Credentials &amp; Session</text>
+
+  <line x1="430" y1="237" x2="430" y2="258" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Credentials Valid? (Col 2) (Point 1, 8) -->
+  <polygon points="430,258 450,272 430,286 410,272" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="430" y="275" font-size="8.5" font-weight="bold" fill="#854d0e" text-anchor="middle">Valid?</text>
+
+  <!-- [Invalid Credentials] -> Clean Loop back to Login Merge (Point 8) -->
+  <path d="M 410,272 L 280,272 L 280,165 L 172,165" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="345" y="265" font-size="9" font-weight="bold" fill="#dc2626">[Invalid Credentials]</text>
+
+  <!-- [Valid Credentials] -> Operator Submit Mission -->
+  <path d="M 430,286 L 430,318 L 255,318" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="435" y="306" font-size="9" font-weight="bold" fill="#16a34a">[Valid Credentials]</text>
+
+  <!-- Merge Node for Proposal Resubmission (Col 1) -->
+  <polygon points="160,306 170,314 160,322 150,314" fill="#f1f5f9" stroke="#475569" stroke-width="1.4"/>
+  <line x1="160" y1="322" x2="160" y2="338" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Submit Mission Request & Sector Details (Col 1) -->
+  <rect x="60" y="338" width="200" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="355" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Mission Request</text>
+  <text x="160" y="369" font-size="10" fill="#0369a1" text-anchor="middle">&amp; Vessel / Sector Specs</text>
+
+  <!-- Merge Node for Document Re-upload (Col 1) -->
+  <line x1="160" y1="380" x2="160" y2="395" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+  <polygon points="160,395 170,403 160,411 150,403" fill="#f1f5f9" stroke="#475569" stroke-width="1.4"/>
+  <line x1="160" y1="411" x2="160" y2="425" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Upload Compliance Documents (Col 1) -->
+  <rect x="60" y="425" width="200" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="442" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Upload Seaworthiness</text>
+  <text x="160" y="456" font-size="10" fill="#0369a1" text-anchor="middle">Permits &amp; Insurance PDFs</text>
+
+  <!-- ==================== PHASE 2: AUTOMATED PRE-AUDIT & EXTERNAL AUDITOR ==================== -->
+  <path d="M 260,446 L 335,446" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Execute Automated Pre-Audit Diagnostics (Col 2) -->
+  <rect x="335" y="425" width="190" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <text x="430" y="442" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Execute Automated</text>
+  <text x="430" y="456" font-size="10" fill="#334155" text-anchor="middle">Pre-Audit Diagnostics</text>
+
+  <line x1="430" y1="467" x2="430" y2="490" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Pre-Audit Passed? (Col 2) (Point 2) -->
+  <polygon points="430,490 450,504 430,518 410,504" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="430" y="507" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Pre-Audit?</text>
+
+  <!-- [Pre-Audit Failed] -> Re-upload Document Loop (Point 2) -->
+  <path d="M 410,504 L 275,504 L 275,403 L 170,403" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="335" y="497" font-size="8.5" font-weight="bold" fill="#dc2626">[Pre-Audit Failed: Re-upload]</text>
+
+  <!-- [Pre-Audit Passed] -> Forward to External Auditor (Point 9) -->
+  <path d="M 450,504 L 605,504" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="480" y="497" font-size="8.5" font-weight="bold" fill="#16a34a">[Pre-Audit Passed]</text>
+
+  <!-- Action: Verify Environmental Compliance (Col 3: External Auditor) (Point 9) -->
+  <rect x="605" y="483" width="190" height="42" rx="8" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.8"/>
+  <text x="700" y="500" font-size="11" font-weight="bold" fill="#0f766e" text-anchor="middle">Verify Recycling Partner</text>
+  <text x="700" y="514" font-size="10" fill="#0f766e" text-anchor="middle">&amp; Marine Sanctuaries</text>
+
+  <line x1="700" y1="525" x2="700" y2="548" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Compliance Approved? (Col 3) (Point 1, 9) -->
+  <polygon points="700,548 720,562 700,576 680,562" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="700" y="565" font-size="7.5" font-weight="bold" fill="#854d0e" text-anchor="middle">Compliant?</text>
+
+  <!-- [Compliance Rejected: Hazard Flagged] -> Loop back to Proposal (Point 2) -->
+  <path d="M 680,562 L 285,562 L 285,314 L 170,314" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="460" y="555" font-size="8.5" font-weight="bold" fill="#dc2626">[Hazard Flagged: Adjust Boundaries]</text>
+
+  <!-- [Compliance Certified] -> Forward to Faculty Review Merge (Point 9) -->
+  <path d="M 720,562 L 875,562" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="740" y="555" font-size="8.5" font-weight="bold" fill="#16a34a">[Compliance Certified]</text>
+
+  <!-- ==================== PHASE 3: FACULTY & HARBOR INSTITUTIONAL APPROVALS ==================== -->
+  <!-- Merge Node for Faculty Review (Col 4) (Priority Fix #6) -->
+  <polygon points="875,562 885,554 895,562 885,570" fill="#f1f5f9" stroke="#475569" stroke-width="1.4"/>
+  <line x1="895" y1="562" x2="970" y2="562" stroke="#0f172a" stroke-width="2"/>
+  <line x1="970" y1="562" x2="970" y2="585" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Review Mission Proposal & Route Safety (Col 4: Faculty Mentor) -->
+  <rect x="875" y="585" width="190" height="42" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+  <text x="970" y="602" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Review Mission Proposal</text>
+  <text x="970" y="616" font-size="10" fill="#92400e" text-anchor="middle">&amp; Route Safety Dossier</text>
+
+  <line x1="970" y1="627" x2="970" y2="650" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Faculty Endorsed? (Col 4) (Point 1, 6) -->
+  <polygon points="970,650 990,664 970,678 950,664" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="970" y="667" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Endorsed?</text>
+
+  <!-- [Faculty Rejected] -> Loop back to Proposal Intake (Point 2) -->
+  <path d="M 950,664 L 40,664 L 40,359 L 60,359" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="620" y="657" font-size="8.5" font-weight="bold" fill="#dc2626">[Faculty Rejected: Revise Proposal]</text>
+
+  <!-- [Faculty Approved] -> Forward to Harbor Director HOD -->
+  <path d="M 990,664 L 1145,664" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="1015" y="657" font-size="8.5" font-weight="bold" fill="#16a34a">[Faculty Approved]</text>
+
+  <!-- Action: Review Departmental Mission & Berth Clearance (Col 5: Harbor Director) -->
+  <rect x="1145" y="643" width="190" height="42" rx="8" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.8"/>
+  <text x="1240" y="660" font-size="11" font-weight="bold" fill="#6b21a8" text-anchor="middle">Review Berth Allocation</text>
+  <text x="1240" y="674" font-size="10" fill="#6b21a8" text-anchor="middle">&amp; Harbor Traffic Clearance</text>
+
+  <line x1="1240" y1="685" x2="1240" y2="708" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Harbor Cleared? (Col 5) (Point 1, 6) -->
+  <polygon points="1240,708 1260,722 1240,736 1220,722" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="1240" y="725" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Cleared?</text>
+
+  <!-- PRIORITY FIX #6: HOD Rejection loops back into Faculty Review Merge Node (NOT into the decision diamond!) -->
+  <path d="M 1220,722 L 885,722 L 885,570" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="1060" y="715" font-size="8.5" font-weight="bold" fill="#dc2626">[Clearance Denied: Re-evaluate Route]</text>
+
+  <!-- [Harbor Cleared] -> System Activates Schedule -->
+  <path d="M 1240,736 L 1240,775 L 525,775" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="1245" y="755" font-size="8.5" font-weight="bold" fill="#16a34a">[Harbor Cleared]</text>
+
+  <!-- Action: Activate Vessel Schedule & Clearance Token (Col 2: System) -->
+  <rect x="335" y="754" width="190" height="42" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="430" y="771" font-size="11" font-weight="bold" fill="#14532d" text-anchor="middle">Activate Vessel Schedule</text>
+  <text x="430" y="785" font-size="10" fill="#14532d" text-anchor="middle">&amp; Issue Departure Token</text>
+
+  <!-- ==================== PHASE 4: AUTONOMOUS DEPLOYMENT & 14-WEEK PATROL LOOP ==================== -->
+  <path d="M 335,775 L 255,775" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Start Autonomous Mission (Col 1: Operator) -->
+  <rect x="65" y="754" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="771" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Start Ocean Cleanup Mission</text>
+  <text x="160" y="785" font-size="10" fill="#0369a1" text-anchor="middle">(Vessel Enters Active Sector)</text>
+
+  <line x1="160" y1="796" x2="160" y2="822" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Priority Fix #3 & #4: Merge Node for Weekly Patrol Loop (Col 1) -->
+  <polygon points="160,822 170,832 160,842 150,832" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+  <line x1="160" y1="842" x2="160" y2="865" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Submit Weekly Patrol Log (Col 1: Operator) -->
+  <rect x="65" y="865" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="882" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Weekly Patrol Log</text>
+  <text x="160" y="896" font-size="10" fill="#0369a1" text-anchor="middle">(Plastic Tonnage &amp; Telemetry)</text>
+
+  <line x1="255" y1="886" x2="335" y2="886" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Record Telemetry Stream & Update Patrol Week (Col 2: System) -->
+  <rect x="335" y="865" width="190" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <text x="430" y="882" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Record Weekly Telemetry</text>
+  <text x="430" y="896" font-size="10" fill="#334155" text-anchor="middle">&amp; Increment Week Counter</text>
+
+  <line x1="525" y1="886" x2="875" y2="886" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Review Weekly Progress Log & Safety (Col 4: Faculty Mentor) -->
+  <rect x="875" y="865" width="190" height="42" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+  <text x="970" y="882" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Review Weekly Progress Log</text>
+  <text x="970" y="896" font-size="10" fill="#92400e" text-anchor="middle">&amp; Sign Off Wildlife Safety</text>
+
+  <!-- Line from Faculty back to System Milestone Check -->
+  <path d="M 970,907 L 970,950 L 430,950 L 430,975" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: 14 Weeks Completed? (Col 2: System) (Point 3, 4) -->
+  <polygon points="430,975 450,990 430,1005 410,990" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="430" y="993" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">14 Weeks?</text>
+
+  <!-- [Week < 14: Continue Patrol] -> Clear loop to Weekly Patrol Merge (Point 3, 4) -->
+  <path d="M 410,990 L 50,990 L 50,832 L 150,832" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrow_amber)"/>
+  <text x="215" y="982" font-size="9" font-weight="bold" fill="#d97706">[Week &lt; 14: Continue Patrol Loop]</text>
+
+  <!-- [Week = 14: Patrol Complete] -> Exit loop to Docking (Point 3, 4) -->
+  <path d="M 430,1005 L 430,1050 L 255,1050" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="435" y="1030" font-size="9" font-weight="bold" fill="#16a34a">[Week = 14: Patrol Complete]</text>
+
+  <!-- ==================== PHASE 5: HARBOR DOCKING, RECYCLING AUDIT & CLOSEOUT ==================== -->
+  <!-- Action: Dock Vessel at Harbor Recycling Slipway (Col 1: Operator) -->
+  <rect x="65" y="1029" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="1046" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Dock Vessel at Harbor</text>
+  <text x="160" y="1060" font-size="10" fill="#0369a1" text-anchor="middle">Dedicated Recycling Slipway</text>
+
+  <line x1="160" y1="1071" x2="160" y2="1098" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Priority Fix #7: Dedicated Merge Node for Manifest Resubmission -->
+  <polygon points="160,1098 170,1108 160,1118 150,1108" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+  <line x1="160" y1="1118" x2="160" y2="1140" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Upload Final Waste Manifest & Receipts (Col 1: Operator) -->
+  <rect x="65" y="1140" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="1157" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Upload Final Waste Manifest</text>
+  <text x="160" y="1171" font-size="10" fill="#0369a1" text-anchor="middle">&amp; Shore Weighbridge Receipts</text>
+
+  <!-- Forward to Faculty Mentor for Audit -->
+  <path d="M 255,1161 L 875,1161" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Audit Physical Weighbridge Receipts & NIR Records (Col 4: Faculty Mentor) -->
+  <rect x="875" y="1140" width="190" height="42" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+  <text x="970" y="1157" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Audit Weighbridge Receipts</text>
+  <text x="970" y="1171" font-size="10" fill="#92400e" text-anchor="middle">&amp; NIR Polymer Sorting Records</text>
+
+  <line x1="970" y1="1182" x2="970" y2="1205" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Manifest Verified? (Col 4: Faculty Mentor) (Point 5, 7) -->
+  <polygon points="970,1205 990,1220 970,1235 950,1220" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="970" y="1223" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Verified?</text>
+
+  <!-- PRIORITY FIX #7: Resubmit Manifest returns directly to the Manifest Merge Node above Action 15 -->
+  <path d="M 950,1220 L 275,1220 L 275,1108 L 170,1108" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="540" y="1212" font-size="9" font-weight="bold" fill="#dc2626">[Discrepancy &gt; 2%: Resubmit Manifest]</text>
+
+  <!-- [Manifest Verified] -> System Marks Completed (Point 5, 12) -->
+  <path d="M 970,1235 L 970,1275 L 525,1275" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="975" y="1255" font-size="8.5" font-weight="bold" fill="#16a34a">[Manifest Verified: Balance Matches]</text>
+
+  <!-- Action: Mark Mission Status COMPLETED & Lock Logbook (Col 2: System) -->
+  <rect x="335" y="1254" width="190" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <text x="430" y="1271" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Mark Mission COMPLETED</text>
+  <text x="430" y="1285" font-size="10" fill="#334155" text-anchor="middle">&amp; Lock Persistent Logbooks</text>
+
+  <line x1="430" y1="1296" x2="430" y2="1328" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Priority Fix #5 & #12: Action: Record Diverted Plastic Mass & Issue Digital Certificate (Col 2: System) -->
+  <rect x="335" y="1328" width="190" height="42" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="430" y="1345" font-size="11" font-weight="bold" fill="#14532d" text-anchor="middle">Record Diverted Plastic Mass</text>
+  <text x="430" y="1359" font-size="10" fill="#14532d" text-anchor="middle">&amp; Issue Completion Certificate</text>
+
+  <!-- Arrow left to Operator Final Feedback (Point 12) -->
+  <path d="M 335,1349 L 255,1349" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Submit Final Debriefing & Feedback Survey (Col 1: Operator) -->
+  <rect x="65" y="1328" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="1345" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Final Debriefing</text>
+  <text x="160" y="1359" font-size="10" fill="#0369a1" text-anchor="middle">&amp; Platform Feedback Survey</text>
+
+  <line x1="160" y1="1370" x2="160" y2="1415" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Activity Final Node (Col 1) (Point 12) -->
+  <circle cx="160" cy="1432" r="16" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+  <circle cx="160" cy="1432" r="10" fill="#0f172a"/>
+  <text x="160" y="1464" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">Activity Final</text>
+
+</svg>'''
+
+with open(os.path.join(dir_path, "master_activity_diagram.svg"), "w", encoding="utf-8") as f:
+    f.write(master_svg_content)
+print("Updated master_activity_diagram.svg successfully.")
+
+# Also update the interactive Panzoom HTML viewer
+viewer_html = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OceanCleanFlow &#8212; Master UML 2.0 Activity Diagram</title>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <style>
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        body, html {{
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }}
+
+        .canvas-container {{
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: grab;
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(to right, #f1f5f9 1px, transparent 1px),
+                linear-gradient(to bottom, #f1f5f9 1px, transparent 1px);
+            background-size: 24px 24px;
+        }}
+        .canvas-container:active {{
+            cursor: grabbing;
+        }}
+
+        #pan-viewport {{
+            transform-origin: 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }}
+
+        .toolbar {{
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+            padding: 10px 18px;
+            border-radius: 40px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }}
+
+        .btn {{
+            background: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }}
+
+        .btn:hover {{
+            background: #0284c7;
+            border-color: #38bdf8;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }}
+
+        .btn-primary {{
+            background: #0284c7;
+            border-color: #38bdf8;
+        }}
+        .btn-primary:hover {{
+            background: #0369a1;
+        }}
+
+        .info-pill {{
+            position: fixed;
+            top: 20px;
+            left: 24px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            z-index: 100;
+            font-size: 13px;
+            color: #334155;
+        }}
+        .info-pill h1 {{
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }}
+    </style>
+</head>
+<body>
+
+    <div class="info-pill">
+        <h1>OceanCleanFlow &#8212; UML 2.0 Activity Diagram</h1>
+        <span>Interactive Canvas &#8226; 5 Partitions &#8226; Drag to Pan &#8226; Scroll to Zoom</span>
+    </div>
+
+    <div class="canvas-container" id="container">
+        <div id="pan-viewport">
+{master_svg_content}
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <button class="btn" id="zoom-in">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Zoom In
+        </button>
+        <button class="btn" id="zoom-out">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Zoom Out
+        </button>
+        <button class="btn btn-primary" id="reset-view">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+            Fit to Screen
+        </button>
+    </div>
+
+    <script>
+        const viewport = document.getElementById('pan-viewport');
+        const container = document.getElementById('container');
+        
+        const panzoom = Panzoom(viewport, {{
+            maxScale: 4.5,
+            minScale: 0.25,
+            contain: 'outside',
+            startScale: 0.65,
+            cursor: 'grab'
+        }});
+
+        container.addEventListener('wheel', panzoom.zoomWithWheel);
+
+        document.getElementById('zoom-in').addEventListener('click', () => panzoom.zoomIn());
+        document.getElementById('zoom-out').addEventListener('click', () => panzoom.zoomOut());
+        document.getElementById('reset-view').addEventListener('click', () => {{
+            panzoom.reset({{ animate: true }});
+            panzoom.zoom(0.65, {{ animate: true }});
+        }});
+
+        setTimeout(() => {{
+            panzoom.zoom(0.65, {{ animate: false }});
+        }}, 100);
+    </script>
+</body>
+</html>'''
+
+with open(os.path.join(dir_path, "Activity_Diagram_Assignment_7.html"), "w", encoding="utf-8") as f:
+    f.write(viewer_html)
+print("Updated Activity_Diagram_Assignment_7.html successfully.")

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 230" width="100%" height="auto" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arr1_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arr1_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <!-- Initial Node -->
+  <circle cx="35" cy="115" r="14" fill="#0f172a"/>
+  <line x1="49" y1="115" x2="80" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+  
+  <!-- Merge Node for Login Retry (Point 8) -->
+  <polygon points="95,115 110,100 125,115 110,130" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <line x1="125" y1="115" x2="155" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- Action: Login to OceanCleanFlow -->
+  <rect x="155" y="89" width="165" height="52" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="237" y="112" font-size="12" font-weight="bold" fill="#0369a1" text-anchor="middle">Login to</text>
+  <text x="237" y="128" font-size="11" fill="#0369a1" text-anchor="middle">OceanCleanFlow Portal</text>
+
+  <line x1="320" y1="115" x2="355" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- Action: Verify Login Credentials & Session -->
+  <rect x="355" y="89" width="165" height="52" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="437" y="112" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Verify Login</text>
+  <text x="437" y="128" font-size="11" fill="#334155" text-anchor="middle">Credentials &amp; Session</text>
+
+  <line x1="520" y1="115" x2="555" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- Decision: Credentials Valid? -->
+  <polygon points="575,115 595,95 615,115 595,135" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="595" y="119" font-size="9" font-weight="bold" fill="#854d0e" text-anchor="middle">Valid?</text>
+
+  <!-- [Invalid Credentials] -> Clean Loop back to Merge Node (Point 8) -->
+  <path d="M 595,95 L 595,45 L 110,45 L 110,100" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr1_red)"/>
+  <text x="350" y="38" font-size="10.5" font-weight="bold" fill="#dc2626">[Invalid Credentials: Prompt Retry]</text>
+
+  <!-- [Valid Credentials] -> Submit Mission Request -->
+  <line x1="615" y1="115" x2="665" y2="115" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr1_green)"/>
+  <text x="640" y="106" font-size="10" font-weight="bold" fill="#16a34a">[Valid]</text>
+
+  <!-- Action: Submit Mission Request & Vessel Specs -->
+  <rect x="665" y="89" width="145" height="52" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="737" y="112" font-size="11.5" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Request &amp;</text>
+  <text x="737" y="128" font-size="10.5" fill="#0369a1" text-anchor="middle">Vessel / Sector Specs</text>
+
+  <line x1="810" y1="115" x2="840" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- Action: Upload Seaworthiness Permits -->
+  <rect x="840" y="89" width="125" height="52" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="902" y="112" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Upload Permits &amp;</text>
+  <text x="902" y="128" font-size="10" fill="#0369a1" text-anchor="middle">Insurance PDFs</text>
+
+  <text x="490" y="200" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Figure 6.1: Operator Authentication &amp; Application Initiation Flow</text>
+</svg>

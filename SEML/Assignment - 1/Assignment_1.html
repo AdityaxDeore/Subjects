@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDLC Models - Assignment 1</title>
+    <!-- Mermaid.js for Diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+    
+    <style>
+        body {
+            font-family: Calibri, "Segoe UI", Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: #1a1a1a;
+            background: #e5e7eb;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+        }
+
+        .page {
+            min-height: 11in;
+            width: 8.5in;
+            padding: 0.8in;
+            background: #ffffff;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .page:focus-within {
+            outline: 2px dashed #666;
+            outline-offset: 4px;
+        }
+
+        @media print {
+            body { background: #ffffff; padding: 0; }
+            .container { max-width: 100%; margin: 0; box-shadow: none; }
+            .page { width: 100%; min-height: auto; margin: 0; padding: 0.2in; box-shadow: none; border: none; border-radius: 0; page-break-after: always; }
+        }
+
+        /* Cover Table CSS */
+        .cover-table {
+            width: 100%; border-collapse: collapse; margin-bottom: 20px; font-family: "Times New Roman", Times, serif;
+        }
+        .cover-table td { border: 1px solid #000; padding: 8px 10px; }
+        .cover-table .college-info { text-align: center; font-weight: bold; font-size: 16pt; line-height: 1.4; color: #000; }
+        .cover-table .row-centered { text-align: center; font-weight: bold; font-size: 13pt; color: #000; }
+        .cover-table .row-left { text-align: left; font-weight: bold; font-size: 13pt; color: #000; }
+        .logo-container { text-align: center; width: 18%; padding: 5px !important; }
+        .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto; }
+
+        /* Typography */
+        h2 { font-family: "Times New Roman", Times, serif; font-weight: bold; font-size: 18pt; color: #1e3a8a; margin-top: 32px; margin-bottom: 12px; border-bottom: 1.5px solid #bfdbfe; padding-bottom: 6px; }
+        h3 { font-family: "Times New Roman", Times, serif; font-weight: bold; font-size: 15pt; color: #000; margin-top: 28px; margin-bottom: 8px; }
+        h4 { font-family: Calibri, sans-serif; font-weight: bold; font-size: 13pt; color: #000; margin-top: 18px; margin-bottom: 6px; }
+        
+        p { font-size: 12pt; text-align: left; margin-bottom: 12px; color: #1a1a1a; }
+        ul, ol { margin-left: 20px; font-size: 12pt; margin-bottom: 12px; color: #1a1a1a; }
+        li { margin-bottom: 6px; }
+        
+        a { color: inherit; text-decoration: none; }
+        a:hover { text-decoration: underline; color: #2563eb; }
+        
+        /* Tables */
+        .styled-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; overflow: hidden; border: 1px solid #ccc; }
+        .styled-table td, .styled-table th { border: 1px solid #ccc; padding: 10px 12px; text-align: left; font-size: 11.5pt; color: #1a1a1a; }
+        .styled-table th { background-color: #f8fafc; font-weight: bold; color: #1e3a8a; font-family: "Times New Roman", Times, serif; font-size: 12pt;}
+
+        /* Diagram Container */
+        .diagram-box { text-align: center; margin: 20px 0; padding: 15px; background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+        .diagram-caption { font-size: 10.5pt; color: #475569; font-family: "Times New Roman", Times, serif; font-style: italic; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container" contenteditable="true">
+        
+        <!-- PAGE 1: Cover Page -->
+        <div class="page">
+            <table class="cover-table">
+                <tr>
+                    <td class="logo-container"><img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false"></td>
+                    <td class="college-info">Pimpri Chinchwad Education Trust's<br>Pimpri Chinchwad College of Engineering</td>
+                </tr>
+                <tr><td colspan="2" class="row-centered">Assignment No. 1</td></tr>
+                <tr><td colspan="2" class="row-left">Course:- Software Engineering and Modeling Lab (SEML)</td></tr>
+                <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+                <tr><td colspan="2" class="row-left">PRN:- 124B1F116</td></tr>
+                <tr><td colspan="2" class="row-left">Batch:- B3</td></tr>
+            </table>
+
+            <h2 style="text-align: center; margin-top: 60px; font-size: 24pt; border-bottom: none; color: #1e3a8a;">Study of SDLC Models</h2>
+            
+            <div style="margin-top: 60px;">
+                <h3 style="color: #000; font-size: 15pt; border-bottom: 1px solid #ccc; padding-bottom: 4px;">Aim</h3>
+                <p>To study and analyze different Software Development Life Cycle (SDLC) models such as Waterfall, Agile, Spiral, and V-Model, understand their characteristics, advantages, and disadvantages, and choose the most suitable SDLC model for different software projects.</p>
+                
+                <h3 style="color: #000; font-size: 15pt; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-top: 40px;">Software Development Life Cycle (SDLC)</h3>
+                <ul>
+                    <li>A structured process used for planning, designing, developing, testing, deploying, and maintaining software applications.</li>
+                    <li>Provides a systematic approach to software development.</li>
+                    <li>Ensures that high-quality software is delivered reliably within budget and strictly on time.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PAGE 2: Waterfall Model -->
+        <div class="page">
+            <h2>1. Waterfall Model</h2>
+            
+            <h3>Introduction</h3>
+            <ul>
+                <li>One of the earliest and simplest SDLC models, following a strict linear and sequential approach.</li>
+                <li>Each phase of software development must be completely finished before the next phase begins.</li>
+                <li>The output of one phase acts as the direct input for the subsequent phase, flowing downwards like a waterfall.</li>
+                <li>Highly suitable for projects where requirements are completely defined, well-understood, and unlikely to change.</li>
+                <li>Extensive documentation is maintained at every single stage to simplify project management.</li>
+            </ul>
+            
+            <h3>Diagram</h3>
+            <div class="diagram-box" contenteditable="false">
+                <div class="mermaid">
+                    flowchart TD
+                        Req[Requirement Analysis] --> Design[System Design]
+                        Design --> Dev[Implementation]
+                        Dev --> Test[Testing]
+                        Test --> Deploy[Deployment]
+                        Deploy --> Maint[Maintenance]
+                </div>
+                <div class="diagram-caption">Figure 1.1: Waterfall Model Phases</div>
+            </div>
+
+            <h3>Characteristics (Features)</h3>
+            <ul>
+                <li>Follows a linear and sequential software development process.</li>
+                <li>Each phase must be completed before the next phase begins.</li>
+                <li>Requirement analysis is completed before development starts.</li>
+                <li>Proper documentation is maintained throughout the project.</li>
+                <li>Customer involvement is mainly during the requirement gathering phase.</li>
+                <li>Testing is performed only after the coding phase is completed.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 3: Waterfall Cont. & Agile -->
+        <div class="page">
+            <h3>Advantages</h3>
+            <ul>
+                <li>Simple and easy to understand and implement.</li>
+                <li>Well-defined phases make project management easier.</li>
+                <li>Proper documentation helps in future maintenance.</li>
+                <li>Easy to estimate project cost, schedule, and resources.</li>
+                <li>Works incredibly well for small and medium-sized projects.</li>
+            </ul>
+
+            <h3>Disadvantages</h3>
+            <ul>
+                <li>Difficult to accommodate changes once development begins.</li>
+                <li>Customer involvement is severely limited after the initial phase.</li>
+                <li>Errors discovered late can be extremely expensive to fix.</li>
+                <li>Working software is only available at the very end of the cycle.</li>
+            </ul>
+
+            <h3>Applications</h3>
+            <ul>
+                <li>Library Management System</li>
+                <li>Student Management System</li>
+                <li>Payroll Management System</li>
+                <li>Inventory Management System</li>
+                <li>Banking Record Management System</li>
+            </ul>
+
+            <h3>Example Project: Library Management System</h3>
+            <ul>
+                <li><strong>Stable Requirements:</strong> Features such as book issue/return and fine calculation rarely change.</li>
+                <li><strong>Clear Sequence:</strong> The project follows a fixed sequence of phases without the need for frequent revisions.</li>
+                <li><strong>Organized Development:</strong> Proper documentation at each step ensures an organized and highly efficient process.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 4: Agile Model -->
+        <div class="page">
+            <h2>2. Agile Model</h2>
+            
+            <h3>Introduction</h3>
+            <ul>
+                <li>An iterative and incremental model that focuses heavily on flexibility, collaboration, and continuous improvement.</li>
+                <li>The project is divided into small, manageable parts called iterations or sprints.</li>
+                <li>Each sprint is designed to deliver a fully working version of the software.</li>
+                <li>Encourages continuous customer involvement and immediate feedback throughout the entire development process.</li>
+                <li>Highly adaptable, allowing developers to quickly respond to suddenly changing market requirements.</li>
+            </ul>
+
+            <h3>Diagram</h3>
+            <div class="diagram-box" contenteditable="false">
+                <div class="mermaid">
+                    flowchart LR
+                        Plan((Plan)) --> Design((Design))
+                        Design --> Develop((Develop))
+                        Develop --> Test((Test))
+                        Test --> Release((Release))
+                        Release --> Feedback((Feedback))
+                        Feedback --> Plan
+                </div>
+                <div class="diagram-caption">Figure 2.1: Agile Iterative Cycle</div>
+            </div>
+
+            <h3>Characteristics (Features)</h3>
+            <ul>
+                <li>Follows an iterative and incremental development approach.</li>
+                <li>Development is divided into small iterations called sprints.</li>
+                <li>Delivers working software at the end of each sprint.</li>
+                <li>Encourages continuous customer involvement and feedback.</li>
+                <li>Easily accommodates changing requirements during development.</li>
+                <li>Team members work collaboratively with regular communication.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 5: Agile Cont. & Spiral Model -->
+        <div class="page">
+            <h3>Advantages</h3>
+            <ul>
+                <li>Highly flexible and adaptable to rapidly changing requirements.</li>
+                <li>Delivers working software quickly through short development cycles.</li>
+                <li>Continuous customer feedback significantly improves product quality.</li>
+                <li>Allows for early detection and resolution of software defects.</li>
+                <li>Reduces overall project risks through frequent testing and reviews.</li>
+            </ul>
+
+            <h3>Disadvantages</h3>
+            <ul>
+                <li>Difficult to estimate the total project cost and completion time upfront.</li>
+                <li>Requires highly experienced and skilled development teams.</li>
+                <li>Continuous customer participation is absolutely necessary for success.</li>
+                <li>Documentation may be less detailed compared to traditional models.</li>
+            </ul>
+
+            <h3>Applications</h3>
+            <ul>
+                <li>Social Media Applications</li>
+                <li>E-commerce Websites</li>
+                <li>Mobile Applications</li>
+                <li>Online Food Delivery Systems</li>
+                <li>Ride-Sharing Applications</li>
+            </ul>
+
+            <h3>Example Project: Social Media Application (Instagram Clone)</h3>
+            <ul>
+                <li><strong>Dynamic Requirements:</strong> User expectations and market trends change frequently.</li>
+                <li><strong>Continuous Updates:</strong> Features such as Stories, Reels, and Messaging require constant iteration.</li>
+                <li><strong>Rapid Feedback:</strong> Agile enables developers to release features in short sprints and gather immediate user feedback.</li>
+                <li><strong>High Adaptability:</strong> Ensures the application maintains quality while meeting rapidly changing expectations.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 6: Spiral Model -->
+        <div class="page">
+            <h2>3. Spiral Model</h2>
+            
+            <h3>Introduction</h3>
+            <ul>
+                <li>A risk-driven SDLC model introduced by Barry Boehm in 1986.</li>
+                <li>Combines the structured features of the Waterfall Model with the iterative nature of the Prototyping Model.</li>
+                <li>Development is carried out in a series of repeated cycles called spirals.</li>
+                <li>Each spiral strictly focuses on planning, risk analysis, development, and customer evaluation.</li>
+                <li>Primarily designed to identify, analyze, and minimize risks at every single stage of software development.</li>
+            </ul>
+
+            <h3>Diagram</h3>
+            <div class="diagram-box" contenteditable="false">
+                <div class="mermaid">
+                    flowchart TD
+                        P[Planning] --> R[Risk Analysis]
+                        R --> E[Engineering & Development]
+                        E --> C[Customer Evaluation]
+                        C --> P
+                </div>
+                <div class="diagram-caption">Figure 3.1: Spiral Model Cycle</div>
+            </div>
+
+            <h3>Characteristics (Features)</h3>
+            <ul>
+                <li>Follows an iterative and heavily risk-driven software development approach.</li>
+                <li>Development is carried out in multiple loops known as spirals.</li>
+                <li>Risk identification and mitigation are performed before any coding begins.</li>
+                <li>Customer feedback is collected immediately after each iteration.</li>
+                <li>Combines the advantages of both the Waterfall and Prototyping models.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 7: Spiral Cont. & V-Model -->
+        <div class="page">
+            <h3>Advantages</h3>
+            <ul>
+                <li>Provides excellent risk management through continuous, dedicated risk analysis phases.</li>
+                <li>Highly suitable for massive, complex, and mission-critical software projects.</li>
+                <li>Changes in requirements can be easily and safely incorporated.</li>
+                <li>Reduces the chances of catastrophic project failure by identifying risks early.</li>
+            </ul>
+
+            <h3>Disadvantages</h3>
+            <ul>
+                <li>Overall development cost is extremely high due to repeated iterations.</li>
+                <li>Requires specialized experts in risk analysis and project management.</li>
+                <li>Far more complex to understand and implement than traditional SDLC models.</li>
+                <li>Development time may increase significantly because of multiple cycles.</li>
+            </ul>
+
+            <h3>Applications</h3>
+            <ul>
+                <li>Hospital Management System</li>
+                <li>Air Traffic Control System</li>
+                <li>Aerospace and Defence Software</li>
+                <li>Banking and Financial Systems</li>
+                <li>Medical Software Systems</li>
+            </ul>
+
+            <h3>Example Project: Hospital Management System</h3>
+            <ul>
+                <li><strong>High Complexity:</strong> Manages patient records, billing, pharmacy, and medical history.</li>
+                <li><strong>Risk Mitigation:</strong> Identifies and minimizes critical risks related to data security and system performance.</li>
+                <li><strong>Iterative Safety:</strong> Each cycle ensures sensitive patient information is secured before proceeding.</li>
+                <li><strong>Continuous Improvement:</strong> Feedback from hospital staff is incorporated to ensure the system remains reliable.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 8: V-Model -->
+        <div class="page">
+            <h2>4. V-Model (Verification and Validation)</h2>
+            
+            <h3>Introduction</h3>
+            <ul>
+                <li>An advanced extension of the Waterfall Model where every development phase has a corresponding testing phase.</li>
+                <li>Testing activities are proactively planned and performed alongside each exact development stage.</li>
+                <li>Designed in a V-shaped structure: the left side is development, the right side is corresponding testing.</li>
+                <li>Ensures defects are identified very early, drastically improving the overall quality of the software.</li>
+                <li>Widely considered the best model for projects requiring ultimate reliability, security, and accuracy.</li>
+            </ul>
+
+            <h3>Diagram</h3>
+            <div class="diagram-box" contenteditable="false">
+                <div class="mermaid">
+                    flowchart TD
+                        Req[Requirement Analysis] --> Sys[System Design]
+                        Sys --> Arch[Architecture Design]
+                        Arch --> Mod[Module Design]
+                        Mod --> Code((Coding))
+                        
+                        Code --> UT[Unit Testing]
+                        UT --> IT[Integration Testing]
+                        IT --> ST[System Testing]
+                        ST --> AT[Acceptance Testing]
+                        
+                        Req -.-> AT
+                        Sys -.-> ST
+                        Arch -.-> IT
+                        Mod -.-> UT
+                </div>
+                <div class="diagram-caption">Figure 4.1: V-Model Structure</div>
+            </div>
+
+            <h3>Characteristics (Features)</h3>
+            <ul>
+                <li>Follows a strictly sequential and highly structured software development process.</li>
+                <li>Every development phase is directly linked to a corresponding testing phase.</li>
+                <li>Emphasizes both verification (building it right) and validation (building the right thing).</li>
+                <li>Testing activities are meticulously planned from the very beginning of the project.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 9: V-Model Cont. -->
+        <div class="page">
+            <h3>Advantages</h3>
+            <ul>
+                <li>Early testing planning helps detect defects long before deployment.</li>
+                <li>Produces exceptionally high-quality and reliable software.</li>
+                <li>Reduces the immense cost of fixing critical defects in later stages.</li>
+                <li>Highly suitable for safety-critical and security-sensitive applications.</li>
+                <li>Ensures complete traceability between development code and testing activities.</li>
+            </ul>
+
+            <h3>Disadvantages</h3>
+            <ul>
+                <li>Extremely difficult to accommodate changing requirements once testing plans are set.</li>
+                <li>Far less flexible than iterative models such as Agile or Spiral.</li>
+                <li>Working software is only available after the entire V-cycle is completed.</li>
+                <li>Can be overly time-consuming for highly dynamic, fast-paced projects.</li>
+            </ul>
+
+            <h3>Applications</h3>
+            <ul>
+                <li>Online Banking Systems</li>
+                <li>ATM Software</li>
+                <li>Railway Reservation Systems</li>
+                <li>Defence and Military Software</li>
+                <li>Aerospace Applications</li>
+            </ul>
+
+            <h3>Example Project: Online Banking System</h3>
+            <ul>
+                <li><strong>High Security Need:</strong> Handles sensitive financial data, fund transfers, and online payments.</li>
+                <li><strong>Parallel Testing:</strong> Every development phase is followed by a rigorous corresponding testing phase.</li>
+                <li><strong>Defect Prevention:</strong> Early testing actively identifies security vulnerabilities and transaction errors.</li>
+                <li><strong>Guaranteed Reliability:</strong> Ensures the resulting banking system is secure, legally compliant, and accurate.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 10: Justification -->
+        <div class="page">
+            <h2>Justification for Selecting SDLC Models</h2>
+            
+            <p>The selection of an appropriate SDLC model is a crucial step. Every project has different requirements, complexities, and risk factors. Choosing the right development model improves quality, reduces risks, and ensures timely delivery.</p>
+
+            <h3>1. Library Management System – Waterfall Model</h3>
+            <ul>
+                <li><strong>Project Overview:</strong> Automates catalog management, member registration, and book issues.</li>
+                <li><strong>Requirement Stability:</strong> Functional requirements are clearly defined upfront and remain highly stable.</li>
+                <li><strong>Development Approach:</strong> Follows a highly structured, sequential workflow without the need to revisit phases.</li>
+                <li><strong>Cost Efficiency:</strong> Because revisions are rare, it is an extremely cost-effective and time-efficient model.</li>
+            </ul>
+
+            <h3>2. Social Media Application – Agile Model</h3>
+            <ul>
+                <li><strong>Dynamic Ecosystem:</strong> Features like Stories, Reels, and Messaging constantly evolve based on market trends.</li>
+                <li><strong>Iterative Sprints:</strong> Developers release functional versions of the application in short, manageable sprints.</li>
+                <li><strong>Continuous Feedback:</strong> Customer feedback is immediately incorporated without breaking the entire system architecture.</li>
+                <li><strong>High Flexibility:</strong> Provides the supreme adaptability needed for rapid, modern software deployment.</li>
+            </ul>
+
+            <h3>3. Hospital Management System – Spiral Model</h3>
+            <ul>
+                <li><strong>Mission-Critical Data:</strong> Manages confidential medical history, billing, and life-saving emergency services.</li>
+                <li><strong>Risk Mitigation:</strong> Focuses heavily on identifying risks like data breaches and performance bottlenecks early.</li>
+                <li><strong>Iterative Evaluation:</strong> Each module (e.g., pharmacy, billing) is developed, rigorously tested, and evaluated independently.</li>
+                <li><strong>System Reliability:</strong> Massively reduces the possibility of catastrophic system failures in a healthcare environment.</li>
+            </ul>
+
+            <h3>4. Online Banking System – V-Model</h3>
+            <ul>
+                <li><strong>Ultimate Security:</strong> Performs critical financial transactions where even a minor defect can cause severe financial loss.</li>
+                <li><strong>Quality Assurance:</strong> Emphasizes strict QA from day one, associating testing phases with every single development stage.</li>
+                <li><strong>Multi-Level Verification:</strong> Utilizes Unit, Integration, System, and Acceptance testing to guarantee accuracy.</li>
+                <li><strong>Regulatory Compliance:</strong> Supports the strict documentation and traceability required by international banking laws.</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 11: Comparison and Conclusion -->
+        <div class="page">
+            <h3>Comparison of SDLC Models for an Online Banking System</h3>
+            <table class="styled-table">
+                <tr>
+                    <th>SDLC Model</th>
+                    <th>Reason for Not Selecting the Model</th>
+                </tr>
+                <tr>
+                    <td><strong>Waterfall Model</strong></td>
+                    <td>Testing begins only after the development phase is completed, delaying the detection of critical security vulnerabilities. This makes transaction errors vastly more expensive to fix.</td>
+                </tr>
+                <tr>
+                    <td><strong>Agile Model</strong></td>
+                    <td>Focuses on rapid development and changing requirements. However, banking apps require complete verification and regulatory approval before deployment, making rapid sprints too risky.</td>
+                </tr>
+                <tr>
+                    <td><strong>Spiral Model</strong></td>
+                    <td>Provides excellent risk analysis, but repeated development cycles heavily increase project cost and time. The complex looping process is less beneficial than structured sequential validation.</td>
+                </tr>
+            </table>
+
+            <h3>Why the V-Model is the Best Choice for an Online Banking System</h3>
+            <ul>
+                <li><strong>Highest Quality Assurance:</strong> Integrates testing activities simultaneously with every single stage of software development.</li>
+                <li><strong>Rigorous Verification:</strong> Ensures that each development phase produces the exact correct output according to strict specifications.</li>
+                <li><strong>Sensitive Data Handling:</strong> Comprehensive testing is absolutely essential due to the highly sensitive financial information involved.</li>
+                <li><strong>Early Defect Detection:</strong> Reduces catastrophic software failures, improves system reliability, and ensures compliance with strict banking regulations.</li>
+            </ul>
+            
+            <h2 style="border-bottom: 1.5px solid #bfdbfe; margin-top: 40px; color: #1e3a8a;">Conclusion</h2>
+            <ul>
+                <li>Every SDLC model possesses highly unique characteristics, distinct strengths, and specific functional limitations.</li>
+                <li>The <strong>Waterfall Model</strong> excels for projects with fixed, well-defined requirements.</li>
+                <li>The <strong>Agile Model</strong> is ideal for modern applications requiring continuous updates and immediate customer feedback.</li>
+                <li>The <strong>Spiral Model</strong> is preferred for massive, complex systems where risk management is the highest priority.</li>
+                <li>The <strong>V-Model</strong> is the ultimate choice for security-critical, quality-sensitive applications like banking and aerospace.</li>
+                <li>Selecting the correct SDLC model is fundamentally critical to improving software quality and delivering reliable applications within budget.</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>

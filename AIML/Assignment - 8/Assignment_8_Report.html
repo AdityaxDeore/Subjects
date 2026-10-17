@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIML Assignment No. 8 - Amazon Smartphone Review Sentiment Analyzer Using Naive Bayes</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.65; color: #111; background: #e5e7eb; padding: 28px 20px; }
+    .container { max-width: 8.5in; margin: 0 auto; }
+    .page { min-height: 11in; width: 8.5in; padding: .8in .9in; background: #fff; margin: 0 auto 28px; box-shadow: 0 2px 16px rgba(0,0,0,.15); }
+    @page { size: A4 portrait; margin: 18mm 16mm; }
+    @media print { body { background: #fff; padding: 0; } .page { width: 100%; min-height: auto; margin: 0; padding: 0; box-shadow: none; page-break-after: always; } .page:last-child { page-break-after: avoid; } }
+    h2 { font-size: 14pt; margin: 20px 0 9px; border-bottom: 1.5px solid #333; padding-bottom: 4px; text-transform: uppercase; }
+    h3 { font-size: 12pt; margin: 16px 0 7px; }
+    p, li { font-size: 11.5pt; text-align: justify; margin-bottom: 10px; }
+    ul, ol { margin-left: 25px; }
+    .cover-table, .styled-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+    .cover-table td, .styled-table td, .styled-table th { border: 1px solid #222; padding: 7px 10px; }
+    .cover-table .college-info { text-align: center; font-weight: bold; font-size: 14pt; }
+    .cover-table .row-centered { text-align: center; font-weight: bold; }
+    .cover-table .row-left { font-weight: bold; }
+    .logo-container { text-align: center; width: 18%; }
+    .logo-container img { max-width: 80px; }
+    .styled-table th { background: #f2f2f2; text-align: center; }
+    pre { background: #f7f7f7; border: 1px solid #ccc; padding: 10px; font: 9pt 'Courier New', monospace; white-space: pre-wrap; }
+    .figure { border: 1px solid #bbb; padding: 10px; text-align: center; margin: 14px 0; }
+    .figure img { max-width: 100%; }
+    .caption { font-style: italic; font-size: 10.5pt; margin-top: 6px; }
+    .info-box { background: #e0f2fe; border-left: 4px solid #0284c7; padding: 12px 16px; margin: 16px 0; border-radius: 4px; }
+    .info-box h4 { margin-bottom: 6px; color: #0369a1; font-size: 11.5pt; }
+    .flow { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 20px 0; }
+    .flow-step { width: 80%; border: 2px solid #3b82f6; background: #eff6ff; padding: 10px; text-align: center; font-weight: bold; border-radius: 8px; color: #1e3a8a; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .arrow { font-size: 20pt; line-height: 1; color: #64748b; }
+    .badge { display: inline-block; padding: 2px 6px; border-radius: 12px; font-size: 9pt; font-weight: bold; color: white; margin-left: 4px; }
+    .badge-pos { background: #22c55e; }
+    .badge-neg { background: #ef4444; }
+  </style>
+</head>
+<body>
+<div class="container" contenteditable="true">
+  <div class="page">
+    <table class="cover-table">
+      <tr><td class="logo-container"><img src="../pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false"></td><td class="college-info">Pimpri Chinchwad Education Trust's<br>Pimpri Chinchwad College of Engineering</td></tr>
+      <tr><td colspan="2" class="row-centered">Assignment No. 8</td></tr>
+      <tr><td colspan="2" class="row-left">Course:- Artificial Intelligence and Machine Learning</td></tr>
+      <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+      <tr><td colspan="2" class="row-left">PRN:- 124B1F116</td></tr>
+    </table>
+    <h2>1. Aim</h2>
+    <p>To implement a Multinomial Naive Bayes classifier for analyzing the sentiment (Positive/Negative) of Amazon smartphone reviews and to gain insights into brand performance based on customer feedback.</p>
+    <h2>2. Problem Statement</h2>
+    <p>Classify Amazon cell phone reviews into Positive or Negative sentiment using Naive Bayes. Then, utilize the classification results to analyze which brands have the highest positive sentiment, the most negative reviews, and identify words most associated with negative reviews.</p>
+    <h2>3. Objectives</h2>
+    <ul><li>Understand conditional probability and the Naive Bayes independence assumption.</li><li>Merge Amazon items and reviews datasets and preprocess review text using TF-IDF.</li><li>Train a Multinomial Naive Bayes model to classify sentiments (Positive vs Negative).</li><li>Evaluate classifier accuracy, precision, recall, and a confusion matrix.</li><li>Perform brand-level analysis to answer key questions regarding customer satisfaction and complaints.</li></ul>
+    <h2>4. Dataset Description</h2>
+    <p>The experiment utilizes the Kaggle dataset <b>"Amazon Cell Phones Reviews"</b>. This dataset offers a rich collection of customer feedback focused strictly on smartphones across ten major global brands including Apple, Samsung, OnePlus, and Xiaomi.</p>
+    
+    <div class="info-box">
+      <h4>Dataset Composition</h4>
+      <p>The data is split into two primary files:</p>
+      <ul style="margin-top:4px;">
+        <li><b>items.csv:</b> Contains product metadata like ASIN (Amazon Standard Identification Number), Brand, Price, and Total Reviews.</li>
+        <li><b>reviews.csv:</b> Contains the actual customer reviews, including Star Ratings (1 to 5), Review Titles, and the Body text.</li>
+      </ul>
+    </div>
+    
+    <p>By mapping the ratings, we create our target sentiment classes:</p>
+    <table class="styled-table"><tr><th>Target Label</th><th>Mapping from Rating</th></tr><tr><td>Positive Sentiment <span class="badge badge-pos">Pos</span></td><td>4 or 5 star ratings</td></tr><tr><td>Negative Sentiment <span class="badge badge-neg">Neg</span></td><td>1 or 2 star ratings</td></tr></table>
+  </div>
+  <div class="page">
+    <h2>5. Theory and Mathematical Formulation</h2>
+    <p>For a document \(d\) and sentiment class \(c\), Naive Bayes estimates the probability:</p>
+    <p style="text-align:center">\(P(c \mid d) \propto P(c)\prod_{i=1}^{n}P(w_i\mid c)\)</p>
+    <p>The model assumes that words contribute independently once the sentiment is known. We utilize <b>TF-IDF (Term Frequency-Inverse Document Frequency)</b> rather than raw word counts to reduce the impact of overly common words (like "the" or "and").</p>
+    
+    <div class="info-box">
+      <h4>Calculation Example: TF-IDF & Laplace Smoothing</h4>
+      <p><b>1. TF-IDF Calculation:</b><br>
+      \( \text{TF}(w) = \frac{\text{Frequency of word } w \text{ in review}}{\text{Total words in review}} \)<br>
+      \( \text{IDF}(w) = \log\left(\frac{\text{Total Reviews}}{\text{Reviews containing word } w}\right) \)<br>
+      \( \text{Score} = \text{TF} \times \text{IDF} \)</p>
+      <p><b>2. Laplace Smoothing:</b><br>
+      To prevent an unseen word from making the entire probability zero, we add a smoothing parameter \(\alpha\):<br>
+      \(P(w\mid c)=\frac{N_{wc}+\alpha}{N_c+\alpha V}\)<br>
+      Where \(V\) is the vocabulary size, and \(\alpha=0.10\) in our implementation.</p>
+    </div>
+    <h2>6. Methodology & Workflow</h2>
+    <p>The sentiment analysis pipeline follows a structured, sequential process:</p>
+    <div class="flow">
+      <div class="flow-step">1. Data Ingestion<br><span style="font-size:9.5pt;font-weight:normal;">Merge items.csv and reviews.csv using ASIN</span></div><div class="arrow">↓</div>
+      <div class="flow-step">2. Preprocessing & Labeling<br><span style="font-size:9.5pt;font-weight:normal;">Filter 3-star ratings, Map 4-5 to Positive, 1-2 to Negative</span></div><div class="arrow">↓</div>
+      <div class="flow-step">3. Feature Extraction<br><span style="font-size:9.5pt;font-weight:normal;">TF-IDF Vectorization (Unigrams & Bigrams)</span></div><div class="arrow">↓</div>
+      <div class="flow-step">4. Model Training<br><span style="font-size:9.5pt;font-weight:normal;">Fit Multinomial Naive Bayes (\(\alpha=0.1\))</span></div><div class="arrow">↓</div>
+      <div class="flow-step">5. Business Intelligence<br><span style="font-size:9.5pt;font-weight:normal;">Brand Analysis & Negative Keyword Extraction</span></div>
+    </div>
+    <h2>7. Algorithm</h2>
+    <pre>1. Load items.csv and reviews.csv and merge them.
+2. Extract Sentiment labels from ratings and drop Neutral (3-star) reviews.
+3. Split data into training and testing sets.
+4. Fit TF-IDF vectorizer on training reviews.
+5. Train Multinomial Naive Bayes on the transformed text features.
+6. Predict sentiment for test documents and compute classification metrics.
+7. Group predictions by brand to find highest positive sentiment and most complaints.
+8. Extract words most associated with negative reviews using log probabilities.</pre>
+    <h2>8. Implementation</h2>
+    <p>The complete executable implementation is provided in <b>naive_bayes_amazon_reviews.py</b>. Run it with Python after installing <code>pandas</code>, <code>scikit-learn</code>, and <code>matplotlib</code>. It requires <b>20191226-items.csv</b> and <b>20191226-reviews.csv</b> to be present in the same directory.</p>
+  </div>
+  <div class="page">
+    <h2>9. Results and Evaluation</h2>
+    <p>The program outputs the dataset size, evaluation metrics (accuracy, precision, recall, F1-score), and brand-level insights, such as which brand receives the highest positive sentiment and which receives the most complaints.</p>
+    <table class="styled-table"><tr><th>Metric</th><th>Purpose</th></tr><tr><td>Accuracy</td><td>Overall proportion of correctly classified posts.</td></tr><tr><td>Precision</td><td>How many posts predicted as a topic actually belong to it.</td></tr><tr><td>Recall</td><td>How many posts from a topic were found by the classifier.</td></tr><tr><td>Macro F1-score</td><td>Unweighted average of the positive and negative class F1-scores.</td></tr></table>
+    <p>The generated charts and methodology diagram are included in <b>Assignment_8_Output_and_AI_Usage.html</b> so that the main report remains focused on the written explanation.</p>
+  </div>
+  <div class="page">
+    <h2>10. Conclusion</h2>
+    <p>Multinomial Naive Bayes effectively classifies Amazon smartphone reviews into positive and negative sentiments, providing a robust baseline. TF-IDF preprocessing helps the model focus on impactful vocabulary. By combining predictions with product metadata (brands), we generate actionable business insights.</p>
+    <p>The experiment demonstrates that Sentiment Analysis paired with Naive Bayes can answer complex questions like which brands satisfy users the most, what words drive negative feedback, and how customer complaints are distributed across the market.</p>
+    <h2>11. Future Scope</h2>
+    <ul><li>Extend the analysis to predict the exact star rating (1-5) instead of binary sentiment.</li><li>Perform hyperparameter tuning for \(\alpha\) and TF-IDF n-gram range.</li><li>Use word embeddings, LSTM, or Transformer models (e.g., BERT) to better capture semantic context.</li><li>Create an interactive dashboard to visualize sentiment trends over time for each brand.</li></ul>
+    <h2>12. References</h2>
+    <ol><li> Kaggle Dataset: Amazon Cell Phones Reviews (by grikomsn).</li><li> scikit-learn documentation: TfidfVectorizer, MultinomialNB, and metrics.</li><li> C. D. Manning, P. Raghavan, and H. Schütze, <i>Introduction to Information Retrieval</i>.</li></ol>
+  </div>
+</div>
+</body>
+</html>

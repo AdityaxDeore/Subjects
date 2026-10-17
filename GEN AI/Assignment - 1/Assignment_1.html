@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TensorFlow Basics - GEN AI Assignment 1</title>
+    
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: Calibri, "Segoe UI", Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: #1a1a1a;
+            background: #e5e7eb;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+        }
+
+        .page {
+            min-height: 11in;
+            width: 8.5in;
+            padding: 0.8in;
+            background: #ffffff;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .page:focus-within {
+            outline: 2px dashed #666;
+            outline-offset: 4px;
+        }
+
+        @media print {
+            body { background: #ffffff; padding: 0; }
+            .container { max-width: 100%; margin: 0; box-shadow: none; }
+            .page { width: 100%; min-height: auto; margin: 0; padding: 0.2in; box-shadow: none; border: none; border-radius: 0; page-break-after: always; }
+        }
+
+        /* Cover Table CSS */
+        .cover-table {
+            width: 100%; border-collapse: collapse; margin-bottom: 20px; font-family: "Times New Roman", Times, serif;
+        }
+        .cover-table td { border: 1px solid #000; padding: 8px 10px; }
+        .cover-table .college-info { text-align: center; font-weight: bold; font-size: 16pt; line-height: 1.4; color: #000; }
+        .cover-table .row-centered { text-align: center; font-weight: bold; font-size: 13pt; color: #000; }
+        .cover-table .row-left { text-align: left; font-weight: bold; font-size: 13pt; color: #000; }
+        .logo-container { text-align: center; width: 18%; padding: 5px !important; }
+        .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto; }
+
+        /* Typography */
+        h2 { font-family: "Times New Roman", Times, serif; font-weight: bold; font-size: 18pt; color: #1e3a8a; margin-top: 32px; margin-bottom: 12px; border-bottom: 1.5px solid #bfdbfe; padding-bottom: 6px; }
+        h3 { font-family: "Times New Roman", Times, serif; font-weight: bold; font-size: 15pt; color: #000; margin-top: 28px; margin-bottom: 8px; }
+        h4 { font-family: Calibri, sans-serif; font-weight: bold; font-size: 13pt; color: #000; margin-top: 18px; margin-bottom: 6px; }
+        
+        p { font-size: 12pt; text-align: left; margin-bottom: 12px; color: #1a1a1a; }
+        ul, ol { margin-left: 20px; font-size: 12pt; margin-bottom: 12px; color: #1a1a1a; }
+        li { margin-bottom: 6px; }
+        
+        /* Modern Code blocks */
+        pre { 
+            background: #f8fafc; 
+            color: #0f172a; 
+            padding: 14px 16px; 
+            border-radius: 8px; 
+            overflow-x: auto; 
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; 
+            font-size: 9.5pt; 
+            line-height: 1.45; 
+            margin-bottom: 16px; 
+            border: 1px solid #cbd5e1; 
+            border-left: 4px solid #3b82f6; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+        code { 
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; 
+        }
+        .inline-code { 
+            background: #f1f5f9; 
+            color: #b91c1c; 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; 
+            font-size: 10.5pt; 
+            font-weight: 500; 
+            border: 1px solid #cbd5e1; 
+        }
+        
+        /* Light theme syntax highlighting */
+        .comment { color: #64748b; font-style: italic; }
+        .keyword { color: #0284c7; font-weight: 600; }
+        .function { color: #d97706; font-weight: 500; }
+        .string { color: #16a34a; }
+        .number { color: #ea580c; }
+        .output { color: #334155; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container" contenteditable="true">
+        
+        <!-- PAGE 1: Cover Page & Objectives -->
+        <div class="page">
+            <table class="cover-table">
+                <tr>
+                    <td class="logo-container"><img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false"></td>
+                    <td class="college-info">Pimpri Chinchwad Education Trust's<br>Pimpri Chinchwad College of Engineering</td>
+                </tr>
+                <tr><td colspan="2" class="row-centered">Assignment No. 1 : Write Python scripts to implement basic operations and TensorFlow 2 tensors</td></tr>
+                <tr><td colspan="2" class="row-left">Course:- Generative AI (GEN AI)</td></tr>
+                <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+                <tr><td colspan="2" class="row-left">PRN:- 124B1F116</td></tr>
+                <tr><td colspan="2" class="row-left">Batch:- B3</td></tr>
+            </table>
+
+            <div style="margin-top: 40px;">
+                <h3 style="color: #1e3a8a; font-size: 16pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 4px;">Objectives</h3>
+                <p>To learn Python and TensorFlow skills for Generative AI.</p>
+                <ul>
+                    <li>To understand basic operations in Python.</li>
+                    <li>To learn how to work with tensors using TensorFlow 2.x.</li>
+                    <li>To handle and preprocess real-world data using Pandas and NumPy.</li>
+                    <li>To apply basic TensorFlow functions to numerical data.</li>
+                </ul>
+                
+                <h3 style="color: #1e3a8a; font-size: 16pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 4px; margin-top: 30px;">Outcome</h3>
+                <p><strong>CO1:</strong> Implement Python and TensorFlow basics, including data handling and preprocessing techniques.</p>
+            </div>
+        </div>
+
+        <!-- PAGE 2: Theory -->
+        <div class="page">
+            <h2>Theory: Python, Data Handling, and TensorFlow Basics</h2>
+            
+            <h3>1. Python for Data Science</h3>
+            <p>Python is one of the most popular programming languages for data science and machine learning. It provides a simple syntax, vast libraries, and strong community support. Libraries like Pandas, NumPy, and Matplotlib allow users to load, clean, manipulate, and visualize data efficiently.</p>
+            <ul>
+                <li><strong>Pandas</strong> is used for reading CSV files and manipulating tabular data using DataFrames.</li>
+                <li><strong>NumPy</strong> supports high-performance numerical operations with arrays and matrices.</li>
+                <li><strong>Matplotlib/Seaborn</strong> can be used for data visualization (optional in this practical).</li>
+            </ul>
+
+            <h3>2. Understanding the Dataset</h3>
+            <p>The dataset used in this assignment (<span class="inline-code">Churn_Modelling.csv</span>) represents customer information from a bank. It includes both categorical (e.g., Gender, Geography) and numerical (e.g., Age, Balance) features. The target variable is <strong>Exited</strong>, indicating whether a customer has left the bank (1) or not (0).</p>
+            <p>Before feeding data into a machine learning or deep learning model, preprocessing is essential. This includes:</p>
+            <ul>
+                <li>Handling missing values.</li>
+                <li>Encoding categorical variables.</li>
+                <li>Normalizing numerical features.</li>
+            </ul>
+            <p>These steps ensure better model accuracy and stability during training.</p>
+
+            <h3>3. Introduction to TensorFlow 2 and Tensors</h3>
+            <p>TensorFlow 2 is an open-source deep learning framework developed by Google. It simplifies the process of building and training machine learning models. At its core, TensorFlow uses a data structure called a <strong>tensor</strong>.</p>
+            <p>A tensor is a generalization of scalars (0D), vectors (1D), and matrices (2D) to n-dimensional arrays. TensorFlow operations work with these tensors to build complex models.</p>
+            <p><strong>Common Tensor Operations:</strong></p>
+            <ul>
+                <li><span class="inline-code">tf.convert_to_tensor()</span>: Converts data to a tensor.</li>
+                <li><span class="inline-code">tf.shape()</span>: Returns the shape of the tensor.</li>
+                <li><span class="inline-code">tf.rank()</span>: Returns the number of dimensions (rank).</li>
+                <li><span class="inline-code">tf.math.reduce_mean()</span> and <span class="inline-code">tf.math.reduce_sum()</span>: Aggregate operations useful for statistics.</li>
+                <li><span class="inline-code">tf.linalg.matmul()</span>: Matrix multiplication.</li>
+            </ul>
+            <p>Understanding how to manipulate tensors is a critical first step in implementing any deep learning model.</p>
+            
+            <div style="text-align: center; margin: 30px 0; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 15px;">
+                <div class="mermaid">
+                    graph LR
+                        A[Dataset] -->|Preprocess| B(Tensors)
+                        B -->|tf.math, tf.linalg| C{TensorFlow Operations}
+                        C -->|Train| D[Deep Learning Model]
+                        D -->|Inference| E((Output))
+                        
+                        style B fill:#3b82f6,stroke:#1e3a8a,stroke-width:2px,color:#fff
+                        style C fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff
+                </div>
+                <p style="font-size: 10pt; color: #64748b; margin-top: 10px; font-style: italic;">Flowchart: The fundamental workflow of TensorFlow using Tensors</p>
+            </div>
+        </div>
+
+        <!-- PAGE 3: Theory Cont. & Assignment Description -->
+        <div class="page">
+            <h3>4. Link to Generative AI</h3>
+            <p>Although this practical does not implement a generative model directly, it builds the foundation necessary for working with Generative AI (like GANs, VAEs, and LLMs). Before building generative models, learners must be comfortable with:</p>
+            <ul>
+                <li>Python basics.</li>
+                <li>Data preprocessing.</li>
+                <li>Tensor creation and manipulation.</li>
+                <li>Working with the TensorFlow framework.</li>
+            </ul>
+
+            <h2>Assignment Description</h2>
+            <p>You are provided with a real-world dataset <span class="inline-code">Churn_Modelling.csv</span>, which contains data of bank customers. Use this dataset to execute the following tasks:</p>
+            
+            <h3>Part A: Basic Python Operations</h3>
+            <ol>
+                <li>Load the dataset using pandas.</li>
+                <li>Display the first five rows.</li>
+                <li>Display the column names and data types.</li>
+                <li>Check for missing values.</li>
+                <li>Describe the dataset statistics.</li>
+            </ol>
+
+            <h3>Part B: Preprocessing</h3>
+            <ol>
+                <li>Select numerical columns: CreditScore, Age, Balance, EstimatedSalary.</li>
+                <li>Normalize these columns using Min-Max Scaling.</li>
+                <li>Convert categorical columns (like Geography, Gender) using one-hot encoding.</li>
+            </ol>
+
+            <h3>Part C: TensorFlow Tensors</h3>
+            <ol>
+                <li>Import TensorFlow 2.</li>
+                <li>Convert the normalized dataset (numerical part) into a tensor.</li>
+                <li>Perform basic tensor operations:
+                    <ul>
+                        <li>Get shape and rank of the tensor.</li>
+                        <li>Slice the first 5 rows.</li>
+                        <li>Perform matrix multiplication on a subset (e.g., CreditScore × Balance).</li>
+                        <li>Use <span class="inline-code">tf.math.reduce_mean()</span> and <span class="inline-code">tf.math.reduce_sum()</span> on any one feature.</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <h3>Dataset Structure</h3>
+            <ul>
+                <li><strong>Demographic:</strong> Age, Gender, Geography</li>
+                <li><strong>Financial:</strong> Balance, EstimatedSalary, CreditScore, etc.</li>
+                <li><strong>Target:</strong> Exited (customer churn status)</li>
+            </ul>
+        </div>
+
+        <!-- PAGE 4: Python Code Implementation -->
+        <div class="page">
+            <h2>TensorFlow Code Implementation</h2>
+            
+<pre><code><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf
+</code></pre>
+            
+<pre><code>scalar = tf.constant(<span class="number">10</span>)
+<span class="keyword">print</span>(<span class="string">"Scalar:"</span>)
+<span class="keyword">print</span>(scalar)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Scalar:
+tf.Tensor(10, shape=(), dtype=int32)</code></pre>
+
+<pre><code>vector = tf.constant([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])
+<span class="keyword">print</span>(<span class="string">"Vector:"</span>)
+<span class="keyword">print</span>(vector)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Vector:
+tf.Tensor([1 2 3 4 5], shape=(5,), dtype=int32)</code></pre>
+
+<pre><code>matrix = tf.constant([[<span class="number">1</span>, <span class="number">2</span>],
+                      [<span class="number">3</span>, <span class="number">4</span>]])
+<span class="keyword">print</span>(<span class="string">"Matrix:"</span>)
+<span class="keyword">print</span>(matrix)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Matrix:
+tf.Tensor(
+[[1 2]
+ [3 4]], shape=(2, 2), dtype=int32)</code></pre>
+
+<pre><code>tensor3d = tf.constant([
+    [[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>]],
+    [[<span class="number">5</span>, <span class="number">6</span>], [<span class="number">7</span>, <span class="number">8</span>]]
+])
+<span class="keyword">print</span>(<span class="string">"3-D Tensor:"</span>)
+<span class="keyword">print</span>(tensor3d)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">3-D Tensor:
+tf.Tensor(
+[[[1 2]
+  [3 4]]
+
+ [[5 6]
+  [7 8]]], shape=(2, 2, 2), dtype=int32)</code></pre>
+        </div>
+
+        <div class="page">
+<pre><code><span class="comment"># Create a tensor</span>
+tensor = tf.constant([[<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>],
+                      [<span class="number">40</span>, <span class="number">50</span>, <span class="number">60</span>]])
+
+<span class="comment"># Display tensor properties</span>
+<span class="keyword">print</span>(<span class="string">"Tensor:"</span>)
+<span class="keyword">print</span>(tensor)
+
+<span class="keyword">print</span>(<span class="string">"\nShape:"</span>, tensor.shape)
+<span class="keyword">print</span>(<span class="string">"Data Type:"</span>, tensor.dtype)
+<span class="keyword">print</span>(<span class="string">"Dimensions:"</span>, tensor.ndim)
+<span class="keyword">print</span>(<span class="string">"Number of Elements:"</span>, tf.size(tensor).numpy())
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Tensor:
+tf.Tensor(
+[[10 20 30]
+ [40 50 60]], shape=(2, 3), dtype=int32)
+
+Shape: (2, 3)
+Data Type: &lt;dtype: 'int32'&gt;
+Dimensions: 2
+Number of Elements: 6</code></pre>
+
+<pre><code><span class="comment"># Create two tensors</span>
+A = tf.constant([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>])
+B = tf.constant([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])
+
+<span class="comment"># Arithmetic Operations</span>
+<span class="keyword">print</span>(<span class="string">"Tensor A:"</span>, A)
+<span class="keyword">print</span>(<span class="string">"Tensor B:"</span>, B)
+
+<span class="keyword">print</span>(<span class="string">"\nAddition:"</span>)
+<span class="keyword">print</span>(tf.add(A, B))
+
+<span class="keyword">print</span>(<span class="string">"\nSubtraction:"</span>)
+<span class="keyword">print</span>(tf.subtract(A, B))
+
+<span class="keyword">print</span>(<span class="string">"\nMultiplication:"</span>)
+<span class="keyword">print</span>(tf.multiply(A, B))
+
+<span class="keyword">print</span>(<span class="string">"\nDivision:"</span>)
+<span class="keyword">print</span>(tf.divide(A, B))
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Tensor A: tf.Tensor([10 20 30], shape=(3,), dtype=int32)
+Tensor B: tf.Tensor([1 2 3], shape=(3,), dtype=int32)
+
+Addition:
+tf.Tensor([11 22 33], shape=(3,), dtype=int32)
+
+Subtraction:
+tf.Tensor([ 9 18 27], shape=(3,), dtype=int32)
+
+Multiplication:
+tf.Tensor([10 40 90], shape=(3,), dtype=int32)
+
+Division:
+tf.Tensor([10. 10. 10.], shape=(3,), dtype=float64)</code></pre>
+        </div>
+
+        <div class="page">
+<pre><code><span class="comment"># Create two matrices</span>
+A = tf.constant([[<span class="number">1</span>, <span class="number">2</span>],
+                 [<span class="number">3</span>, <span class="number">4</span>]])
+
+B = tf.constant([[<span class="number">5</span>, <span class="number">6</span>],
+                 [<span class="number">7</span>, <span class="number">8</span>]])
+
+<span class="keyword">print</span>(<span class="string">"Matrix A:"</span>)
+<span class="keyword">print</span>(A)
+
+<span class="keyword">print</span>(<span class="string">"\nMatrix B:"</span>)
+<span class="keyword">print</span>(B)
+
+<span class="comment"># Matrix Addition</span>
+<span class="keyword">print</span>(<span class="string">"\nMatrix Addition:"</span>)
+<span class="keyword">print</span>(tf.add(A, B))
+
+<span class="comment"># Matrix Multiplication</span>
+<span class="keyword">print</span>(<span class="string">"\nMatrix Multiplication:"</span>)
+<span class="keyword">print</span>(tf.matmul(A, B))
+
+<span class="comment"># Transpose of Matrix A</span>
+<span class="keyword">print</span>(<span class="string">"\nTranspose of Matrix A:"</span>)
+<span class="keyword">print</span>(tf.transpose(A))
+
+<span class="comment"># Transpose of Matrix B</span>
+<span class="keyword">print</span>(<span class="string">"\nTranspose of Matrix B:"</span>)
+<span class="keyword">print</span>(tf.transpose(B))
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Matrix A:
+tf.Tensor(
+[[1 2]
+ [3 4]], shape=(2, 2), dtype=int32)
+
+Matrix B:
+tf.Tensor(
+[[5 6]
+ [7 8]], shape=(2, 2), dtype=int32)
+
+Matrix Addition:
+tf.Tensor(
+[[ 6  8]
+ [10 12]], shape=(2, 2), dtype=int32)
+
+Matrix Multiplication:
+tf.Tensor(
+[[19 22]
+ [43 50]], shape=(2, 2), dtype=int32)
+
+Transpose of Matrix A:
+tf.Tensor(
+[[1 3]
+ [2 4]], shape=(2, 2), dtype=int32)
+
+Transpose of Matrix B:
+tf.Tensor(
+[[5 7]
+ [6 8]], shape=(2, 2), dtype=int32)</code></pre>
+        </div>
+
+        <div class="page">
+<pre><code><span class="comment"># Create a matrix</span>
+A = tf.constant([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],
+                 [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])
+
+<span class="keyword">print</span>(<span class="string">"Matrix A:"</span>)
+<span class="keyword">print</span>(A)
+
+<span class="comment"># Sum of all elements</span>
+<span class="keyword">print</span>(<span class="string">"\nSum of all elements:"</span>)
+<span class="keyword">print</span>(tf.reduce_sum(A))
+
+<span class="comment"># Sum of each column</span>
+<span class="keyword">print</span>(<span class="string">"\nColumn-wise Sum:"</span>)
+<span class="keyword">print</span>(tf.reduce_sum(A, axis=<span class="number">0</span>))
+
+<span class="comment"># Sum of each row</span>
+<span class="keyword">print</span>(<span class="string">"\nRow-wise Sum:"</span>)
+<span class="keyword">print</span>(tf.reduce_sum(A, axis=<span class="number">1</span>))
+
+<span class="comment"># Mean of all elements</span>
+<span class="keyword">print</span>(<span class="string">"\nMean of all elements:"</span>)
+<span class="keyword">print</span>(tf.reduce_mean(tf.cast(A, tf.float32)))
+
+<span class="comment"># Mean of each column</span>
+<span class="keyword">print</span>(<span class="string">"\nColumn-wise Mean:"</span>)
+<span class="keyword">print</span>(tf.reduce_mean(tf.cast(A, tf.float32), axis=<span class="number">0</span>))
+
+<span class="comment"># Mean of each row</span>
+<span class="keyword">print</span>(<span class="string">"\nRow-wise Mean:"</span>)
+<span class="keyword">print</span>(tf.reduce_mean(tf.cast(A, tf.float32), axis=<span class="number">1</span>))
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Matrix A:
+tf.Tensor(
+[[1 2 3]
+ [4 5 6]], shape=(2, 3), dtype=int32)
+
+Sum of all elements:
+tf.Tensor(21, shape=(), dtype=int32)
+
+Column-wise Sum:
+tf.Tensor([5 7 9], shape=(3,), dtype=int32)
+
+Row-wise Sum:
+tf.Tensor([ 6 15], shape=(2,), dtype=int32)
+
+Mean of all elements:
+tf.Tensor(3.5, shape=(), dtype=float32)
+
+Column-wise Mean:
+tf.Tensor([2.5 3.5 4.5], shape=(3,), dtype=float32)
+
+Row-wise Mean:
+tf.Tensor([2. 5.], shape=(2,), dtype=float32)</code></pre>
+        </div>
+
+        <div class="page">
+<pre><code><span class="comment"># Create a 2-D tensor</span>
+tensor = tf.constant([[<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>],
+                      [<span class="number">40</span>, <span class="number">50</span>, <span class="number">60</span>],
+                      [<span class="number">70</span>, <span class="number">80</span>, <span class="number">90</span>]])
+
+<span class="keyword">print</span>(<span class="string">"Original Tensor:"</span>)
+<span class="keyword">print</span>(tensor)
+
+<span class="comment"># Indexing</span>
+<span class="keyword">print</span>(<span class="string">"\nFirst Row:"</span>)
+<span class="keyword">print</span>(tensor[<span class="number">0</span>])
+
+<span class="keyword">print</span>(<span class="string">"\nSecond Row:"</span>)
+<span class="keyword">print</span>(tensor[<span class="number">1</span>])
+
+<span class="keyword">print</span>(<span class="string">"\nElement at Row 2, Column 3:"</span>)
+<span class="keyword">print</span>(tensor[<span class="number">1</span>, <span class="number">2</span>])
+
+<span class="comment"># Slicing</span>
+<span class="keyword">print</span>(<span class="string">"\nFirst Two Rows:"</span>)
+<span class="keyword">print</span>(tensor[:<span class="number">2</span>])
+
+<span class="keyword">print</span>(<span class="string">"\nSecond Column:"</span>)
+<span class="keyword">print</span>(tensor[:, <span class="number">1</span>])
+
+<span class="keyword">print</span>(<span class="string">"\nLast Two Columns:"</span>)
+<span class="keyword">print</span>(tensor[:, <span class="number">1</span>:])
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Original Tensor:
+tf.Tensor(
+[[10 20 30]
+ [40 50 60]
+ [70 80 90]], shape=(3, 3), dtype=int32)
+
+First Row:
+tf.Tensor([10 20 30], shape=(3,), dtype=int32)
+
+Second Row:
+tf.Tensor([40 50 60], shape=(3,), dtype=int32)
+
+Element at Row 2, Column 3:
+tf.Tensor(60, shape=(), dtype=int32)
+
+First Two Rows:
+tf.Tensor(
+[[10 20 30]
+ [40 50 60]], shape=(2, 3), dtype=int32)
+
+Second Column:
+tf.Tensor([20 50 80], shape=(3,), dtype=int32)
+
+Last Two Columns:
+tf.Tensor(
+[[20 30]
+ [50 60]
+ [80 90]], shape=(3, 2), dtype=int32)</code></pre>
+
+<pre><code><span class="comment"># Create a TensorFlow Variable</span>
+x = tf.Variable([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>])
+
+<span class="keyword">print</span>(<span class="string">"Original Variable:"</span>)
+<span class="keyword">print</span>(x)
+
+<span class="comment"># Update the variable</span>
+x.assign([<span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>])
+
+<span class="keyword">print</span>(<span class="string">"\nAfter assign():"</span>)
+<span class="keyword">print</span>(x)
+
+<span class="comment"># Add a value to each element</span>
+x.assign_add([<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>])
+
+<span class="keyword">print</span>(<span class="string">"\nAfter assign_add():"</span>)
+<span class="keyword">print</span>(x)
+
+<span class="comment"># Subtract a value from each element</span>
+x.assign_sub([<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>])
+
+<span class="keyword">print</span>(<span class="string">"\nAfter assign_sub():"</span>)
+<span class="keyword">print</span>(x)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Original Variable:
+&lt;tf.Variable 'Variable:0' shape=(3,) dtype=int32, numpy=array([10, 20, 30], dtype=int32)&gt;
+
+After assign():
+&lt;tf.Variable 'Variable:0' shape=(3,) dtype=int32, numpy=array([100, 200, 300], dtype=int32)&gt;
+
+After assign_add():
+&lt;tf.Variable 'Variable:0' shape=(3,) dtype=int32, numpy=array([110, 210, 310], dtype=int32)&gt;
+
+After assign_sub():
+&lt;tf.Variable 'Variable:0' shape=(3,) dtype=int32, numpy=array([105, 205, 305], dtype=int32)&gt;</code></pre>
+
+            <h2 style="border-bottom: 1.5px solid #bfdbfe; margin-top: 40px; color: #1e3a8a;">Conclusion</h2>
+            <p>The experiment successfully demonstrated basic TensorFlow 2 tensor operations, including tensor creation, arithmetic operations, reshaping, and matrix multiplication. These concepts form the indispensable foundation for developing sophisticated Machine Learning, Deep Learning, and Generative AI applications.</p>
+        </div>
+
+    </div>
+</body>
+</html>

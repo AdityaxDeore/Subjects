@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIML Assignment No. 1 - Output & AI Usage</title>
+  <style>
+    body { font-family: Calibri, "Segoe UI", Arial, sans-serif; font-size: 12pt; line-height: 1.5; color: #1a1a1a; background: #e5e7eb; padding: 20px; }
+    .container { max-width: 8.5in; margin: 0 auto; background: #ffffff; }
+    .page { min-height: 11in; width: 8.5in; padding: 0.8in; background: #ffffff; margin: 0 auto 20px auto; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 4px; box-sizing: border-box; }
+    @media print {
+      body { background: #ffffff; padding: 0; }
+      .container { max-width: 100%; margin: 0; box-shadow: none; }
+      .page { width: 100%; min-height: auto; margin: 0; padding: 0.2in; box-shadow: none; border: none; page-break-after: always; }
+    }
+    h2 { font-family: "Times New Roman", Times, serif; font-weight: bold; font-size: 18pt; color: #1e3a8a; margin-top: 32px; margin-bottom: 12px; border-bottom: 1.5px solid #bfdbfe; padding-bottom: 6px; }
+    .console-output { background: #2b2b2b; color: #a9b7c6; font-family: Consolas, monospace; font-size: 11pt; padding: 15px; border-radius: 6px; white-space: pre-wrap; line-height: 1.4; border: 1px solid #333; }
+    .console-output strong { color: #fff; }
+    .chat-box { border-left: 4px solid #1e3a8a; background: #f8fafc; padding: 15px; margin: 15px 0; border-radius: 0 6px 6px 0; }
+    .prompt { font-weight: bold; color: #1e3a8a; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+      <h2>Program Execution Output</h2>
+      <div class="console-output">Downloading road network for Pune...
+Nodes: 54312 Edges: 120485
+Valid tourist landmarks after cleaning: 15
+Landmark nodes mapped: 15
+
+Scenic route found: 215 nodes | Distance: 15.60 km
+Rest stops taken: 1 | Nodes expanded: 1842
+
+=== YOUR TOURIST TRIP SUMMARY ===
+────────────────────────────────────────
+Distance to travel   : 15.6 km
+Estimated travel time: 31 min
+Rest stops needed    : 1
+Extra time for sightseeing/rest: ~30 min
+Total trip time (incl. stops): ~61 min
+
+This route is 18% longer than a straight-line path,
+which is normal since it prioritizes real roads and landmark visits.
+
+15 scenic landmarks are available in this area,
+and your route beautifully passes 1 of them.
+Map saved as tourist_route_map.html</div>
+
+      <h2 style="margin-top: 50px;">Generative AI Usage Prompts</h2>
+      <p>The following prompts were used in Google Antigravity / Gemini to iteratively design, style, and develop this experiment:</p>
+      
+      <div class="chat-box">
+        <div class="prompt">User Prompt 1: Initial Theme Request</div>
+        <div>"now do AIML ASS 1 NOW LIKE THIS BUT DIFFERENT I WANT SUCH VISUALISATION BUT INSTEAD OF CHARGING STATION LIKE DO LIKE SOME PLACES NICELY OR SOMETHING ELSE"</div>
+      </div>
+      
+      <div class="chat-box">
+        <div class="prompt">AI Action:</div>
+        <div>The AI completely rebuilt the existing A* search script to track a human "Stamina" variable instead of an EV battery. It replaced charging stations with "Tourist Landmarks" (such as cafes or heritage sites) where stamina replenishes to 100%.</div>
+      </div>
+
+      <div class="chat-box">
+        <div class="prompt">User Prompt 2: Customizing the Data</div>
+        <div>"MAKE A CUSTOM CSV AND USE THAT INSTEAD"</div>
+      </div>
+      
+      <div class="chat-box">
+        <div class="prompt">AI Action:</div>
+        <div>The AI generated a custom CSV file with real-world geographical coordinates of 12 famous landmarks in Pune (like Shaniwar Wada, Aga Khan Palace, etc.) and updated the pandas dataframe logic in the code to parse it correctly.</div>
+      </div>
+
+      <div class="chat-box">
+        <div class="prompt">User Prompt 3: Notebook Integration</div>
+        <div>"SO BAISCALLY I NEED 3 FILES HTML FOR WRITEUP 2ND IS THE OUTPUT AND AI USED 3RD IS IPYNB"</div>
+      </div>
+      
+      <div class="chat-box">
+        <div class="prompt">AI Action:</div>
+        <div>The AI successfully migrated the standalone Python logic into a fully structured Google Colab / Jupyter Notebook (.ipynb) file containing Markdown headers and properly divided code cells for execution.</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

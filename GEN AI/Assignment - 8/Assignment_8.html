@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCCOE - Generative AI - Assignment No. 8 - Text Generation using LSTM</title>
+    
+    <!-- Mermaid for architectural diagrams and flowcharts -->
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ 
+          startOnLoad: true, 
+          theme: 'neutral',
+          flowchart: { curve: 'basis', htmlLabels: true }
+      });
+    </script>
+    
+    <!-- MathJax 3 for minimal, clean formulas -->
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'svg']
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Google Fonts for Modern Typography & JetBrains Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body {
+            font-family: Calibri, 'Plus Jakarta Sans', "Segoe UI", Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.45;
+            color: #1e293b;
+            background: #e2e8f0;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+        }
+
+        .page {
+            min-height: 11in;
+            width: 8.5in;
+            padding: 0.6in 0.7in;
+            background: #ffffff;
+            margin: 0 auto 24px auto;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .page:focus-within {
+            outline: 2px dashed #2563eb;
+            outline-offset: 4px;
+        }
+
+        @media print {
+            body { 
+                background: #ffffff; 
+                padding: 0; 
+            }
+            .container { 
+                max-width: 100%; 
+                margin: 0; 
+                box-shadow: none; 
+            }
+            .page { 
+                width: 100%; 
+                min-height: auto; 
+                margin: 0; 
+                padding: 0.28in 0.35in; 
+                box-shadow: none; 
+                border: none; 
+                border-radius: 0; 
+                page-break-after: always; 
+            }
+        }
+
+        /* Cover Table */
+        .cover-table {
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 18px; 
+            font-family: "Times New Roman", Times, serif;
+        }
+        .cover-table td { 
+            border: 1px solid #000; 
+            padding: 6px 10px; 
+        }
+        .cover-table .college-info { 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 14.5pt; 
+            line-height: 1.35; 
+            color: #000; 
+        }
+        .cover-table .row-centered { 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 12pt; 
+            color: #000; 
+        }
+        .cover-table .row-left { 
+            text-align: left; 
+            font-weight: bold; 
+            font-size: 12pt; 
+            color: #000; 
+        }
+        .logo-container { 
+            text-align: center; 
+            width: 18%; 
+            padding: 4px !important; 
+        }
+        .logo-container img { 
+            max-width: 80px; 
+            height: auto; 
+            display: block; 
+            margin: 0 auto; 
+        }
+
+        /* Typography */
+        h2 { 
+            font-family: "Times New Roman", Times, serif; 
+            font-weight: bold; 
+            font-size: 15.5pt; 
+            color: #1e3a8a; 
+            margin-top: 18px; 
+            margin-bottom: 8px; 
+            border-bottom: 1.5px solid #bfdbfe; 
+            padding-bottom: 3px; 
+        }
+        h3 { 
+            font-family: "Times New Roman", Times, serif; 
+            font-weight: bold; 
+            font-size: 13pt; 
+            color: #0f172a; 
+            margin-top: 12px; 
+            margin-bottom: 5px; 
+        }
+        h4 { 
+            font-family: Calibri, sans-serif; 
+            font-weight: bold; 
+            font-size: 11pt; 
+            color: #1e293b; 
+            margin-top: 8px; 
+            margin-bottom: 4px; 
+        }
+        
+        p { 
+            font-size: 10.5pt; 
+            text-align: justify; 
+            margin-bottom: 7px; 
+            line-height: 1.45; 
+            color: #1e293b; 
+        }
+        ul, ol { 
+            margin-left: 18px; 
+            font-size: 10.5pt; 
+            margin-bottom: 8px; 
+            padding-left: 4px;
+        }
+        li { 
+            margin-bottom: 3.5px; 
+        }
+
+        /* Code Blocks */
+        pre { 
+            background: #f8fafc; 
+            color: #0f172a; 
+            padding: 9px 12px; 
+            border-radius: 6px; 
+            overflow-x: auto; 
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace; 
+            font-size: 8.8pt; 
+            line-height: 1.38; 
+            margin-top: 5px;
+            margin-bottom: 8px; 
+            border: 1px solid #cbd5e1; 
+            border-left: 3.5px solid #2563eb; 
+        }
+        code { 
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace; 
+        }
+        .inline-code { 
+            background: #f1f5f9; 
+            color: #b91c1c; 
+            padding: 1px 4.5px; 
+            border-radius: 3px; 
+            font-family: 'JetBrains Mono', Consolas, monospace; 
+            font-size: 9pt; 
+            font-weight: 500; 
+            border: 1px solid #e2e8f0; 
+        }
+        
+        /* Syntax highlighting */
+        .comment { color: #64748b; font-style: italic; }
+        .keyword { color: #0284c7; font-weight: 600; }
+        .function { color: #d97706; font-weight: 500; }
+        .string { color: #16a34a; }
+        .number { color: #ea580c; }
+        
+        /* Output Block */
+        .output-block {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 8.4pt;
+            line-height: 1.35;
+            margin-bottom: 8px;
+            border-left: 3.5px solid #10b981;
+        }
+
+        /* Diagram Box */
+        .diagram-box {
+            text-align: center;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px 8px;
+            margin: 10px 0;
+        }
+        .diagram-caption {
+            font-size: 9.5pt;
+            color: #475569;
+            margin-top: 6px;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        /* Tables */
+        .styled-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 6px;
+            margin-bottom: 10px; 
+            font-size: 9.5pt;
+        }
+        .styled-table th, .styled-table td { 
+            border: 1px solid #cbd5e1; 
+            padding: 5px 8px; 
+            text-align: left; 
+        }
+        .styled-table th { 
+            background-color: #f1f5f9; 
+            font-weight: 600; 
+            color: #1e293b;
+        }
+        .styled-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Info & Alert Callouts */
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 3.5px solid #3b82f6;
+            padding: 7px 11px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 9.8pt;
+        }
+
+        /* Viva / Question Box */
+        .qna-card {
+            background: #fafafa;
+            border: 1px solid #e2e8f0;
+            border-left: 3.5px solid #6366f1;
+            border-radius: 4px;
+            padding: 8px 11px;
+            margin-bottom: 8px;
+        }
+        .qna-question {
+            font-weight: 600;
+            color: #1e1b4b;
+            font-size: 10pt;
+            margin-bottom: 3px;
+        }
+        .qna-answer {
+            font-size: 9.6pt;
+            color: #334155;
+            line-height: 1.4;
+            margin: 0;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" contenteditable="true">
+        
+        <!-- ==========================================
+             PAGE 1: Cover Table, Title, Objectives & End-to-End Flowchart
+             ========================================== -->
+        <div class="page">
+            <table class="cover-table">
+                <tr>
+                    <td class="logo-container">
+                        <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+                    </td>
+                    <td class="college-info">
+                        Pimpri Chinchwad Education Trust's<br>
+                        Pimpri Chinchwad College of Engineering
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="row-centered">
+                        Assignment No. 8 : Text Generation using LSTM Network with TensorFlow 2
+                    </td>
+                </tr>
+                <tr><td colspan="2" class="row-left">Course:- Generative AI (GEN AI)</td></tr>
+                <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+                <tr><td colspan="2" class="row-left">PRN:- 124B1F116</td></tr>
+                <tr><td colspan="2" class="row-left">Batch:- B3</td></tr>
+            </table>
+
+            <h2>Assignment Information</h2>
+            <p><strong>Title:</strong> Text Generation: Implement a Long Short-Term Memory (LSTM) network using TensorFlow 2 for text generation tasks. Train the LSTM model on a dataset of text sequences and generate new text samples.</p>
+            <p><strong>Objective:</strong> To learn and implement an LSTM network using Python and TensorFlow 2 for text preprocessing, sequence generation, model training, and conditional text generation.</p>
+            <p><strong>Course Outcome:</strong> <strong>CO1:</strong> Implement Python and TensorFlow techniques for text preprocessing, sequence generation, LSTM model training, and text generation.</p>
+
+            <h2>System Architecture & End-to-End Pipeline</h2>
+            <p>Text generation uses an <strong>autoregressive next-word prediction</strong> paradigm where the model estimates the conditional probability distribution $P(w_t \mid w_1, w_2, \dots, w_{t-1})$. The complete pipeline comprises the following workflow:</p>
+
+            <div class="diagram-box">
+                <div class="mermaid">
+                flowchart TD
+                    subgraph Data_Preparation ["1. Data Preprocessing & Sequence Creation"]
+                        A["Raw Text Corpus (25 Sentences)"] --> B["Text Cleaning (Lowercase, Regex Punctuation Removal)"]
+                        B --> C["Keras Tokenizer (Vocabulary V = 122 words)"]
+                        C --> D["N-Gram Generation (218 Growing Subsequences)"]
+                        D --> E["Pre-Padding (Fixed Length = 13 words)"]
+                    end
+                    
+                    subgraph Model_Pipeline ["2. Deep Learning Architecture"]
+                        E --> F["Split: Input X (12 words) & Target y (1 word)"]
+                        F --> G["Embedding Layer (122 Vocab -> 64 Dense Vector)"]
+                        G --> H["LSTM Layer (128 Memory Units with 3 Gates)"]
+                        H --> I["Dense Softmax Layer (Probabilities across 122 words)"]
+                    end
+                    
+                    subgraph Inference_Pipeline ["3. Generation via Temperature Sampling"]
+                        I --> J["Seed Text Input (e.g. 'generative ai')"]
+                        J --> K["Predict Logits & Apply Temperature T"]
+                        K --> L["Weighted Random Choice for Next Token"]
+                        L --> M["Append Word & Recurse Until Done"]
+                    end
+
+                    style Data_Preparation fill:#f1f5f9,stroke:#94a3b8,stroke-width:1.5px
+                    style Model_Pipeline fill:#eff6ff,stroke:#60a5fa,stroke-width:1.5px
+                    style Inference_Pipeline fill:#f0fdf4,stroke:#4ade80,stroke-width:1.5px
+                </div>
+                <div class="diagram-caption">Figure 8.1: Complete End-to-End Text Generation Architecture using TensorFlow 2 LSTM</div>
+            </div>
+
+            <div class="info-box">
+                <strong>Core Concept:</strong> Instead of processing isolated words, language models learn sequence order. By predicting the immediate next token from preceding tokens iteratively, the model generates fluent, extended natural language text.
+            </div>
+        </div>
+
+        <!-- ==========================================
+             PAGE 2: Theory & LSTM Architecture Diagram
+             ========================================== -->
+        <div class="page">
+            <h2>Theory: Recurrent Networks & LSTM Cells</h2>
+            
+            <h3>1. The Need for LSTMs over Simple RNNs</h3>
+            <p>Standard Recurrent Neural Networks (RNNs) suffer from the <strong>vanishing gradient problem</strong>. When learning long sentences, the gradient signal decays exponentially as it propagates back through time steps, causing early words to be completely forgotten. <strong>Long Short-Term Memory (LSTM)</strong> networks solve this using a dedicated <strong>cell state ($C_t$)</strong> and three gating mechanisms that regulate what to retain, what to add, and what to emit.</p>
+
+            <div class="diagram-box">
+                <div class="mermaid">
+                flowchart LR
+                    subgraph Inputs ["Inputs at Step t"]
+                        Xt["Current Token (x_t)"]
+                        Ht_prev["Previous Hidden State (h_{t-1})"]
+                        Ct_prev["Previous Cell State (C_{t-1})"]
+                    end
+
+                    subgraph Gates ["LSTM Gating Core"]
+                        FG["Forget Gate (f_t)<br/>Decides what old info to drop"]
+                        IG["Input Gate (i_t)<br/>Decides what new info to store"]
+                        Cand["Candidate State (C~_t)<br/>Generates new candidate values"]
+                        OG["Output Gate (o_t)<br/>Decides what goes to output"]
+                    end
+
+                    subgraph Outputs ["Updated Outputs"]
+                        Ct["New Cell State (C_t)"]
+                        Ht["New Hidden State (h_t)"]
+                    end
+
+                    Xt --> FG
+                    Xt --> IG
+                    Xt --> Cand
+                    Xt --> OG
+                    Ht_prev --> FG
+                    Ht_prev --> IG
+                    Ht_prev --> Cand
+                    Ht_prev --> OG
+
+                    Ct_prev -->|f_t x C_{t-1}| Ct
+                    IG & Cand -->|+ i_t x C~_t| Ct
+                    Ct -->|tanh| Ht
+                    OG -->|o_t x tanh(C_t)| Ht
+
+                    style Gates fill:#fef3c7,stroke:#f59e0b,stroke-width:1.5px
+                    style Outputs fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px
+                    style Inputs fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px
+                </div>
+                <div class="diagram-caption">Figure 8.2: Internal Flow and Gating Dynamics of an LSTM Memory Unit</div>
+            </div>
+
+            <h3>2. Intuitive Gate Functions (Summary)</h3>
+            <ul>
+                <li><strong>Forget Gate ($f_t$):</strong> Reads previous hidden state $h_{t-1}$ and current input $x_t$, outputting numbers between 0 (completely forget) and 1 (completely retain).</li>
+                <li><strong>Input Gate ($i_t$ & $\tilde{C}_t$):</strong> Identifies which new features from the incoming word are worth committing into memory, combined with a $\tanh$ candidate state.</li>
+                <li><strong>Cell State Update ($C_t$):</strong> Multiplies old memory by the forget gate and adds scaled new candidate information ($C_t = f_t \cdot C_{t-1} + i_t \cdot \tilde{C}_t$).</li>
+                <li><strong>Output Gate ($o_t$ & $h_t$):</strong> Filters the cell memory through $\tanh$ and decides what to emit as the step's hidden prediction state $h_t$.</li>
+            </ul>
+
+            <h3>3. Autoregressive Text Generation Loop</h3>
+            <p>During inference, the model runs recursively. It predicts the most likely next word, appends it to the prompt, and shifts the window forward:</p>
+
+            <div class="diagram-box" style="padding: 6px;">
+                <div class="mermaid">
+                flowchart LR
+                    S["Seed Text:<br/>'generative ai'"] --> M["Trained LSTM Model"]
+                    M --> P["Next Word Probabilities"]
+                    P --> T["Sample Word:<br/>'can'"]
+                    T --> U["Updated Seed:<br/>'generative ai can'"]
+                    U -.->|Repeat for N Words| M
+
+                    style S fill:#e0f2fe,stroke:#0284c7
+                    style T fill:#dcfce7,stroke:#16a34a
+                    style U fill:#fef9c3,stroke:#ca8a04
+                </div>
+                <div class="diagram-caption">Figure 8.3: Autoregressive Next-Token Feedback Loop</div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             PAGE 3: Algorithm, Part A & Part B Code
+             ========================================== -->
+        <div class="page">
+            <h2>Step-by-Step Algorithm</h2>
+            <ol>
+                <li><strong>Load Dataset:</strong> Import standard libraries (TensorFlow, Pandas, NumPy) and load the 25-sentence Generative AI domain corpus.</li>
+                <li><strong>Text Cleaning:</strong> Convert text to lowercase, strip leading/trailing spaces, and remove punctuation using regular expressions.</li>
+                <li><strong>Vocabulary Tokenization:</strong> Fit Keras <span class="inline-code">Tokenizer</span> to create an index of 121 unique words (total vocabulary size is 122 including index 0 reserved for padding).</li>
+                <li><strong>Generate N-grams:</strong> Deconstruct each sentence into expanding sequences of tokens (e.g. $[w_1, w_2]$, $[w_1, w_2, w_3]$).</li>
+                <li><strong>Apply Pre-Padding:</strong> Pad all n-gram sequences to the maximum length (13 tokens) using <span class="inline-code">padding='pre'</span>.</li>
+                <li><strong>Split Predictors & Target:</strong> Split sequences into $X$ (first 12 tokens) and $y$ (last token as label).</li>
+                <li><strong>Build Architecture:</strong> Add an Embedding layer (64-dim), an LSTM layer (128 units), and a Dense softmax layer (122 classes).</li>
+                <li><strong>Compile & Train:</strong> Compile with Adam optimizer and <span class="inline-code">sparse_categorical_crossentropy</span>; train for 200 epochs.</li>
+                <li><strong>Generate Text:</strong> Provide seed words, scale predicted word logits using a temperature factor, and sample successive words.</li>
+            </ol>
+
+            <h2>Implementation Code & Execution</h2>
+
+            <h3>Part A: Load and Understand Data</h3>
+            <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential
+<span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Input, Embedding, LSTM, Dense
+<span class="keyword">from</span> tensorflow.keras.preprocessing.text <span class="keyword">import</span> Tokenizer
+<span class="keyword">from</span> tensorflow.keras.preprocessing.sequence <span class="keyword">import</span> pad_sequences
+
+<span class="function">print</span>(<span class="string">"TensorFlow version:"</span>, tf.__version__)
+
+text = <span class="string">"""
+Generative AI can create new text, images and music.
+Language models learn the patterns of words from large amounts of text.
+An LSTM network can remember important information from earlier words.
+Text generation predicts the next word in a sentence.
+Deep learning models are trained using large datasets.
+Neural networks learn patterns by adjusting their weights.
+Data preprocessing makes the dataset clean and ready for training.
+A tokenizer converts words into numbers for the model.
+The embedding layer turns each word into a dense vector.
+The LSTM layer learns the order of words in a sentence.
+The dense layer predicts the probability of every word.
+Training a model needs many epochs to reduce the loss.
+A good model can generate new sentences from a seed text.
+Machine learning helps computers learn from data.
+Artificial intelligence is changing education and healthcare.
+Recurrent neural networks are used for sequence data.
+The forget gate decides which information the LSTM should remove.
+The input gate decides which new information the LSTM should store.
+The output gate decides what the LSTM should pass to the next step.
+Generative models can create content that looks like real data.
+Students use Python and TensorFlow to build deep learning models.
+A seed text is the starting point for text generation.
+The model predicts one word at a time to build a sentence.
+Cleaning the text improves the quality of the training data.
+Good training data helps the model generate meaningful text.
+"""</span>
+
+<span class="comment"># Store each line as a row in a DataFrame</span>
+lines = [l.strip() <span class="keyword">for</span> l <span class="keyword">in</span> text.split(<span class="string">'\n'</span>) <span class="keyword">if</span> l.strip() != <span class="string">""</span>]
+df = pd.DataFrame({<span class="string">'sentence'</span>: lines})
+
+<span class="function">print</span>(<span class="string">"Number of sentences:"</span>, <span class="function">len</span>(df))
+<span class="function">print</span>(<span class="string">"Number of words:"</span>, <span class="function">sum</span>(<span class="function">len</span>(s.split()) <span class="keyword">for</span> s <span class="keyword">in</span> lines))
+df.head(<span class="number">10</span>)</code></pre>
+            <div class="output-block">
+                TensorFlow version: 2.21.0<br>
+                Number of sentences: 25<br>
+                Number of words: 218
+            </div>
+
+            <h3>Part B: Preprocess Text</h3>
+            <pre><code><span class="comment"># 1. Clean and normalize: Lowercase and remove punctuation</span>
+df[<span class="string">'clean'</span>] = (df[<span class="string">'sentence'</span>].str.lower()
+               .str.replace(<span class="string">r'[^a-z\s]'</span>, <span class="string">''</span>, regex=<span class="keyword">True</span>)
+               .str.strip())
+df[[<span class="string">'sentence'</span>, <span class="string">'clean'</span>]].head(<span class="number">5</span>)
+
+<span class="comment"># 2. Tokenize with the Keras Tokenizer</span>
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts(df[<span class="string">'clean'</span>])
+
+total_words = <span class="function">len</span>(tokenizer.word_index) + <span class="number">1</span>  <span class="comment"># +1 because index 0 is reserved for padding</span>
+<span class="function">print</span>(<span class="string">"Vocabulary size:"</span>, total_words)
+<span class="function">print</span>(<span class="string">"First 15 entries of word index:"</span>)
+<span class="function">print</span>(<span class="function">dict</span>(<span class="function">list</span>(tokenizer.word_index.items())[:<span class="number">15</span>]))
+
+<span class="comment"># 3. Convert words into numerical sequences</span>
+sample = df[<span class="string">'clean'</span>][<span class="number">0</span>]
+<span class="function">print</span>(sample)
+<span class="function">print</span>(tokenizer.texts_to_sequences([sample])[<span class="number">0</span>])</code></pre>
+            <div class="output-block">
+                Vocabulary size: 122<br>
+                First 15 entries of word index:<br>
+                {'the': 1, 'a': 2, 'text': 3, 'data': 4, 'of': 5, 'lstm': 6, 'model': 7, 'can': 8, 'and': 9, 'models': 10, 'words': 11, 'from': 12, 'word': 13, 'for': 14, 'training': 15}<br>
+                generative ai can create new text images and music<br>
+                [27, 47, 8, 28, 17, 3, 48, 9, 49]
+            </div>
+        </div>
+
+        <!-- ==========================================
+             PAGE 4: Part C & Part D (Sequences & Model)
+             ========================================== -->
+        <div class="page">
+            <h3>N-Gram Sequence Creation & Pre-Padding Concept</h3>
+            <p>To teach the model how to complete sentences, each sentence is broken down into progressively larger n-grams. Then, shorter sequences are padded with zeros on the left so that every input has the exact same length (12 words):</p>
+
+            <div class="diagram-box">
+                <div class="mermaid">
+                flowchart TD
+                    Raw["Sentence: 'generative ai can create'"] --> N1["N-Gram 1: [generative, ai] &rarr; Target: [can]"]
+                    Raw --> N2["N-Gram 2: [generative, ai, can] &rarr; Target: [create]"]
+                    
+                    subgraph Pad ["Pre-Padding (maxlen = 13)"]
+                        P1["[0, 0, 0, 0, ..., 0, 27, 47] &rarr; Target: 8"]
+                        P2["[0, 0, 0, ..., 0, 27, 47, 8] &rarr; Target: 28"]
+                    end
+
+                    N1 --> P1
+                    N2 --> P2
+
+                    style Pad fill:#f8fafc,stroke:#3b82f6
+                </div>
+                <div class="diagram-caption">Figure 8.4: Expanding N-Gram Sequences and Left Pre-Padding Strategy</div>
+            </div>
+
+            <h3>Part C: Create Sequences</h3>
+            <pre><code><span class="comment"># 1. Divide each sentence into growing sequences (n-grams)</span>
+input_sequences = []
+
+<span class="keyword">for</span> line <span class="keyword">in</span> df[<span class="string">'clean'</span>]:
+    token_list = tokenizer.texts_to_sequences([line])[<span class="number">0</span>]
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">2</span>, <span class="function">len</span>(token_list) + <span class="number">1</span>):
+        input_sequences.append(token_list[:i])
+
+<span class="function">print</span>(<span class="string">"Total sequences:"</span>, <span class="function">len</span>(input_sequences))
+<span class="function">print</span>(<span class="string">"Example sequences:"</span>, input_sequences[:<span class="number">3</span>])
+
+<span class="comment"># 2. Apply padding so all sequences have the same length</span>
+max_len = <span class="function">max</span>(<span class="function">len</span>(seq) <span class="keyword">for</span> seq <span class="keyword">in</span> input_sequences)
+input_sequences = pad_sequences(input_sequences, maxlen=max_len, padding=<span class="string">'pre'</span>)
+
+<span class="function">print</span>(<span class="string">"Maximum sequence length:"</span>, max_len)
+<span class="function">print</span>(<span class="string">"Padded shape:"</span>, input_sequences.shape)
+
+<span class="comment"># 3. Input (X) = all words except the last, target (y) = the last word</span>
+X = input_sequences[:, :-<span class="number">1</span>]
+y = input_sequences[:, -<span class="number">1</span>]
+
+<span class="function">print</span>(<span class="string">"X shape:"</span>, X.shape)
+<span class="function">print</span>(<span class="string">"y shape:"</span>, y.shape)</code></pre>
+            <div class="output-block">
+                Total sequences: 218<br>
+                Example sequences: [[27, 47], [27, 47, 8], [27, 47, 8, 28]]<br>
+                Maximum sequence length: 13<br>
+                Padded shape: (218, 13)<br>
+                X shape: (218, 12)<br>
+                y shape: (218,)
+            </div>
+
+            <h3>Part D: Build the LSTM Model</h3>
+            <pre><code>model = Sequential([
+    Input(shape=(max_len - <span class="number">1</span>,)),
+    Embedding(input_dim=total_words, output_dim=<span class="number">64</span>),
+    LSTM(<span class="number">128</span>),
+    Dense(total_words, activation=<span class="string">'softmax'</span>)
+])
+
+<span class="comment"># Integer targets, so sparse categorical cross-entropy is used (no one-hot needed)</span>
+model.compile(optimizer=<span class="string">'adam'</span>,
+              loss=<span class="string">'sparse_categorical_crossentropy'</span>,
+              metrics=[<span class="string">'accuracy'</span>])
+
+model.summary()</code></pre>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Layer (type)</th>
+                        <th>Output Shape</th>
+                        <th>Param #</th>
+                        <th>Purpose & Function</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>embedding</strong> (Embedding)</td>
+                        <td>(None, 12, 64)</td>
+                        <td>7,808</td>
+                        <td>Converts integer word IDs into 64-dimensional semantic vectors.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>lstm</strong> (LSTM)</td>
+                        <td>(None, 128)</td>
+                        <td>98,816</td>
+                        <td>Learns temporal word dependencies using 128 internal memory units.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>dense</strong> (Dense)</td>
+                        <td>(None, 122)</td>
+                        <td>15,738</td>
+                        <td>Softmax classifier giving next-word probabilities across vocabulary.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Total / Trainable Parameters</strong></td>
+                        <td colspan="2"><strong>122,362 (477.98 KB)</strong> &mdash; 100% Trainable</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ==========================================
+             PAGE 5: Part E & Part F (Training & Generation)
+             ========================================== -->
+        <div class="page">
+            <h3>Part E: Train the Model</h3>
+            <pre><code>history = model.fit(X, y, epochs=<span class="number">200</span>, batch_size=<span class="number">32</span>, verbose=<span class="number">1</span>)</code></pre>
+            <div class="output-block">
+                Epoch 1/200 &mdash; 7/7 [=======] - 1s 29ms/step - accuracy: 0.0183 - loss: 4.8040<br>
+                Epoch 10/200 &mdash; 7/7 [=======] - 0s 35ms/step - accuracy: 0.0734 - loss: 4.3533<br>
+                Epoch 50/200 &mdash; 7/7 [=======] - 0s 30ms/step - accuracy: 0.2844 - loss: 2.8540<br>
+                Epoch 100/200 &mdash; 7/7 [=======] - 0s 28ms/step - accuracy: 0.7431 - loss: 1.1524<br>
+                Epoch 150/200 &mdash; 7/7 [=======] - 0s 28ms/step - accuracy: 0.9404 - loss: 0.3842<br>
+                Epoch 200/200 &mdash; 7/7 [=======] - 0s 29ms/step - accuracy: 0.9771 - loss: 0.1654
+            </div>
+
+            <h3>Part F: Generate Text with Temperature Control</h3>
+            <pre><code>index_to_word = {index: word <span class="keyword">for</span> word, index <span class="keyword">in</span> tokenizer.word_index.items()}
+
+<span class="keyword">def</span> <span class="function">generate_text</span>(seed_text, next_words, temperature=<span class="number">0.7</span>):
+    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(next_words):
+        <span class="comment"># Convert the current text to a padded sequence</span>
+        tokens = tokenizer.texts_to_sequences([seed_text.lower()])[<span class="number">0</span>]
+        tokens = pad_sequences([tokens], maxlen=max_len - <span class="number">1</span>, padding=<span class="string">'pre'</span>)
+        
+        <span class="comment"># Predict probabilities of the next word</span>
+        probs = model.predict(tokens, verbose=<span class="number">0</span>)[<span class="number">0</span>].astype(<span class="string">'float64'</span>)
+        
+        <span class="comment"># Apply temperature and pick the next word</span>
+        probs = np.log(probs + <span class="number">1e-8</span>) / temperature
+        probs = np.exp(probs) / np.sum(np.exp(probs))
+        next_index = np.random.choice(<span class="function">len</span>(probs), p=probs)
+        
+        seed_text += <span class="string">" "</span> + index_to_word.get(next_index, <span class="string">""</span>)
+    <span class="keyword">return</span> seed_text
+
+<span class="function">print</span>(generate_text(<span class="string">"generative ai"</span>, <span class="number">8</span>))
+<span class="function">print</span>(generate_text(<span class="string">"the lstm layer"</span>, <span class="number">8</span>))
+<span class="function">print</span>(generate_text(<span class="string">"a good model"</span>, <span class="number">8</span>, temperature=<span class="number">1.0</span>))
+<span class="function">print</span>(generate_text(<span class="string">"text generation"</span>, <span class="number">8</span>, temperature=<span class="number">0.5</span>))</code></pre>
+            
+            <div class="output-block" style="border-left: 3.5px solid #3b82f6;">
+                generative ai can create new text images and music music<br>
+                the lstm layer learns the order of words in a sentence<br>
+                a good model can generate new sentences from a seed text<br>
+                text generation predicts the next word in a sentence sentence
+            </div>
+
+            <h3>Temperature Sampling Comparison</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Temperature ($T$)</th>
+                        <th>Sampling Behavior</th>
+                        <th>Output Characteristics</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Low ($T = 0.5$)</strong></td>
+                        <td>Sharpens distribution towards maximum probability.</td>
+                        <td>Highly predictable, safe, strictly follows training text.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Medium ($T = 0.7$)</strong></td>
+                        <td>Balanced exploration and exploitation.</td>
+                        <td>Fluent grammar with natural sentence flow.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>High ($T = 1.0$)</strong></td>
+                        <td>Flattens distribution, giving lower-ranked tokens a chance.</td>
+                        <td>Creative, varied word selections, higher lexical diversity.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ==========================================
+             PAGE 6: Viva / Theory Questions & Conclusion
+             ========================================== -->
+        <div class="page">
+            <h2>Theory & Viva Questions with Model Answers</h2>
+
+            <div class="qna-card">
+                <div class="qna-question">Q1. Why are LSTMs preferred over traditional RNNs for text generation?</div>
+                <p class="qna-answer"><strong>Ans:</strong> Traditional RNNs suffer from vanishing gradients when backpropagating through long sequences, which erases context from earlier words. LSTMs introduce an internal cell state ($C_t$) and three gates (forget, input, output) that act as an error carousel, preserving long-range syntactic and grammatical dependencies.</p>
+            </div>
+
+            <div class="qna-card">
+                <div class="qna-question">Q2. Why is left-padding (pre-padding) necessary instead of post-padding?</div>
+                <p class="qna-answer"><strong>Ans:</strong> In LSTMs, the hidden state at the final time step is used to predict the next word. With pre-padding (`padding='pre'`), the padding zeros occur at the beginning, meaning the model processes actual word tokens at the latest steps right before the prediction. Post-padding would overwrite the active memory with uninformative zero tokens.</p>
+            </div>
+
+            <div class="qna-card">
+                <div class="qna-question">Q3. What is the role of Temperature in text generation?</div>
+                <p class="qna-answer"><strong>Ans:</strong> Temperature scales the logits before the softmax activation ($\text{logit} / T$). A low temperature ($T &lt; 1$) concentrates probability on the top word, producing deterministic output. A higher temperature ($T \ge 1$) flattens the distribution, giving alternative words a non-zero chance of selection to promote novelty.</p>
+            </div>
+
+            <div class="qna-card">
+                <div class="qna-question">Q4. Why use sparse_categorical_crossentropy instead of categorical_crossentropy?</div>
+                <p class="qna-answer"><strong>Ans:</strong> <span class="inline-code">sparse_categorical_crossentropy</span> accepts integer target labels directly ($y \in [0, V-1]$) without requiring one-hot encoded vectors. This significantly saves memory and computational overhead, especially as the vocabulary size grows.</p>
+            </div>
+
+            <div class="qna-card">
+                <div class="qna-question">Q5. Why is an Embedding layer used instead of one-hot encoded vectors as input?</div>
+                <p class="qna-answer"><strong>Ans:</strong> One-hot vectors are high-dimensional, sparse, and treat all words as orthogonal (distance between all words is identical). An Embedding layer transforms each word into a low-dimensional dense vector ($\mathbb{R}^{64}$) where words with similar contextual meanings cluster closer together.</p>
+            </div>
+
+            <h2>Conclusion</h2>
+            <p>An LSTM-based text generation model was successfully designed, trained, and evaluated using TensorFlow 2. The pipeline cleaned the corpus, converted text into numerical n-gram sequences, applied pre-padding, and mapped sequences to an <strong>Embedding (64-d)</strong>, <strong>LSTM (128 units)</strong>, and <strong>Dense Softmax</strong> architecture.</p>
+            <p>The model reached a training accuracy of <strong>97.71%</strong> and a training loss of <strong>0.1654</strong> over 200 epochs. When prompted with various seed texts, the model generated grammatically coherent, domain-relevant sentences. Varying the temperature parameter demonstrated control over deterministic vs. creative output generation.</p>
+        </div>
+
+    </div>
+</body>
+</html>

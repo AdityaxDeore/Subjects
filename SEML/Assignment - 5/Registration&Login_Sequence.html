@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration & Login - Sequence Diagram</title>
+    <!-- Load Mermaid -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            sequence: {
+                showSequenceNumbers: false,
+                actorMargin: 50,
+                messageMargin: 40,
+                activationBorders: 1
+            }
+        });
+    </script>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <style>
+        body, html {
+            margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background-color: #ffffff;
+        }
+        .grid-bg {
+            background-image: 
+                linear-gradient(to right, #f3f3f3 1px, transparent 1px),
+                linear-gradient(to bottom, #f3f3f3 1px, transparent 1px);
+            background-size: 20px 20px;
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+            display: flex; justify-content: center; align-items: center; cursor: grab;
+        }
+        .grid-bg:active { cursor: grabbing; }
+        .diagram-container {
+            width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;
+        }
+        .mermaid {
+            background-color: white;
+            padding: 40px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        /* Buttons for controls */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button:hover { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+
+<div class="grid-bg" id="canvas-bg">
+    <div class="diagram-container" id="pan-container">
+        <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant UI as Game UI
+    participant Auth as Authentication System
+    participant DB as Database
+
+    User->>UI: Open OceanCleanup.io
+    User->>UI: Register
+    
+    activate UI
+    UI->>Auth: Submit registration details
+    deactivate UI
+    
+    activate Auth
+    alt New User
+        Auth->>DB: Create account
+        activate DB
+        DB-->>Auth: Account created
+        deactivate DB
+    else Existing User
+        Auth->>DB: Check account
+        activate DB
+        DB-->>Auth: Account details
+        deactivate DB
+    end
+    
+    Auth-->>UI: Registration successful
+    deactivate Auth
+    
+    activate UI
+    UI-->>User: Show login screen
+    deactivate UI
+    
+    loop Login attempts < 3
+        User->>UI: Login
+        
+        activate UI
+        UI->>Auth: Validate credentials
+        deactivate UI
+        
+        activate Auth
+        alt Valid Credentials
+            Auth->>DB: Check account
+            activate DB
+            DB-->>Auth: Account details
+            deactivate DB
+            
+            Auth-->>UI: Login successful
+            deactivate Auth
+            
+            activate UI
+            UI-->>User: Open game
+            deactivate UI
+        else Invalid Credentials
+            activate Auth
+            Auth-->>UI: Show error
+            deactivate Auth
+            
+            activate UI
+            UI-->>User: Display login error
+            deactivate UI
+        end
+    end
+        </div>
+    </div>
+</div>
+
+<div class="controls">
+    <button id="zoom-in">Zoom In</button>
+    <button id="zoom-out">Zoom Out</button>
+    <button id="reset">Reset View</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Wait a brief moment for Mermaid to render the SVG before attaching Panzoom
+        setTimeout(() => {
+            const container = document.getElementById('pan-container');
+            const p = Panzoom(container, { maxScale: 5, minScale: 0.1, step: 0.2 });
+            
+            document.getElementById('canvas-bg').addEventListener('wheel', p.zoomWithWheel);
+            
+            document.getElementById('zoom-in').addEventListener('click', p.zoomIn);
+            document.getElementById('zoom-out').addEventListener('click', p.zoomOut);
+            document.getElementById('reset').addEventListener('click', p.reset);
+        }, 500);
+    });
+</script>
+
+</body>
+</html>

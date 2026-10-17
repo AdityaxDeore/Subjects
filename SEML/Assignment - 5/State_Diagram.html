@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Open Ocean Cleanup — State Diagram</title>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; font-family: "Segoe UI", Arial, sans-serif; background-color: #ffffff; }
+        .grid-bg { background-image: linear-gradient(to right, #f3f3f3 1px, transparent 1px), linear-gradient(to bottom, #f3f3f3 1px, transparent 1px); background-size: 20px 20px; width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; justify-content: center; align-items: center; }
+        .diagram { width: 100%; height: 100%; position: relative; }
+        text { user-select: none; font-family: "Arial", sans-serif; }
+        .trans-label { font-size: 13px; fill: #111; text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 0px -2px 0 #fff, 0px 2px 0 #fff, -2px 0px 0 #fff, 2px 0px 0 #fff; }
+        .diag-header { font-size: 22px; font-weight: bold; fill: #222; }
+    </style>
+</head>
+<body>
+    <div class="grid-bg" id="state-diagram">
+        <div class="diagram" style="width: 2500px; height: 5000px;" id="pan-state">
+            <svg width="100%" height="100%" viewBox="0 0 2500 5000" xmlns="http://www.w3.org/2000/svg" style="background-color: transparent;">
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 Z" fill="#333" />
+                  </marker>
+                </defs>
+                <text x="40" y="45" class="diag-header">Open Ocean Cleanup — State Diagram</text>
+            </svg>
+        </div>
+    </div>
+    <button id="download-svg-btn" style="position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-family: sans-serif; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000;">Download SVG</button>
+
+    <script>
+        const states = [
+            // Main Flow
+            { id: "Initial", type: "initial", x: 1000, y: 100 },
+            { id: "Logged_Out", label: "Logged Out", x: 1000, y: 220, w: 150, h: 50 },
+            { id: "Registering", label: "Registering", x: 700, y: 350, w: 150, h: 50 },
+            { id: "Login", label: "Login", x: 1300, y: 350, w: 180, h: 100, entry: "showLoginForm()", do: "validateCredentials()", exit: "createSession()" },
+            { id: "Main_Menu", label: "Main Menu", x: 1000, y: 500, w: 150, h: 50 },
+            { id: "Settings", label: "Settings", x: 1300, y: 500, w: 150, h: 50 },
+            
+            // Game Start
+            { id: "Game_Ready", label: "Game Ready", x: 1000, y: 650, w: 150, h: 50 },
+            { id: "Zone_Selection", label: "Zone Selection", x: 1000, y: 800, w: 160, h: 50 },
+            { id: "Boat_Preparation", label: "Boat Preparation", x: 1000, y: 980, w: 200, h: 100, entry: "checkBoat()", do: "prepareForLaunch()", exit: "confirmLaunch()" },
+            
+            // Ocean Exploration Composite
+            { id: "Ocean_Exploration", label: "Ocean Exploration", type: "composite", x: 1000, y: 1750, w: 1200, h: 1200, entry: "initializeExploration()", do: "monitorBoatAndOcean()", exit: "saveExplorationState()" },
+            { id: "OE_Initial", type: "initial", x: 1000, y: 1230 },
+            { id: "Exploring", label: "Exploring", x: 1000, y: 1330, w: 140, h: 50 },
+            { id: "Detecting_Objects", label: "Detecting Objects", x: 1000, y: 1480, w: 180, h: 50 },
+            
+            { id: "Waste_Detected", label: "Waste Detected", x: 600, y: 1630, w: 160, h: 50 },
+            { id: "Collecting_Waste", label: "Collecting Waste", x: 600, y: 1800, w: 200, h: 100, entry: "lockWasteTarget()", do: "collectWaste()", exit: "updateWasteStatus()" },
+            
+            { id: "Marine_Life_Detected", label: "Marine Life Detected", x: 1000, y: 1630, w: 180, h: 50 },
+            { id: "Rescuing_Marine_Life", label: "Rescuing Marine Life", x: 1000, y: 1800, w: 220, h: 100, entry: "identifyMarineLife()", do: "performRescue()", exit: "updateMarineLifeHealth()" },
+            
+            { id: "Obstacle_Detected", label: "Obstacle Detected", x: 1400, y: 1630, w: 160, h: 50 },
+            { id: "Avoiding_Obstacle", label: "Avoiding Obstacle", x: 1400, y: 1780, w: 160, h: 50 },
+            
+            { id: "Update_Score", label: "Update Score", x: 800, y: 1980, w: 140, h: 50 },
+            { id: "Low_Durability_Warning", label: "Low Durability Warning", x: 1300, y: 1330, w: 220, h: 50 },
+            { id: "Return_Required", label: "Return Required", x: 1000, y: 2150, w: 160, h: 50 },
+            { id: "OE_Final", type: "final", x: 1000, y: 2280 },
+
+            // Mission Progress
+            { id: "Mission_Active", label: "Mission Active", x: 1850, y: 1400, w: 160, h: 50 },
+            { id: "Next_Objective", label: "Next Objective", x: 1850, y: 1550, w: 160, h: 50 },
+            { id: "Mission_Completed", label: "Mission Completed", x: 1700, y: 2050, w: 180, h: 50 },
+            { id: "Mission_Failed", label: "Mission Failed", x: 2050, y: 1550, w: 160, h: 50 },
+            { id: "Mission_Abandoned", label: "Mission Abandoned", x: 2050, y: 1700, w: 180, h: 50 },
+
+            // Return to Base
+            { id: "Return_to_Base", label: "Return to Base", x: 1000, y: 2550, w: 160, h: 50 },
+
+            // Base Operations Composite
+            { id: "Base_Operations", label: "Base Operations", type: "composite", x: 1000, y: 3250, w: 1500, h: 1100, entry: "loadBaseState()", do: "handlePlayerOperations()", exit: "saveBaseState()" },
+            { id: "BO_Initial", type: "initial", x: 1000, y: 2770 },
+            { id: "Base_Idle", label: "Base Idle", x: 1000, y: 2880, w: 140, h: 50 },
+            
+            { id: "Selecting_Waste", label: "Selecting Waste", x: 600, y: 3050, w: 160, h: 50 },
+            { id: "Processing_Sale", label: "Processing Sale", x: 600, y: 3200, w: 160, h: 50 },
+            { id: "Waste_Sold", label: "Waste Sold", x: 600, y: 3350, w: 140, h: 50 },
+            { id: "Coins_Updated", label: "Coins Updated", x: 600, y: 3500, w: 160, h: 50 },
+            
+            { id: "Checking_Upgrade", label: "Checking Upgrade", x: 1400, y: 3050, w: 180, h: 50 },
+            { id: "Max_Level", label: "Max Level", x: 1150, y: 3200, w: 140, h: 50 },
+            { id: "Checking_Coins", label: "Checking Coins", x: 1650, y: 3200, w: 160, h: 50 },
+            { id: "Applying_Upgrade", label: "Applying Upgrade", x: 1650, y: 3350, w: 160, h: 50 },
+            { id: "Boat_Upgraded", label: "Boat Upgraded", x: 1650, y: 3500, w: 160, h: 50 },
+            { id: "Upgrade_Rejected", label: "Upgrade Rejected", x: 1400, y: 3350, w: 180, h: 50 },
+
+            // Player Report
+            { id: "Report_Generation", label: "Report Generation", x: 1000, y: 3950, w: 180, h: 50 },
+            { id: "Report_Ready", label: "Report Ready", x: 1000, y: 4100, w: 160, h: 50 },
+            { id: "Report_Displayed", label: "Report Displayed", x: 1000, y: 4250, w: 180, h: 50 },
+
+            // Final
+            { id: "Final", type: "final", x: 1000, y: 4450 }
+        ];
+
+        const transitions = [
+            // Authentication
+            { from: "Initial", to: "Logged_Out", label: "" },
+            { from: "Logged_Out", to: "Registering", label: "register" },
+            { from: "Logged_Out", to: "Login", label: "login" },
+            { from: "Registering", to: "Login", label: "[valid details] / createAccount()" },
+            { from: "Registering", to: "Registering", label: "[invalid details] / showError()", selfLoop: "left" },
+            { from: "Login", to: "Main_Menu", label: "[valid credentials] / createSession()", route: [[1300, 400], [1300, 500], [1075, 500]] },
+            { from: "Login", to: "Login", label: "[invalid credentials] / showError()", selfLoop: "right" },
+            
+            // Main Menu
+            { from: "Main_Menu", to: "Game_Ready", label: "startGame" },
+            { from: "Main_Menu", to: "Settings", label: "configureSettings" },
+            { from: "Main_Menu", to: "Logged_Out", label: "logout", route: [[925, 500], [550, 500], [550, 220], [925, 220]] },
+            { from: "Settings", to: "Main_Menu", label: "saveSettings", route: [[1300, 475], [1300, 450], [1000, 450], [1000, 475]] },
+
+            // Game Start
+            { from: "Game_Ready", to: "Zone_Selection", label: "selectExploreOcean" },
+            { from: "Zone_Selection", to: "Boat_Preparation", label: "[zone unlocked] / loadZone()" },
+            { from: "Zone_Selection", to: "Zone_Selection", label: "[zone locked] / showLockedMessage()", selfLoop: "right" },
+            { from: "Boat_Preparation", to: "Ocean_Exploration", label: "[boat ready] / launchBoat()", route: [[1000, 1030], [1000, 1150]] },
+            { from: "Boat_Preparation", to: "Boat_Preparation", label: "[boat requires repair] / showRepairMessage()", selfLoop: "right" },
+
+            // Ocean Exploration Substates
+            { from: "OE_Initial", to: "Exploring", label: "" },
+            { from: "Exploring", to: "Detecting_Objects", label: "controlBoat()" },
+            { from: "Detecting_Objects", to: "Waste_Detected", label: "[waste detected]", route: [[910, 1480], [600, 1480], [600, 1605]] },
+            { from: "Detecting_Objects", to: "Marine_Life_Detected", label: "[marine life detected]" },
+            { from: "Detecting_Objects", to: "Obstacle_Detected", label: "[obstacle detected]", route: [[1090, 1480], [1400, 1480], [1400, 1605]] },
+            { from: "Detecting_Objects", to: "Exploring", label: "[nothing detected]", route: [[1090, 1470], [1180, 1440], [1180, 1330], [1070, 1330]] },
+            
+            { from: "Waste_Detected", to: "Collecting_Waste", label: "collectWaste" },
+            { from: "Collecting_Waste", to: "Update_Score", label: "collection complete", route: [[600, 1850], [600, 1980], [730, 1980]] },
+            
+            { from: "Marine_Life_Detected", to: "Rescuing_Marine_Life", label: "rescueMarineLife" },
+            { from: "Rescuing_Marine_Life", to: "Update_Score", label: "rescue complete", route: [[1000, 1850], [1000, 1980], [870, 1980]] },
+            
+            { from: "Obstacle_Detected", to: "Avoiding_Obstacle", label: "avoidObstacle" },
+            { from: "Avoiding_Obstacle", to: "Exploring", label: "obstacle cleared", route: [[1480, 1780], [1550, 1780], [1550, 1330], [1070, 1330]] },
+            
+            { from: "Update_Score", to: "Exploring", label: "scoreUpdated()", route: [[730, 1980], [450, 1980], [450, 1330], [930, 1330]] },
+            
+            { from: "Exploring", to: "Low_Durability_Warning", label: "[boat durability below threshold]" },
+            { from: "Low_Durability_Warning", to: "Exploring", label: "continueExploration", route: [[1300, 1305], [1300, 1280], [1050, 1280], [1050, 1305]] },
+            { from: "Low_Durability_Warning", to: "Return_Required", label: "returnToBase", route: [[1410, 1330], [1480, 1330], [1480, 2150], [1080, 2150]] },
+            
+            { from: "Exploring", to: "Return_Required", label: "[boat capacity full]", route: [[930, 1340], [800, 1340], [800, 2150], [920, 2150]] },
+            { from: "Return_Required", to: "OE_Final", label: "returnToBase" },
+
+            // Mission Progress
+            { from: "Ocean_Exploration", to: "Mission_Active", label: "missionSelected", route: [[1600, 1400], [1770, 1400]] },
+            { from: "Mission_Active", to: "Next_Objective", label: "[objective completed]" },
+            { from: "Next_Objective", to: "Mission_Active", label: "[more objectives remain]", selfLoop: "right" },
+            { from: "Mission_Active", to: "Mission_Completed", label: "[all objectives completed]", route: [[1850, 1425], [1850, 2050], [1790, 2050]] },
+            { from: "Mission_Active", to: "Mission_Failed", label: "[timer expired]", route: [[1850, 1375], [1850, 1300], [2050, 1300], [2050, 1525]] },
+            { from: "Mission_Active", to: "Mission_Abandoned", label: "abandonMission", route: [[1930, 1400], [2050, 1400], [2050, 1675]] },
+            { from: "Mission_Failed", to: "Mission_Active", label: "retry", route: [[2050, 1575], [2050, 1620], [1950, 1620], [1950, 1420], [1930, 1420]] },
+            { from: "Mission_Completed", to: "Return_to_Base", label: "missionCompleted", route: [[1700, 2075], [1700, 2550], [1080, 2550]] },
+            { from: "Mission_Abandoned", to: "Return_to_Base", label: "missionAbandoned", route: [[2140, 1700], [2200, 1700], [2200, 2570], [1080, 2570]] },
+
+            // Return to Base
+            { from: "Ocean_Exploration", to: "Return_to_Base", label: "endExploration", route: [[1000, 2350], [1000, 2525]] },
+            { from: "Return_to_Base", to: "Base_Operations", label: "boatArrivedAtBase", route: [[1000, 2575], [1000, 2700]] },
+
+            // Base Operations Substates
+            { from: "BO_Initial", to: "Base_Idle", label: "" },
+            
+            { from: "Base_Idle", to: "Selecting_Waste", label: "sellWaste", route: [[930, 2880], [600, 2880], [600, 3025]] },
+            { from: "Selecting_Waste", to: "Selecting_Waste", label: "[more waste to select] / selectWaste()", selfLoop: "left" },
+            { from: "Selecting_Waste", to: "Processing_Sale", label: "confirmSale" },
+            { from: "Processing_Sale", to: "Waste_Sold", label: "[valid selection] / markWasteSold()" },
+            { from: "Processing_Sale", to: "Selecting_Waste", label: "[invalid selection] / showSelectionError()", route: [[520, 3200], [400, 3200], [400, 3050], [520, 3050]] },
+            { from: "Waste_Sold", to: "Coins_Updated", label: "calculateCoins()" },
+            { from: "Coins_Updated", to: "Base_Idle", label: "coinsUpdated", route: [[600, 3525], [600, 3650], [350, 3650], [350, 2880], [930, 2880]] },
+
+            { from: "Base_Idle", to: "Checking_Upgrade", label: "upgradeBoat", route: [[1070, 2880], [1400, 2880], [1400, 3025]] },
+            { from: "Checking_Upgrade", to: "Max_Level", label: "[maximum level reached]", route: [[1310, 3050], [1150, 3050], [1150, 3175]] },
+            { from: "Checking_Upgrade", to: "Checking_Coins", label: "[upgrade available] / getUpgradeCost()", route: [[1490, 3050], [1650, 3050], [1650, 3175]] },
+            { from: "Checking_Coins", to: "Applying_Upgrade", label: "[sufficient coins] / deductCoins()" },
+            { from: "Checking_Coins", to: "Upgrade_Rejected", label: "[insufficient coins]", route: [[1570, 3200], [1400, 3200], [1400, 3325]] },
+            { from: "Applying_Upgrade", to: "Boat_Upgraded", label: "applyUpgrade()" },
+            { from: "Boat_Upgraded", to: "Base_Idle", label: "statsUpdated", route: [[1650, 3525], [1650, 3650], [1800, 3650], [1800, 2880], [1070, 2880]] },
+            { from: "Max_Level", to: "Base_Idle", label: "closeUpgrade", route: [[1150, 3225], [1150, 3260], [1250, 3260], [1250, 2930], [1050, 2930], [1050, 2905]] },
+            { from: "Upgrade_Rejected", to: "Base_Idle", label: "closeUpgrade", route: [[1400, 3375], [1400, 3420], [1280, 3420], [1280, 2960], [1050, 2960], [1050, 2905]] },
+
+            // Player Report & Final
+            { from: "Base_Operations", to: "Report_Generation", label: "viewPlayerReport", route: [[1000, 3800], [1000, 3925]] },
+            { from: "Report_Generation", to: "Report_Ready", label: "statisticsLoaded" },
+            { from: "Report_Ready", to: "Report_Displayed", label: "viewReport" },
+            { from: "Report_Displayed", to: "Base_Operations", label: "closeReport", route: [[910, 4250], [150, 4250], [150, 3700], [250, 3700]] },
+            
+            { from: "Base_Operations", to: "Ocean_Exploration", label: "continueExploring", route: [[250, 3350], [120, 3350], [120, 1850], [400, 1850]] },
+            
+            { from: "Main_Menu", to: "Final", label: "exitGame", route: [[1075, 520], [2350, 520], [2350, 4450], [1030, 4450]] }
+        ];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const SVG_NS = "http://www.w3.org/2000/svg";
+            const svg = document.querySelector("svg");
+
+            const statesMap = {};
+            states.forEach(s => {
+                s.w = s.w || (s.type === 'initial' || s.type === 'final' ? 30 : 150);
+                s.h = s.h || (s.type === 'initial' || s.type === 'final' ? 30 : 50);
+                statesMap[s.id] = s;
+            });
+
+            function createEl(tag, attrs) {
+                const el = document.createElementNS(SVG_NS, tag);
+                for (let k in attrs) el.setAttribute(k, attrs[k]);
+                return el;
+            }
+
+            // Render States
+            states.forEach(s => {
+                const group = createEl("g", { id: s.id });
+                if (s.type === "initial") {
+                    group.appendChild(createEl("circle", { cx: s.x, cy: s.y, r: 15, fill: "#222" }));
+                } else if (s.type === "final") {
+                    group.appendChild(createEl("circle", { cx: s.x, cy: s.y, r: 15, fill: "none", stroke: "#222", "stroke-width": 2 }));
+                    group.appendChild(createEl("circle", { cx: s.x, cy: s.y, r: 9, fill: "#222" }));
+                } else if (s.type === "composite") {
+                    group.appendChild(createEl("rect", { 
+                        x: s.x - s.w/2, y: s.y - s.h/2, 
+                        width: s.w, height: s.h, 
+                        rx: 15, ry: 15, 
+                        fill: "#fefefe", stroke: "#222", "stroke-width": 2, "stroke-dasharray": "6 6"
+                    }));
+                    const text = createEl("text", { x: s.x, y: s.y - s.h/2 + 25, "text-anchor": "middle", fill: "#222", "font-size": 18, "font-weight": "bold", "font-family": "Arial" });
+                    text.textContent = s.label;
+                    group.appendChild(text);
+
+                    // Actions
+                    let actionY = s.y - s.h/2 + 45;
+                    if (s.entry || s.do || s.exit) {
+                       group.appendChild(createEl("line", {
+                            x1: s.x - s.w/2, y1: actionY - 5,
+                            x2: s.x + s.w/2, y2: actionY - 5,
+                            stroke: "#222", "stroke-width": 1, "stroke-dasharray": "4 4"
+                        }));
+                    }
+                    if (s.entry) {
+                        const t = createEl("text", { x: s.x - s.w/2 + 15, y: actionY + 12, fill: "#333", "font-size": 13, "font-family": "Arial" });
+                        t.textContent = "entry / " + s.entry;
+                        group.appendChild(t); actionY += 16;
+                    }
+                    if (s.do) {
+                        const t = createEl("text", { x: s.x - s.w/2 + 15, y: actionY + 12, fill: "#333", "font-size": 13, "font-family": "Arial" });
+                        t.textContent = "do / " + s.do;
+                        group.appendChild(t); actionY += 16;
+                    }
+                    if (s.exit) {
+                        const t = createEl("text", { x: s.x - s.w/2 + 15, y: actionY + 12, fill: "#333", "font-size": 13, "font-family": "Arial" });
+                        t.textContent = "exit / " + s.exit;
+                        group.appendChild(t); actionY += 16;
+                    }
+
+                } else {
+                    let lines = 1;
+                    if (s.entry) lines++;
+                    if (s.do) lines++;
+                    if (s.exit) lines++;
+                    
+                    group.appendChild(createEl("rect", { 
+                        x: s.x - s.w/2, y: s.y - s.h/2, 
+                        width: s.w, height: s.h, 
+                        rx: 15, ry: 15, 
+                        fill: "white", stroke: "#222", "stroke-width": 1.5 
+                    }));
+                    
+                    if (lines > 1) {
+                        group.appendChild(createEl("line", {
+                            x1: s.x - s.w/2, y1: s.y - s.h/2 + 30,
+                            x2: s.x + s.w/2, y2: s.y - s.h/2 + 30,
+                            stroke: "#222", "stroke-width": 1
+                        }));
+                    }
+
+                    const text = createEl("text", { x: s.x, y: s.y - s.h/2 + 20, "text-anchor": "middle", fill: "#111", "font-size": 14, "font-weight": "bold", "font-family": "Arial" });
+                    text.textContent = s.label;
+                    group.appendChild(text);
+
+                    let actionY = s.y - s.h/2 + 45;
+                    if (s.entry) {
+                        const t = createEl("text", { x: s.x - s.w/2 + 10, y: actionY, fill: "#333", "font-size": 12, "font-family": "Arial" });
+                        t.textContent = "entry / " + s.entry;
+                        group.appendChild(t); actionY += 15;
+                    }
+                    if (s.do) {
+                        const t = createEl("text", { x: s.x - s.w/2 + 10, y: actionY, fill: "#333", "font-size": 12, "font-family": "Arial" });
+                        t.textContent = "do / " + s.do;
+                        group.appendChild(t); actionY += 15;
+                    }
+                    if (s.exit) {
+                        const t = createEl("text", { x: s.x - s.w/2 + 10, y: actionY, fill: "#333", "font-size": 12, "font-family": "Arial" });
+                        t.textContent = "exit / " + s.exit;
+                        group.appendChild(t); actionY += 15;
+                    }
+                }
+                svg.appendChild(group);
+            });
+
+            function getIntersection(rect, angle) {
+                if (rect.type === 'initial' || rect.type === 'final') {
+                    return { x: rect.x + 15 * Math.cos(angle), y: rect.y + 15 * Math.sin(angle) };
+                }
+                const w = rect.w / 2;
+                const h = rect.h / 2;
+                let x, y;
+                const tan = Math.tan(angle);
+                if (Math.abs(tan) < h / w) {
+                    x = Math.sign(Math.cos(angle)) * w;
+                    y = x * tan;
+                } else {
+                    y = Math.sign(Math.sin(angle)) * h;
+                    x = y / tan;
+                }
+                return { x: rect.x + x, y: rect.y + y };
+            }
+
+            // Render Transitions
+            transitions.forEach(t => {
+                const from = statesMap[t.from];
+                const to = statesMap[t.to];
+                
+                let pathD = "";
+                let labelX = 0, labelY = 0;
+                
+                if (t.route) {
+                    pathD = `M ${t.route[0].join(",")} `;
+                    for (let i=1; i<t.route.length; i++) {
+                        pathD += `L ${t.route[i].join(",")} `;
+                    }
+                    let midSeg = Math.floor((t.route.length - 1) / 2);
+                    labelX = (t.route[midSeg][0] + t.route[midSeg+1][0]) / 2;
+                    labelY = (t.route[midSeg][1] + t.route[midSeg+1][1]) / 2;
+                } else if (t.selfLoop) {
+                    if (t.selfLoop === "left") {
+                        const startX = from.x - from.w/2;
+                        const startY = from.y;
+                        pathD = `M ${startX},${startY - 10} C ${startX-70},${startY-50} ${startX-70},${startY+50} ${startX},${startY + 10}`;
+                        labelX = startX - 50;
+                        labelY = startY;
+                    } else {
+                        const startX = from.x + from.w/2;
+                        const startY = from.y;
+                        pathD = `M ${startX},${startY - 10} C ${startX+70},${startY-50} ${startX+70},${startY+50} ${startX},${startY + 10}`;
+                        labelX = startX + 50;
+                        labelY = startY;
+                    }
+                } else {
+                    let dx = to.x - from.x;
+                    let dy = to.y - from.y;
+                    let angle = Math.atan2(dy, dx);
+                    
+                    let start = getIntersection(from, angle);
+                    let end = getIntersection(to, angle + Math.PI);
+                    
+                    pathD = `M ${start.x},${start.y} L ${end.x},${end.y}`;
+                    labelX = (start.x + end.x) / 2;
+                    labelY = (start.y + end.y) / 2;
+                }
+                
+                const path = createEl("path", {
+                    d: pathD,
+                    fill: "none",
+                    stroke: "#333",
+                    "stroke-width": 1.5,
+                    "marker-end": "url(#arrow)"
+                });
+                svg.appendChild(path);
+                
+                if (t.label) {
+                    const text = createEl("text", {
+                        x: labelX,
+                        y: labelY - 6,
+                        fill: "#111",
+                        "font-family": "Arial",
+                        "font-weight": "bold",
+                        "text-anchor": "middle",
+                        "class": "trans-label"
+                    });
+                    if (t.selfLoop === "left") {
+                        text.setAttribute("text-anchor", "end");
+                        text.setAttribute("x", labelX - 10);
+                    } else if (t.selfLoop === "right") {
+                        text.setAttribute("text-anchor", "start");
+                        text.setAttribute("x", labelX + 10);
+                    }
+                    text.textContent = t.label;
+                    svg.appendChild(text);
+                }
+            });
+
+            // Panzoom setup
+            const wrapper = document.getElementById('state-diagram');
+            const p = Panzoom(document.getElementById('pan-state'), { maxScale: 3, minScale: 0.1, step: 0.1 });
+            wrapper.addEventListener('wheel', p.zoomWithWheel, { passive: false });
+            p.zoom(0.40);
+            p.pan(0, 0);
+
+            // SVG Download
+            document.getElementById('download-svg-btn').addEventListener('click', function() {
+                const svgElement = document.querySelector('svg');
+                const serializer = new XMLSerializer();
+                let source = serializer.serializeToString(svgElement);
+                if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+                    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+                }
+                const svgBlob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + source], {type: 'image/svg+xml;charset=utf-8'});
+                const url = URL.createObjectURL(svgBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'State_Diagram.svg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+    </script>
+</body>
+</html>

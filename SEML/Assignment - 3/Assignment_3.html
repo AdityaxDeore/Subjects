@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 3 - Hospital Management System</title>
+    <style>
+body {
+  font-family: Arial, sans-serif;
+  font-size: 12pt;
+  line-height: 1.5;
+  color: #000;
+  background: #e5e7eb;
+  padding: 20px;
+}
+
+.container {
+  max-width: 8.5in;
+  margin: 0 auto;
+}
+
+.page {
+  min-height: 11in;
+  width: 8.5in;
+  padding: 0.8in;
+  background: #ffffff;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  box-sizing: border-box;
+}
+.page:focus-within {
+  outline: 2px dashed #4299e1;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    padding: 0;
+  }
+  .container {
+    max-width: 100%;
+    margin: 0;
+    box-shadow: none;
+  }
+  .page {
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    padding: 0.2in;
+    box-shadow: none;
+    border: none;
+    page-break-after: always;
+  }
+}
+
+.cover-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+  font-family: 'Times New Roman', Times, serif;
+}
+.cover-table td {
+  border: 1px solid #000;
+  padding: 8px 12px;
+}
+.cover-table .college-info {
+  text-align: center;
+  font-weight: bold;
+  font-size: 16pt;
+  line-height: 1.4;
+}
+.cover-table .row-centered { text-align: center; font-weight: bold; font-size: 14pt; }
+.cover-table .row-left { text-align: left; font-weight: bold; font-size: 14pt; }
+.logo-container { text-align: center; width: 18%; padding: 5px !important; }
+.logo-container img { max-width: 100px; height: auto; display: block; margin: 0 auto; }
+
+h2 {
+  font-family: Arial, sans-serif;
+  font-size: 16pt;
+  color: #000;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-family: Arial, sans-serif;
+  font-size: 14pt;
+  color: #000;
+  margin-top: 18px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-family: Arial, sans-serif;
+  font-size: 11pt;
+  text-align: justify;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+ul, ol {
+  margin-left: 20px;
+  font-size: 11pt;
+  margin-bottom: 15px;
+}
+li { margin-bottom: 6px; }
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.styled-table td, .styled-table th {
+  border: 1px solid #000;
+  padding: 8px;
+  font-size: 11pt;
+  vertical-align: top;
+}
+.styled-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.diagram-box { text-align: center; margin: 20px 0; padding: 10px; }
+
+.spec-block {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  page-break-inside: avoid;
+}
+.spec-block h3 { margin-top: 0; color: #1e3a8a; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; font-size: 13pt; }
+.spec-field { margin-bottom: 5px; font-size: 11pt; line-height: 1.4; }
+.spec-field strong { color: #000; }
+    </style>
+</head>
+<body>
+<div class="container" contenteditable="true">
+
+<div class="page">
+<table class="cover-table">
+  <tr>
+    <td class="logo-container"><img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false"></td>
+    <td class="college-info">Pimpri Chinchwad Education Trust's<br>Pimpri Chinchwad College of Engineering</td>
+  </tr>
+  <tr><td colspan="2" class="row-centered">Assignment No. 3</td></tr>
+  <tr><td colspan="2" class="row-left">Course:- Software Engineering and Modeling Lab (SEML)</td></tr>
+  <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore, Aditya Gurav</td></tr>
+  <tr><td colspan="2" class="row-left">PRN:- 124B1F116, 124B1F124</td></tr>
+  <tr><td colspan="2" class="row-left">Batch:- B3</td></tr>
+</table>
+
+<h2>Aim</h2>
+<p>To identify the actors and functional use cases for a Hospital Management System (HMS), prepare a UML 2.0 Use Case Diagram using a step-by-step breakdown of its components, and specify core system interactions using structured prose and advanced relationship rules like &lt;&lt;include&gt;&gt; and &lt;&lt;extend&gt;&gt;.</p>
+
+<h2>Introduction</h2>
+<p>A UML 2.0 Use Case Diagram captures the functional requirements of a system from the perspective of external entities. It establishes system boundaries, identifies interactions, and defines behavioral dependencies without detailing internal programmatic code. The Hospital Management System automates clinical and administrative workflows, bridging patient registration, consultation, diagnostics, room allocation, and billing.</p>
+</div>
+
+<div class="page">
+<h2>1. Identifying Actors</h2>
+<p>Actors represent external entities (human users or other systems) that interact with the system. They are depicted as stick figures outside the system boundary. In the HMS, we identify three primary human actors:</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 180" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <g transform="translate(100, 20)">
+      <circle cx="20" cy="20" r="14" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="34" x2="20" y2="75" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="-10" y1="50" x2="50" y2="50" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="75" x2="0" y2="115" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="75" x2="40" y2="115" stroke="#A80036" stroke-width="1.5"/>
+      <text x="20" y="135" font-size="13" font-weight="bold" text-anchor="middle">Patient</text>
+    </g>
+    <g transform="translate(280, 20)">
+      <circle cx="20" cy="20" r="14" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="34" x2="20" y2="75" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="-10" y1="50" x2="50" y2="50" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="75" x2="0" y2="115" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="75" x2="40" y2="115" stroke="#A80036" stroke-width="1.5"/>
+      <text x="20" y="135" font-size="13" font-weight="bold" text-anchor="middle">Receptionist</text>
+    </g>
+    <g transform="translate(460, 20)">
+      <circle cx="20" cy="20" r="14" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="34" x2="20" y2="75" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="-10" y1="50" x2="50" y2="50" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="75" x2="0" y2="115" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="75" x2="40" y2="115" stroke="#A80036" stroke-width="1.5"/>
+      <text x="20" y="135" font-size="13" font-weight="bold" text-anchor="middle">Doctor</text>
+    </g>
+  </svg>
+</div>
+
+<h2>2. System Boundary &amp; Use Cases</h2>
+<p>A Use Case represents a specific piece of functionality (e.g., Admit Patient, Pay Fee) and is drawn as an ellipse. The System Boundary is drawn as a rectangle enclosing all use cases, indicating the scope of the software. Actors remain outside this boundary.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 200" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <!-- System Boundary -->
+    <rect x="150" y="20" width="300" height="160" stroke="#334155" stroke-width="2" fill="none"/>
+    <text x="300" y="45" font-size="13" font-weight="bold" text-anchor="middle" fill="#1e3a8a">Hospital Management System</text>
+    
+    <!-- Use Cases -->
+    <ellipse cx="300" cy="90" rx="90" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="300" y="95" font-size="12" font-weight="bold" text-anchor="middle">Admit Patient</text>
+    
+    <ellipse cx="300" cy="160" rx="90" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="300" y="165" font-size="12" font-weight="bold" text-anchor="middle">Pay Fee</text>
+  </svg>
+</div>
+
+</div>
+
+<div class="page">
+<h2>3. Basic Associations</h2>
+<p>Associations represent a communication path between an Actor and a Use Case. They are drawn as solid, plain lines. Note that arrows are rarely used here unless demonstrating direction of data flow; a plain line is standard.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 140" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <g transform="translate(100, 10)">
+      <circle cx="20" cy="15" r="12" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="27" x2="20" y2="60" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="-5" y1="40" x2="45" y2="40" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="60" x2="0" y2="90" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="60" x2="40" y2="90" stroke="#A80036" stroke-width="1.5"/>
+      <text x="20" y="110" font-size="12" font-weight="bold" text-anchor="middle">Receptionist</text>
+    </g>
+    
+    <ellipse cx="400" cy="55" rx="90" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="400" y="60" font-size="12" font-weight="bold" text-anchor="middle">Admit Patient</text>
+    
+    <line x1="145" y1="55" x2="310" y2="55" stroke="black" stroke-width="1.5"/>
+  </svg>
+</div>
+
+<h2>4. The &lt;&lt;include&gt;&gt; Relationship</h2>
+<p>An <code>&lt;&lt;include&gt;&gt;</code> relationship means a Use Case absolutely requires the functionality of another Use Case to complete its job. It is depicted as a dashed arrow pointing <strong>from</strong> the base Use Case <strong>to</strong> the included Use Case. For example, Admitting a Patient <em>always</em> includes Generating a Patient ID.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 120" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <defs>
+      <marker id="inc_arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
+      </marker>
+    </defs>
+
+    <ellipse cx="150" cy="60" rx="90" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="150" y="65" font-size="12" font-weight="bold" text-anchor="middle">Admit Patient</text>
+    
+    <ellipse cx="450" cy="60" rx="90" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="450" y="65" font-size="12" font-weight="bold" text-anchor="middle">Generate Patient ID</text>
+    
+    <line x1="240" y1="60" x2="350" y2="60" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#inc_arrow)"/>
+    <text x="295" y="52" font-size="11" font-weight="bold" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+  </svg>
+</div>
+
+</div>
+
+<div class="page">
+<h2>5. The &lt;&lt;extend&gt;&gt; Relationship</h2>
+<p>An <code>&lt;&lt;extend&gt;&gt;</code> relationship indicates optional or conditional behavior. It is depicted as a dashed arrow pointing <strong>from</strong> the extending (optional) Use Case <strong>to</strong> the base Use Case. For example, if no rooms are available during allotment, the "No Room Available" flow extends the "Allot Room" process.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 600 120" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <defs>
+      <marker id="ext_arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
+      </marker>
+    </defs>
+
+    <ellipse cx="150" cy="60" rx="90" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="150" y="65" font-size="12" font-weight="bold" text-anchor="middle">Allot Room</text>
+    
+    <ellipse cx="450" cy="60" rx="90" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="450" y="65" font-size="12" font-weight="bold" text-anchor="middle">No Room Available</text>
+    
+    <!-- Pointing from Extended (Right) to Base (Left) -->
+    <line x1="360" y1="60" x2="250" y2="60" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#ext_arrow)"/>
+    <text x="305" y="52" font-size="11" font-weight="bold" text-anchor="middle">&lt;&lt;extend&gt;&gt;</text>
+  </svg>
+</div>
+
+</div>
+
+<div class="page">
+<h2>6. Final Combined Use Case Diagram</h2>
+<p>Below is the fully assembled Use Case Diagram integrating all actors, use cases, and complex relationships governing the Hospital Management System.</p>
+
+<div class="diagram-box">
+  <svg width="100%" height="auto" viewBox="0 0 920 600" style="background:#ffffff; font-family:Arial,sans-serif;">
+    <defs>
+      <marker id="arr_final" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
+      </marker>
+    </defs>
+
+    <!-- System Boundary -->
+    <rect x="200" y="10" width="520" height="570" stroke="#334155" stroke-width="2" fill="none"/>
+    <text x="460" y="30" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e3a8a">Hospital Management System</text>
+
+    <!-- Actors -->
+    <!-- Receptionist (Top Left) -->
+    <g transform="translate(60, 60)">
+      <circle cx="20" cy="15" r="14" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="29" x2="20" y2="70" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="-10" y1="45" x2="50" y2="45" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="70" x2="0" y2="105" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="70" x2="40" y2="105" stroke="#A80036" stroke-width="1.5"/>
+      <text x="20" y="125" font-size="13" font-weight="bold" text-anchor="middle">Receptionist</text>
+    </g>
+
+    <!-- Patient (Bottom Left) -->
+    <g transform="translate(60, 360)">
+      <circle cx="20" cy="15" r="14" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="29" x2="20" y2="70" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="-10" y1="45" x2="50" y2="45" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="70" x2="0" y2="105" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="70" x2="40" y2="105" stroke="#A80036" stroke-width="1.5"/>
+      <text x="20" y="125" font-size="13" font-weight="bold" text-anchor="middle">Patient</text>
+    </g>
+
+    <!-- Doctor (Right Side) -->
+    <g transform="translate(780, 240)">
+      <circle cx="20" cy="15" r="14" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="29" x2="20" y2="70" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="-10" y1="45" x2="50" y2="45" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="70" x2="0" y2="105" stroke="#A80036" stroke-width="1.5"/>
+      <line x1="20" y1="70" x2="40" y2="105" stroke="#A80036" stroke-width="1.5"/>
+      <text x="20" y="125" font-size="13" font-weight="bold" text-anchor="middle">Doctor</text>
+    </g>
+
+    <!-- Base Use Cases (Left Column inside boundary) -->
+    <ellipse cx="320" cy="90" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="320" y="95" font-size="12" font-weight="bold" text-anchor="middle">Admit Patient</text>
+
+    <ellipse cx="320" cy="180" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="320" y="185" font-size="12" font-weight="bold" text-anchor="middle">Allot Room</text>
+
+    <ellipse cx="320" cy="270" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="320" y="275" font-size="12" font-weight="bold" text-anchor="middle">Schedule Diagnosis</text>
+
+    <ellipse cx="320" cy="360" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="320" y="365" font-size="12" font-weight="bold" text-anchor="middle">Prescribe Test</text>
+
+    <ellipse cx="320" cy="450" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="320" y="455" font-size="12" font-weight="bold" text-anchor="middle">Pay Fee</text>
+
+    <ellipse cx="320" cy="540" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="320" y="545" font-size="12" font-weight="bold" text-anchor="middle">Discharge Patient</text>
+
+    <!-- Target Use Cases (Right Column inside boundary) -->
+    <ellipse cx="600" cy="90" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="600" y="95" font-size="12" font-weight="bold" text-anchor="middle">Generate Patient ID</text>
+
+    <ellipse cx="600" cy="180" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="600" y="185" font-size="12" font-weight="bold" text-anchor="middle">No Room Available</text>
+
+    <ellipse cx="600" cy="270" rx="95" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+    <text x="600" y="275" font-size="12" font-weight="bold" text-anchor="middle">Prescribe Medicine</text>
+
+
+    <!-- Associations from Receptionist -->
+    <line x1="110" y1="120" x2="225" y2="90" stroke="black" stroke-width="1.5"/>
+    <line x1="110" y1="130" x2="225" y2="180" stroke="black" stroke-width="1.5"/>
+    <line x1="110" y1="140" x2="225" y2="450" stroke="black" stroke-width="1.5"/>
+    <line x1="110" y1="150" x2="225" y2="540" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Associations from Patient -->
+    <line x1="110" y1="410" x2="225" y2="90" stroke="black" stroke-width="1.5"/>
+    <line x1="110" y1="420" x2="225" y2="270" stroke="black" stroke-width="1.5"/>
+    <line x1="110" y1="430" x2="225" y2="360" stroke="black" stroke-width="1.5"/>
+    <line x1="110" y1="440" x2="225" y2="450" stroke="black" stroke-width="1.5"/>
+    <line x1="110" y1="450" x2="225" y2="540" stroke="black" stroke-width="1.5"/>
+
+    <!-- Associations from Doctor -->
+    <line x1="770" y1="300" x2="415" y2="270" stroke="black" stroke-width="1.5"/>
+    <line x1="770" y1="310" x2="415" y2="360" stroke="black" stroke-width="1.5"/>
+    <line x1="770" y1="320" x2="415" y2="540" stroke="black" stroke-width="1.5"/>
+
+    <!-- Dependencies -->
+    <!-- Admit -> Generate ID (include) -->
+    <line x1="415" y1="90" x2="495" y2="90" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr_final)"/>
+    <text x="455" y="82" font-size="10" font-weight="bold" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+
+    <!-- No Room -> Allot Room (extend) -->
+    <line x1="505" y1="180" x2="425" y2="180" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr_final)"/>
+    <text x="465" y="172" font-size="10" font-weight="bold" text-anchor="middle">&lt;&lt;extend&gt;&gt;</text>
+
+    <!-- Diagnosis -> Medicine (include) -->
+    <line x1="415" y1="270" x2="495" y2="270" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr_final)"/>
+    <text x="455" y="262" font-size="10" font-weight="bold" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+  </svg>
+</div>
+
+</div>
+
+
+<div class="page">
+<h2>7. Use Case Specifications</h2>
+<p>Below are detailed textual descriptions outlining the normal flow and preconditions for the core use cases identified in the diagram.</p>
+
+<div class="spec-block">
+  <h3>UC-01: Admit Patient</h3>
+  <div class="diagram-box">
+    <svg width="100%" height="auto" viewBox="0 0 600 140" style="background:#ffffff; font-family:Arial,sans-serif;">
+      <defs>
+        <marker id="arr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="black" /></marker>
+      </defs>
+      <g transform="translate(40, 10)">
+        <circle cx="20" cy="15" r="12" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="27" x2="20" y2="60" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="-5" y1="40" x2="45" y2="40" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="60" x2="0" y2="90" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="60" x2="40" y2="90" stroke="#A80036" stroke-width="1.5"/>
+        <text x="20" y="110" font-size="12" font-weight="bold" text-anchor="middle">Receptionist</text>
+      </g>
+      <ellipse cx="250" cy="55" rx="80" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="250" y="60" font-size="12" font-weight="bold" text-anchor="middle">Admit Patient</text>
+      <ellipse cx="480" cy="55" rx="80" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="480" y="60" font-size="12" font-weight="bold" text-anchor="middle">Generate ID</text>
+      <line x1="85" y1="55" x2="170" y2="55" stroke="black" stroke-width="1.5"/>
+      <line x1="330" y1="55" x2="400" y2="55" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr1)"/>
+      <text x="365" y="47" font-size="10" font-weight="bold" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+    </svg>
+  </div>
+  <div class="spec-field"><strong>Actors:</strong> Receptionist, Patient</div>
+  <div class="spec-field"><strong>Description:</strong> Registers a new patient into the hospital system.</div>
+  <div class="spec-field"><strong>Pre-condition:</strong> Receptionist is authenticated into the system.</div>
+  <div class="spec-field"><strong>Normal Flow:</strong></div>
+  <ol>
+    <li>Receptionist opens registration form.</li>
+    <li>Enters patient's personal and medical history details.</li>
+    <li>System executes the <code>&lt;&lt;include&gt;&gt;</code> relationship to <em>Generate Patient ID</em>.</li>
+    <li>Record is successfully saved.</li>
+  </ol>
+</div>
+
+<div class="spec-block">
+  <h3>UC-02: Allot Room</h3>
+  <div class="diagram-box">
+    <svg width="100%" height="auto" viewBox="0 0 600 140" style="background:#ffffff; font-family:Arial,sans-serif;">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="black" /></marker>
+      </defs>
+      <g transform="translate(40, 10)">
+        <circle cx="20" cy="15" r="12" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="27" x2="20" y2="60" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="-5" y1="40" x2="45" y2="40" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="60" x2="0" y2="90" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="60" x2="40" y2="90" stroke="#A80036" stroke-width="1.5"/>
+        <text x="20" y="110" font-size="12" font-weight="bold" text-anchor="middle">Receptionist</text>
+      </g>
+      <ellipse cx="250" cy="55" rx="80" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="250" y="60" font-size="12" font-weight="bold" text-anchor="middle">Allot Room</text>
+      <ellipse cx="480" cy="55" rx="80" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="480" y="60" font-size="12" font-weight="bold" text-anchor="middle">No Room Avail</text>
+      <line x1="85" y1="55" x2="170" y2="55" stroke="black" stroke-width="1.5"/>
+      <line x1="400" y1="55" x2="330" y2="55" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr2)"/>
+      <text x="365" y="47" font-size="10" font-weight="bold" text-anchor="middle">&lt;&lt;extend&gt;&gt;</text>
+    </svg>
+  </div>
+  <div class="spec-field"><strong>Actors:</strong> Receptionist</div>
+  <div class="spec-field"><strong>Description:</strong> Assigns an available inpatient bed to an admitted patient.</div>
+  <div class="spec-field"><strong>Pre-condition:</strong> Patient must be formally admitted to the hospital.</div>
+  <div class="spec-field"><strong>Normal Flow:</strong></div>
+  <ol>
+    <li>Receptionist queries ward availability.</li>
+    <li>Selects bed and assigns it to Patient ID.</li>
+    <li>System updates bed status to occupied.</li>
+  </ol>
+  <div class="spec-field"><strong>Alternate Flow:</strong> If no beds are available, the system triggers the <code>&lt;&lt;extend&gt;&gt;</code> relationship to <em>No Room Available</em> workflow, adding the patient to a waitlist.</div>
+</div>
+</div>
+
+<div class="page">
+<div class="spec-block">
+  <h3>UC-03: Schedule Diagnosis</h3>
+  <div class="diagram-box">
+    <svg width="100%" height="auto" viewBox="0 0 600 140" style="background:#ffffff; font-family:Arial,sans-serif;">
+      <defs>
+        <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="black" /></marker>
+      </defs>
+      <g transform="translate(40, 10)">
+        <circle cx="20" cy="15" r="12" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="27" x2="20" y2="60" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="-5" y1="40" x2="45" y2="40" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="60" x2="0" y2="90" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="60" x2="40" y2="90" stroke="#A80036" stroke-width="1.5"/>
+        <text x="20" y="110" font-size="12" font-weight="bold" text-anchor="middle">Doctor</text>
+      </g>
+      <ellipse cx="250" cy="55" rx="80" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="250" y="60" font-size="12" font-weight="bold" text-anchor="middle">Schedule Diagnosis</text>
+      <ellipse cx="480" cy="55" rx="80" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="480" y="60" font-size="12" font-weight="bold" text-anchor="middle">Prescribe Med</text>
+      <line x1="85" y1="55" x2="170" y2="55" stroke="black" stroke-width="1.5"/>
+      <line x1="330" y1="55" x2="400" y2="55" stroke="black" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr3)"/>
+      <text x="365" y="47" font-size="10" font-weight="bold" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+    </svg>
+  </div>
+  <div class="spec-field"><strong>Actors:</strong> Doctor, Patient</div>
+  <div class="spec-field"><strong>Description:</strong> Doctor consults the patient, examines symptoms, and records clinical findings.</div>
+  <div class="spec-field"><strong>Pre-condition:</strong> Patient has a valid appointment or is admitted in the ward.</div>
+  <div class="spec-field"><strong>Normal Flow:</strong></div>
+  <ol>
+    <li>Doctor retrieves patient file.</li>
+    <li>Doctor logs examination notes.</li>
+    <li>System forces the doctor to execute <code>&lt;&lt;include&gt;&gt;</code> <em>Prescribe Medicine</em> based on findings.</li>
+    <li>Consultation is finalized and saved.</li>
+  </ol>
+</div>
+
+<div class="spec-block">
+  <h3>UC-04: Pay Fee</h3>
+  <div class="diagram-box">
+    <svg width="100%" height="auto" viewBox="0 0 600 140" style="background:#ffffff; font-family:Arial,sans-serif;">
+      <g transform="translate(40, 10)">
+        <circle cx="20" cy="15" r="12" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="27" x2="20" y2="60" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="-5" y1="40" x2="45" y2="40" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="60" x2="0" y2="90" stroke="#A80036" stroke-width="1.5"/>
+        <line x1="20" y1="60" x2="40" y2="90" stroke="#A80036" stroke-width="1.5"/>
+        <text x="20" y="110" font-size="12" font-weight="bold" text-anchor="middle">Patient</text>
+      </g>
+      <ellipse cx="250" cy="55" rx="80" ry="30" fill="#FEFECE" stroke="#A80036" stroke-width="1.5"/>
+      <text x="250" y="60" font-size="12" font-weight="bold" text-anchor="middle">Pay Fee</text>
+      <line x1="85" y1="55" x2="170" y2="55" stroke="black" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <div class="spec-field"><strong>Actors:</strong> Receptionist, Patient</div>
+  <div class="spec-field"><strong>Description:</strong> Settlement of all outstanding hospital bills.</div>
+  <div class="spec-field"><strong>Pre-condition:</strong> Services (consultation, room, labs) must be rendered and logged.</div>
+  <div class="spec-field"><strong>Normal Flow:</strong></div>
+  <ol>
+    <li>System consolidates all charges associated with the Patient ID.</li>
+    <li>Itemized invoice is presented to the patient.</li>
+    <li>Patient pays the fee via cash or digital transaction.</li>
+    <li>Receptionist records payment; system generates receipt.</li>
+  </ol>
+</div>
+
+<h2>Conclusion</h2>
+<p>The Hospital Management System was successfully analyzed and modeled using a detailed breakdown of UML 2.0 Use Case rules. By establishing clear actors, boundaries, and enforcing advanced relationships like <code>&lt;&lt;include&gt;&gt;</code> and <code>&lt;&lt;extend&gt;&gt;</code>, this specification provides an unambiguous blueprint for the subsequent architectural design and software implementation phases.</p>
+</div>
+
+</div>
+</body>
+</html>

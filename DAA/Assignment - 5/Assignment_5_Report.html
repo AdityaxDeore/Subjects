@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assignment No.5 - DAA</title>
+  
+  <!-- Polyfill and MathJax for formulas -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <!-- Prism.js for code syntax highlighting (Java) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-vs.min.css" rel="stylesheet" />
+  
+  <!-- Mermaid.js for Diagrams -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.5; color: #000; background: #e5e7eb; padding: 20px; }
+    .container { max-width: 8.5in; margin: 0 auto; background: #ffffff; }
+    .page:focus-within {
+      outline: 2px dashed #4299e1;
+    }
+    
+    /* Suppress browser default header (date/title) and footer (URL/page numbers) */
+    @page {
+      size: A4 portrait;
+      margin: 0mm !important;
+    }
+    
+    @media print {
+      * {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      html, body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .page {
+        width: 100% !important;
+        height: 296mm !important;
+        min-height: 296mm !important;
+        max-height: 296mm !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 12mm 16mm !important; /* Perfect spacing at all sides for every page */
+        box-shadow: none !important;
+        border: none !important;
+        outline: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        overflow: hidden !important;
+      }
+      .page:last-child {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      .page:focus, .page:focus-within {
+        outline: none !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      pre, code {
+        white-space: pre-wrap !important;
+        word-break: break-all !important;
+      }
+      .mermaid {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+    }
+    
+    .cover-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Times New Roman', Times, serif; }
+    .cover-table td { border: 1px solid #000; padding: 8px 12px; }
+    .cover-table .college-info { text-align: center; font-weight: bold; font-size: 16pt; line-height: 1.4; }
+    .cover-table .row-centered { text-align: center; font-weight: bold; font-size: 14pt; }
+    .cover-table .row-left { text-align: left; font-weight: bold; font-size: 14pt; }
+    .logo-container { text-align: center; width: 18%; padding: 5px !important; }
+    .logo-container img { max-width: 100px; height: auto; display: block; margin: 0 auto; }
+    
+    h2 { font-family: Arial, sans-serif; font-size: 16pt; margin-top: 25px; margin-bottom: 10px; color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 5px; }
+    h3 { font-family: Arial, sans-serif; font-size: 14pt; margin-top: 18px; margin-bottom: 10px; color: #34495e; }
+    p { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.6; margin-bottom: 15px; text-align: justify; }
+    ul, ol { margin-left: 25px; margin-bottom: 15px; font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.6; }
+    li { margin-bottom: 8px; }
+    
+    .diagram-container { text-align: center; margin: 20px 0; background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 15px; page-break-inside: avoid; }
+    
+    /* Code block styling adjustments over Prism.js */
+    pre[class*="language-"] { border-radius: 6px; border: 1px solid #ccc; font-size: 12pt !important; line-height: 1.5; padding: 15px; text-shadow: none !important; }
+    code[class*="language-"] { text-shadow: none !important; font-family: Consolas, Monaco, 'Andale Mono', monospace; font-size: 12pt !important; }
+    
+    .console-output { background: #2b2b2b; color: #a9b7c6; font-family: Consolas, monospace; font-size: 11pt; padding: 15px; border-radius: 6px; white-space: pre-wrap; line-height: 1.4; border: 1px solid #333; page-break-inside: avoid; }
+    .console-output strong { color: #fff; }
+    .console-output .highlight { color: #6a8759; } /* Greenish string-like color */
+    
+    .explanation-box { background: #e8f4f8; border: 1px solid #bdc3c7; border-radius: 6px; padding: 15px; margin-top: 15px; font-size: 11pt; page-break-inside: avoid; }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+    
+    <!-- PAGE 1 -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust's<br>
+            Pimpri Chinchwad college of Engineering
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-centered">
+            Assignment No.5
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Course:- Design & Analysis of Algorithms Laboratory (BIT25PC04)
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Name:- Aditya Chandrajit Deore
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            PRN:- 124B1F116
+          </td>
+        </tr>
+      </table>
+
+      <h2>1. Assignment Overview</h2>
+      <p>
+        This assignment explores Dynamic Programming with a backward approach on a directed, weighted multistage graph. We apply this to optimize package delivery routing across a series of logistical stages (e.g., from warehouses to final destinations via intermediate transit hubs).
+      </p>
+
+      <h2>2. Aim</h2>
+      <p>
+        To model a transportation network as a directed multistage graph and successfully implement an efficient algorithm to find the optimal delivery route. The algorithm must support batch processing of routes and dynamically adjust to real-time constraints such as traffic conditions, weather delays, and road closures.
+      </p>
+
+      <h2>3. Problem Statement</h2>
+      <p>
+        A logistics company, SwiftCargo, specializes in delivering packages across multiple cities. To optimize its delivery process, the company divides the transportation network into multiple stages (warehouses, transit hubs, and final delivery points). Each package must follow the most cost-efficient or fastest route from the source to the destination while passing through these predefined stages. 
+      </p>
+      
+      <h2>4. Primary Objectives</h2>
+      <ul>
+        <li>To model the logistics network into N stages strictly, simulating an industry-standard transportation graph.</li>
+        <li>To apply the Dynamic Programming backward approach resolving every possible source simultaneously.</li>
+        <li>To scale execution performance targeting \(\Theta(V+E)\) constraints enabling calculation of over 10,000 cities efficiently.</li>
+        <li>To simulate real-time route adjustment constraints such as traffic multipliers and complete edge disconnections (road closures).</li>
+      </ul>
+
+      <h2>5. Introduction & Theory</h2>
+      <p>
+        A <strong>multistage graph</strong> is a directed, weighted graph in which the vertices are partitioned into \(k \ge 2\) disjoint sets or stages \(V_1, V_2, \ldots, V_k\). Edges strictly connect vertices from stage \(V_i\) to stage \(V_{i+1}\).
+      </p>
+      
+      <h3>Backward Approach (Dynamic Programming)</h3>
+      <p>
+        In the backward approach, we compute the shortest path from each node to the sink node starting from the \(k-1\)-th stage backwards down to stage 1. The recurrence relation is:
+      </p>
+      <div style="text-align: center; font-size: 1.15em; margin: 15px 0;">
+        \[ Cost(i, j) = \min_{l \in V_{i+1}, \langle j, l \rangle \in E} \{ c(j, l) + Cost(i+1, l) \} \]
+      </div>
+      <p>Where \(Cost(i, j)\) is the minimum cost from vertex \(j\) in stage \(i\) to the sink.</p>
+
+      <h3>Mapping Theory to SwiftCargo Constraints</h3>
+      <ul>
+        <li><strong>1. Multistage Graph Modeling:</strong> The logistics network is modeled such that warehouses (Stage 0) strictly supply transit Hubs A (Stage 1), which supply Hubs B (Stage 2), before reaching final Destinations (Stage 3). This strict partitioning defines a true directed multistage graph.</li>
+        <li><strong>2. Efficient Algorithm Selection:</strong> While Dijkstra's Algorithm finds the shortest path from a single source, the <strong>Dynamic Programming (Backward Approach)</strong> was selected because it is mathematically superior for <em>multistage</em> structures. It calculates the optimal path from <em>every</em> warehouse simultaneously in a single bottom-up sweep.</li>
+        <li><strong>3. Scalability for Large Datasets:</strong> By utilizing a tabular DP array, we avoid the path explosion problem. The time complexity is strictly \(\Theta(V + E)\), allowing the system to securely scale and resolve massive datasets (e.g., 10,000 cities and 80,000 routes) in roughly 150 milliseconds.</li>
+        <li><strong>4. Real-time Constraints & Batch Processing:</strong> Traffic conditions and weather delays are translated into multiplicative mathematical penalties applied dynamically to base edge weights. Road closures logically sever edges (setting cost to \(\infty\)). Because DP solves all possible sources simultaneously in one pass, a single function call acts as a highly efficient <strong>batch processor</strong> for all pending delivery requests from any starting warehouse.</li>
+      </ul>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="page">
+      <h2>6. Algorithm & Complexity Analysis</h2>
+      
+      <h3>Formal Pseudocode (Backward Approach)</h3>
+      <pre><code>Algorithm MultistageGraphDP(G, k, n)
+// G: Adjacency list of the multistage graph
+// k: Total number of stages
+// n: Total number of vertices
+// cost[1..n]: Minimum cost to reach the sink
+// next[1..n]: Next vertex on the optimal path
+
+1. Initialize cost[sink] = 0
+2. For j = n-1 down to 1 do
+3.     min_cost = &infin;
+4.     For each vertex r adjacent to j do
+5.         if G.weight(j, r) + cost[r] < min_cost then
+6.             min_cost = G.weight(j, r) + cost[r]
+7.             next[j] = r
+8.     cost[j] = min_cost
+9. End For
+
+10. // To extract optimal path for any Source S:
+11. curr = S
+12. While curr != -1 do
+13.     print curr
+14.     curr = next[curr]</code></pre>
+
+      <h3>Time Complexity: \(\Theta(V + E)\)</h3>
+      <p>
+        The outer loop iterates backward through all vertices \((V)\) exactly once. For every vertex, the inner loop evaluates all of its outgoing edges. Therefore, every single edge \((E)\) in the entire graph is checked exactly once during the execution. Because the algorithm processes each vertex and each edge exactly once, the total time complexity is bounded by <strong>\(\Theta(V + E)\)</strong>.
+      </p>
+
+      <h3>Space / Auxiliary Complexity: \(\Theta(V)\)</h3>
+      <p>
+        The dynamic programming approach utilizes two 1D arrays: <code>cost[]</code> to store the minimum cost from each node to the sink, and <code>next[]</code> to store the forward path pointers. Both arrays are of size \(V\). Thus, the auxiliary space used is exactly proportional to the number of vertices, resulting in an optimal <strong>\(\Theta(V)\)</strong> space complexity.
+      </p>
+      
+      <h2>7. Multistage Network Diagram</h2>
+      <p>Below is the visual representation of the logistics network utilized in the implementation. Nodes are arranged across 4 distinct stages. Numbers on the edges represent the base travel costs.</p>
+      
+      <div class="diagram-container">
+        <div class="mermaid">
+          graph LR
+            subgraph Stage 0: Warehouses
+              WH1((WH1))
+              WH2((WH2))
+            end
+            subgraph Stage 1: Hubs A
+              HA1((HA1))
+              HA2((HA2))
+              HA3((HA3))
+            end
+            subgraph Stage 2: Hubs B
+              HB1((HB1))
+              HB2((HB2))
+            end
+            subgraph Stage 3: Destination
+              DEST((DEST))
+            end
+
+            WH1 -- 100 --> HA1
+            WH1 -- 150 --> HA2
+            WH2 -- 120 --> HA2
+            WH2 -- 130 --> HA3
+
+            HA1 -- 200 --> HB1
+            HA1 -- 250 --> HB2
+            HA2 -- 180 --> HB1
+            HA2 -- 220 --> HB2
+            HA3 -- 190 --> HB2
+
+            HB1 -- 300 --> DEST
+            HB2 -- 280 --> DEST
+
+            classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px;
+            classDef source fill:#e1f5fe,stroke:#039be5,stroke-width:2px;
+            classDef dest fill:#e8f5e9,stroke:#43a047,stroke-width:2px;
+            
+            class WH1,WH2 source;
+            class DEST dest;
+        </div>
+      </div>
+
+      <h2>8. Java Implementation</h2>
+      <p>The solution uses Java. It models the stages and uses dynamic programming to solve all routes simultaneously in a single pass.</p>
+      <pre><code class="language-java">import java.util.*;
+
+/**
+ * SwiftCargo - Optimal Delivery Routing over a Multistage Graph
+ * Technique  : Dynamic Programming, BACKWARD approach.
+ * Complexity : Theta(V + E) time, Theta(V) auxiliary space.
+ */
+public class SwiftCargo {
+    static final int INF = Integer.MAX_VALUE / 4;
+
+    static class Edge {
+        int to, base;                
+        double traffic, weather;     
+        boolean open = true;         
+
+        Edge(int to, int base) { this.to = to; this.base = base; }
+
+        int cost() {
+            if (!open) return INF;
+            // Cost calculation applying penalty factors for traffic and weather
+            return (int) Math.round(base * (1 + 0.50 * traffic + 0.30 * weather));
+        }
+    }
+
+    final int n, stages;
+    final int[] stageOf;
+    final String[] code, city;
+    final List&lt;Edge&gt;[] adj;
+    final List&lt;List&lt;Integer&gt;&gt; byStage = new ArrayList&lt;&gt;();
+
+    int[] cost, next;
+    int routes = 0;
+
+    @SuppressWarnings("unchecked")
+    SwiftCargo(int n, int stages) {
+        this.n = n; this.stages = stages;
+        stageOf = new int[n]; code = new String[n]; city = new String[n];
+        adj = new List[n];
+        for (int i = 0; i &lt; n; i++) adj[i] = new ArrayList&lt;&gt;();
+        for (int s = 0; s &lt; stages; s++) byStage.add(new ArrayList&lt;&gt;());
+    }</code></pre>
+    </div>
+
+    <!-- PAGE 3 -->
+    <div class="page">
+      <pre><code class="language-java">    void addCity(int v, int stage, String cd, String nm) {
+        stageOf[v] = stage; code[v] = cd; city[v] = nm;
+        byStage.get(stage).add(v);
+    }
+
+    void addRoute(int u, int v, int base) {
+        if (stageOf[v] != stageOf[u] + 1) throw new IllegalArgumentException();
+        adj[u].add(new Edge(v, base)); routes++;
+    }
+
+    Edge find(int u, int v) {
+        for (Edge e : adj[u]) if (e.to == v) return e;
+        return null;
+    }
+
+    // Real-Time Modifiers
+    void setLiveConditions(int u, int v, double traffic, double weather) {
+        Edge e = find(u, v);
+        if (e != null) { e.traffic = traffic; e.weather = weather; }
+    }
+
+    void closeRoute(int u, int v) {
+        Edge e = find(u, v);
+        if (e != null) e.open = false;
+    }
+
+    // Dynamic Programming Algorithm
+    void solve() {
+        cost = new int[n]; next = new int[n];
+        Arrays.fill(cost, INF); Arrays.fill(next, -1);
+        
+        for (int t : byStage.get(stages - 1)) cost[t] = 0;      
+        
+        // Iterating backward from the second-to-last stage
+        for (int s = stages - 2; s &gt;= 0; s--)                   
+            for (int u : byStage.get(s))
+                for (Edge e : adj[u]) {
+                    int w = e.cost();
+                    if (w &gt;= INF || cost[e.to] &gt;= INF) continue;
+                    
+                    // Relax the edge
+                    if (w + cost[e.to] &lt; cost[u]) {
+                        cost[u] = w + cost[e.to]; 
+                        next[u] = e.to;
+                    }
+                }
+    }
+
+    List&lt;Integer&gt; route(int src) {
+        List&lt;Integer&gt; p = new ArrayList&lt;&gt;();
+        if (cost[src] &gt;= INF) return p;
+        for (int v = src; v != -1; v = next[v]) p.add(v);
+        return p;
+    }
+
+    String routeText(int src) {
+        List&lt;Integer&gt; p = route(src);
+        if (p.isEmpty()) return "UNREACHABLE";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i &lt; p.size(); i++) {
+            sb.append(code[p.get(i)]);
+            if (i &lt; p.size() - 1) sb.append(" -&gt; ");
+        }
+        return sb.toString();
+    }
+}</code></pre>
+    </div>
+
+    <!-- PAGE 4 -->
+    <div class="page">
+      <h2>9. Program Output</h2>
+      <div class="console-output"><strong>=== SwiftCargo Logistics Optimization ===</strong>
+
+<span class="highlight">[+] Initial Optimal Routes:</span>
+WH1 Route: WH1 -&gt; HA1 -&gt; HB1 -&gt; DEST | Cost: 600
+WH2 Route: WH2 -&gt; HA2 -&gt; HB1 -&gt; DEST | Cost: 600
+
+<span class="highlight">[+] Real-time constraints applied (Traffic delay on HA2-&gt;HB1, Weather on HB1-&gt;DEST)</span>
+WH1 Route: WH1 -&gt; HA1 -&gt; HB2 -&gt; DEST | Cost: 630
+WH2 Route: WH2 -&gt; HA3 -&gt; HB2 -&gt; DEST | Cost: 600
+
+<span class="highlight">[+] Road Closure (Hub B2 -&gt; Destination)</span>
+WH1 Route: WH1 -&gt; HA1 -&gt; HB1 -&gt; DEST | Cost: 681
+WH2 Route: WH2 -&gt; HA2 -&gt; HB1 -&gt; DEST | Cost: 753
+
+<span class="highlight">[+] Testing Scalability (Large Dataset: 10,000 cities, 5 stages)</span>
+Optimal routes calculated for 10,000 cities and 80000 routes in 152 ms.</div>
+
+      <h2>10. Output Explanation</h2>
+      <div class="explanation-box">
+        <p><strong>1. Initial Optimal Routes:</strong><br>
+        Initially, the algorithm finds the absolute shortest path via Dynamic Programming. For Warehouse 1 (WH1), the shortest path is <code>WH1 -> HA1 (100) -> HB1 (200) -> DEST (300) = 600</code>.</p>
+        
+        <p><strong>2. Real-time Constraints (Traffic & Weather):</strong><br>
+        We injected a heavy traffic delay (0.8 factor) on edge <code>HA2 -> HB1</code> and bad weather (0.9 factor) on <code>HB1 -> DEST</code>. <br>
+        Due to the weather penalty on <code>HB1 -> DEST</code>, its cost increased from 300 to <code>300 * (1 + 0.3*0.9) = 381</code>. The DP algorithm instantly recognized that routing through <code>HB1</code> is no longer optimal. WH1 successfully rerouted through <code>HB2</code> resulting in a cost of 630, which is the new lowest possible cost.</p>
+        
+        <p><strong>3. Road Closures:</strong><br>
+        A complete blockage was declared between <code>HB2</code> and <code>DEST</code>. Since <code>HB2</code> is completely cut off, all shipments were forced to route through <code>HB1</code> despite the severe weather penalty, causing the minimum cost to spike up to 681 for WH1 and 753 for WH2, but successfully ensuring delivery.</p>
+        
+        <p><strong>4. Scalability Validation:</strong><br>
+        A synthetic graph consisting of 10,000 cities and 80,000 routes was generated on the fly. The algorithm solved the routing for <strong>all 10,000 starting cities simultaneously</strong> in just <strong>152 milliseconds</strong>, proving that the \(O(V+E)\) DP solution is exceptionally suited for massive industrial-scale datasets.</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Prism JS core and Java components -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+</body>
+</html>

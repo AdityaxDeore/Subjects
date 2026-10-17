@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assignment No.6 - DAA - 0/1 Knapsack Dynamic Programming</title>
+  
+  <!-- MathJax for formulas -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <!-- Prism.js for code syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-vs.min.css" rel="stylesheet" />
+  
+  <!-- Mermaid.js for Diagrams -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.6;
+      color: #000;
+      background: #e5e7eb;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 8.5in;
+      margin: 0 auto;
+    }
+    
+    /* Screen Preview: Standard 8.5in x 11in page boxes with professional margins */
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.7in 0.8in;
+      background: #ffffff;
+      margin: 0 auto 24px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .page:focus-within {
+      outline: 2px dashed #4299e1;
+    }
+    
+    /* Print CSS: Clean A4 formatting with zero browser header/footer */
+    @page {
+      size: A4 portrait;
+      margin: 0; /* Suppresses browser default header (title/URL) and footer (date/page #) */
+    }
+    
+    @media print {
+      * {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      html, body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .page {
+        width: 100% !important;
+        min-height: 297mm !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 12mm 15mm !important; /* Internal page margin so text doesn't touch paper edges */
+        box-shadow: none !important;
+        border: none !important;
+        outline: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      .page:last-child {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      .page:focus, .page:focus-within {
+        outline: none !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      pre, code {
+        white-space: pre-wrap !important;
+        word-break: break-all !important;
+      }
+      
+      h2, h3 {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      .styled-table, .cover-table, .diagram-container, 
+      .code-window-light, .terminal-window, .math-callout, .info-box {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      li {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+    }
+    
+    /* Cover Page Table */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 26px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .cover-table td {
+      border: 1px solid #000;
+      padding: 7px 12px;
+    }
+    .cover-table .college-info {
+      text-align: center;
+      font-weight: bold;
+      font-size: 15pt;
+      line-height: 1.35;
+    }
+    .cover-table .row-centered { text-align: center; font-weight: bold; font-size: 13pt; }
+    .cover-table .row-left { text-align: left; font-weight: bold; font-size: 12pt; }
+    .logo-container { text-align: center; width: 18%; padding: 4px !important; }
+    .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto; }
+    
+    /* Typography & Spacing */
+    h2 {
+      font-family: Arial, sans-serif;
+      font-size: 14pt;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      color: #000;
+      border-bottom: 1.5px solid #cbd5e1;
+      padding-bottom: 5px;
+    }
+    .page > h2:first-child {
+      margin-top: 0;
+    }
+    h3 {
+      font-family: Arial, sans-serif;
+      font-size: 12pt;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: #000;
+    }
+    p {
+      font-family: Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      text-align: justify;
+    }
+    ul, ol {
+      margin-left: 24px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      font-family: Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+    }
+    li { margin-bottom: 6px; }
+    
+    /* Tables */
+    table.styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 22px; /* Clear generous spacing after table */
+      font-size: 9.5pt;
+      font-family: Arial, sans-serif;
+    }
+    table.styled-table th, table.styled-table td {
+      border: 1px solid #000;
+      padding: 7px 10px;
+      text-align: left;
+    }
+    table.styled-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      text-align: center;
+    }
+    table.styled-table td.center { text-align: center; }
+    
+    /* Math & Callout Boxes */
+    .math-callout {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 12px 18px;
+      margin: 12px 0 22px 0; /* Clear space after callout */
+      text-align: center;
+      font-size: 10pt;
+    }
+    
+    /* Code Window */
+    .code-window-light {
+      background-color: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin: 12px 0 22px 0;
+      overflow: hidden;
+      border: 1px solid #d1d5db;
+    }
+    .code-header-light {
+      background-color: #f3f4f6;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .code-dots {
+      display: flex;
+      gap: 5px;
+      margin-right: 10px;
+    }
+    .code-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-red { background-color: #ff5f56; }
+    .dot-yellow { background-color: #ffbd2e; }
+    .dot-green { background-color: #27c93f; }
+    .code-title-light {
+      color: #374151;
+      font-size: 9pt;
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 600;
+    }
+    pre[class*="language-"] {
+      border: none !important;
+      border-radius: 0 !important;
+      font-size: 8.5pt !important;
+      line-height: 1.38;
+      padding: 12px 16px !important;
+      margin: 0 !important;
+      background: #fafafa !important;
+    }
+    code[class*="language-"] {
+      font-family: Consolas, Monaco, monospace !important;
+      font-size: 8.5pt !important;
+    }
+
+    /* Terminal Output */
+    .terminal-window {
+      background-color: #1e222a;
+      border-radius: 6px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+      margin: 12px 0 22px 0;
+      overflow: hidden;
+      border: 1px solid #333;
+    }
+    .terminal-header {
+      background-color: #282c34;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #3e4451;
+    }
+    .terminal-title {
+      color: #9da5b4;
+      font-size: 8.5pt;
+      font-family: 'Consolas', monospace;
+      font-weight: 600;
+    }
+    .terminal-body {
+      padding: 14px 18px;
+      color: #abb2bf;
+      font-family: 'Consolas', monospace;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+    .term-highlight { color: #98c379; }
+    .term-cyan { color: #56b6c2; font-weight: bold; }
+    .term-white { color: #ffffff; font-weight: bold; }
+    .term-warn { color: #e5c07b; }
+
+    /* Diagram Containers */
+    .diagram-container {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 12px;
+      margin: 12px 0 22px 0;
+      text-align: center;
+    }
+    .diagram-caption {
+      font-size: 9pt;
+      font-style: italic;
+      color: #475569;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+    
+    <!-- ================================================================= -->
+    <!-- PAGE 1: COVER TABLE, 1. AIM, 2. PROBLEM STATEMENT, 3. OBJECTIVE -->
+    <!-- ================================================================= -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust's<br>
+            Pimpri Chinchwad college of Engineering
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-centered">
+            Assignment No.6
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Course:- Design & Analysis of Algorithms Laboratory (BIT25PC04)
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Name:- Aditya Chandrajit Deore
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            PRN:- 124B1F116
+          </td>
+        </tr>
+      </table>
+
+      <h2>1. Aim</h2>
+      <p>
+        To model and implement the <strong>0/1 Knapsack Algorithm using Dynamic Programming</strong> to optimize the loading and transport of emergency supplies for a <strong>Disaster Relief Resource Allocation</strong> mission following a major earthquake, maximizing the total humanitarian utility value while ensuring that the relief truck's maximum payload capacity \(W\) is strictly not exceeded.
+      </p>
+
+      <h2>2. Problem Statement</h2>
+      <p>
+        A massive earthquake has struck a remote mountainous region, isolating communities and destroying vital local infrastructure. A humanitarian relief organization is preparing an emergency transport truck with a limited payload capacity of \(W\) kilograms, making it impossible to transport every available relief item. Each relief item is characterized by a specific gross weight and an associated utility value, where the utility value represents the importance of the item in saving lives, mitigating suffering, and meeting urgent field medical needs.
+      </p>
+      <p>
+        The objective is to determine the optimal set of relief items that maximizes the total utility value without exceeding the truck's payload capacity. Unlike bulk consumable resources, critical disaster assets (such as surgical trauma kits, generators, satellite transceivers, and water purification units) are indivisible and cannot be transported in partial fractions. Therefore, the 0/1 Knapsack model is used, where each item must either be included in the truck entirely (1) or excluded (0).
+      </p>
+
+      <h2>3. Objective</h2>
+      <ol>
+        <li>To model the Disaster Relief Resource Allocation problem using the 0/1 Knapsack approach.</li>
+        <li>To implement the 0/1 Knapsack Algorithm using a bottom-up Dynamic Programming tabular strategy.</li>
+        <li>To construct the 2D dynamic programming table \(DP[N+1][W+1]\) based on the recurrence relation.</li>
+        <li>To implement backtracking from the optimal state to identify the exact set of loaded supplies.</li>
+        <li>To maximize the total humanitarian utility value within the given truck payload capacity \(W\).</li>
+        <li>To analyze and benchmark the performance of Dynamic Programming against Brute Force and Greedy heuristics.</li>
+        <li>To optimize for real-world constraints such as perishable items (blood plasma, medicines) having priority.</li>
+        <li>To extend the model to consider multiple relief trucks for dynamic disaster supply chain management.</li>
+      </ol>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 2: 4. INTRODUCTION, 5. THEORY (PARTS A & B) -->
+    <!-- ================================================================= -->
+    <div class="page">
+      <h2>4. Introduction</h2>
+      <p>
+        The 0/1 Knapsack Problem is a classic combinatorial optimization problem in algorithmic science. In the 0/1 Knapsack scenario, each item is indivisible and must either be chosen in its entirety or left behind. A greedy approach sorting by value-to-weight ratio, while optimal for Fractional Knapsack, fails in 0/1 Knapsack because fractional parts cannot be loaded, frequently leaving awkward payload voids. An exhaustive brute-force search requires evaluating \(2^N\) subsets, making it computationally infeasible for large \(N\).
+      </p>
+      <p>
+        Dynamic Programming overcomes this combinatorial explosion by breaking the problem down into overlapping subproblems, storing results in a matrix to avoid redundant recalculation, and achieving a globally optimal solution in pseudo-polynomial time \(\Theta(N \cdot W)\). In this assignment, we apply this method to an earthquake disaster relief operation to maximize the life-saving impact of every kilogram transported.
+      </p>
+
+      <h2>5. Theory</h2>
+      <p>
+        The knapsack problem involves selecting a subset of items with given weights and values to maximize the total value without exceeding a specified capacity constraint.
+      </p>
+
+      <h3>Types of Knapsack Problems</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Algorithm Used</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Fractional Knapsack</strong></td>
+            <td>Items can be divided into arbitrary fractions</td>
+            <td>Greedy Algorithm</td>
+          </tr>
+          <tr>
+            <td><strong>0/1 Knapsack</strong></td>
+            <td>Items must be selected whole (1) or not at all (0)</td>
+            <td>Dynamic Programming</td>
+          </tr>
+          <tr>
+            <td><strong>Bounded Knapsack</strong></td>
+            <td>Items can be selected up to a specified bounded count</td>
+            <td>Dynamic Programming</td>
+          </tr>
+          <tr>
+            <td><strong>Unbounded Knapsack</strong></td>
+            <td>Items can be selected an unlimited number of times</td>
+            <td>Dynamic Programming</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>0/1 Knapsack Problem Concept</h3>
+      <p>
+        This variant strictly forbids taking fractions of items. Dynamic Programming constructs an \((N+1) \times (W+1)\) table where row \(i\) corresponds to considering items \(1 \dots i\) and column \(w\) represents available capacity \(0 \dots W\).
+      </p>
+
+      <h3>Difference: Fractional vs. 0/1 Knapsack</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Fractional Knapsack</th>
+            <th>0/1 Knapsack</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Algorithm</strong></td>
+            <td>Greedy Algorithm</td>
+            <td>Dynamic Programming</td>
+          </tr>
+          <tr>
+            <td><strong>Item Division</strong></td>
+            <td>Allowed (continuous)</td>
+            <td>Not Allowed (discrete binary)</td>
+          </tr>
+          <tr>
+            <td><strong>Optimal Strategy</strong></td>
+            <td>Sort by value/weight ratio</td>
+            <td>Subproblem recurrence tabulation</td>
+          </tr>
+          <tr>
+            <td><strong>Time Complexity</strong></td>
+            <td>\(\mathcal{O}(N \log N)\)</td>
+            <td>\(\Theta(N \cdot W)\)</td>
+          </tr>
+          <tr>
+            <td><strong>Capacity Utilization</strong></td>
+            <td>Always fills capacity 100%</td>
+            <td>May leave small slack if indivisible items don't fit</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 3: 5. THEORY (FORMULATION & APPS), 6. EXAMPLE WALKTHROUGH -->
+    <!-- ================================================================= -->
+    <div class="page">
+      <h2>5. Theory (Continued)</h2>
+      
+      <h3>Mathematical Representation</h3>
+      <div class="math-callout">
+        <strong>Objective Function:</strong> Maximize \(Z = \sum_{i=1}^{N} (v_i \cdot x_i)\)<br>
+        <strong>Subject to Constraint:</strong> \(\sum_{i=1}^{N} (w_i \cdot x_i) \le W\)<br>
+        <strong>Variables:</strong> \(x_i \in \{0, 1\}\) for all \(i = 1, 2, \ldots, N\)
+      </div>
+
+      <h3>Dynamic Programming Recurrence Relation</h3>
+      <div class="math-callout">
+        \[ DP[i][w] = \begin{cases} 
+        0 & \text{if } i = 0 \text{ or } w = 0 \\
+        DP[i-1][w] & \text{if } w_i > w \\
+        \max\Big( DP[i-1][w], \; DP[i-1][w - w_i] + v_i \Big) & \text{if } w_i \le w 
+        \end{cases} \]
+      </div>
+
+      <h2>6. Example: 0/1 Knapsack Disaster Relief Optimization</h2>
+      <p>
+        The following parameters define a disaster relief knapsack problem with a relief truck payload capacity of <strong>\(W = 50\text{ kg}\)</strong> and 5 essential relief items.
+      </p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Utility (\(V\))</th>
+            <th>Weight (\(W\) kg)</th>
+            <th>Calculation (\(V/W\))</th>
+            <th>Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="center">A</td><td>First Aid & Surgical Packs</td><td class="center">60</td><td class="center">10</td><td class="center">60 / 10</td><td class="center">6.0</td></tr>
+          <tr><td class="center">B</td><td>Emergency Food Rations</td><td class="center">100</td><td class="center">20</td><td class="center">100 / 20</td><td class="center">5.0</td></tr>
+          <tr><td class="center">C</td><td>Water Purification Unit</td><td class="center">120</td><td class="center">30</td><td class="center">120 / 30</td><td class="center">4.0</td></tr>
+          <tr><td class="center">D</td><td>Satellite Comms Transceiver</td><td class="center">70</td><td class="center">15</td><td class="center">70 / 15</td><td class="center">4.67</td></tr>
+          <tr><td class="center">E</td><td>Thermal Shelter Tents</td><td class="center">80</td><td class="center">25</td><td class="center">80 / 25</td><td class="center">3.2</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Dynamic Programming Matrix \(DP[i][w]\) Walkthrough</h3>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Item \(i\)</th>
+            <th>\(w_i, v_i\)</th>
+            <th>\(w=0\)</th>
+            <th>\(w=10\)</th>
+            <th>\(w=20\)</th>
+            <th>\(w=30\)</th>
+            <th>\(w=40\)</th>
+            <th>\(w=50\)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="center">0</td><td>Base (None)</td><td class="center">0</td><td class="center">0</td><td class="center">0</td><td class="center">0</td><td class="center">0</td><td class="center">0</td></tr>
+          <tr><td class="center">1 (A)</td><td>10 kg, 60</td><td class="center">0</td><td class="center">60</td><td class="center">60</td><td class="center">60</td><td class="center">60</td><td class="center">60</td></tr>
+          <tr><td class="center">2 (B)</td><td>20 kg, 100</td><td class="center">0</td><td class="center">60</td><td class="center">100</td><td class="center">160</td><td class="center">160</td><td class="center">160</td></tr>
+          <tr><td class="center">3 (C)</td><td>30 kg, 120</td><td class="center">0</td><td class="center">60</td><td class="center">100</td><td class="center">160</td><td class="center">180</td><td class="center">220</td></tr>
+          <tr><td class="center">4 (D)</td><td>15 kg, 70</td><td class="center">0</td><td class="center">60</td><td class="center">100</td><td class="center">160</td><td class="center">180</td><td class="center">230</td></tr>
+          <tr><td class="center">5 (E)</td><td>25 kg, 80</td><td class="center">0</td><td class="center">60</td><td class="center">100</td><td class="center">160</td><td class="center">180</td><td class="center"><strong>240</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Step-by-Step Backtracking Process</h3>
+      <ol>
+        <li>Start at \(DP[5][50] = 240\). Compare with \(DP[4][50] = 230\). They differ, so <strong>Item E (25 kg) is selected</strong>. Remaining capacity: \(50 - 25 = 25\text{ kg}\).</li>
+        <li>Move to \(DP[4][25] = 130\). Compare with \(DP[3][25] = 100\). They differ, so <strong>Item D (15 kg) is selected</strong>. Remaining capacity: \(25 - 15 = 10\text{ kg}\).</li>
+        <li>Move to \(DP[3][10] = 60\). Compare with \(DP[2][10] = 60\). Equal, Item C was not selected.</li>
+        <li>Move to \(DP[2][10] = 60\). Compare with \(DP[1][10] = 60\). Equal, Item B was not selected.</li>
+        <li>Move to \(DP[1][10] = 60\). Compare with \(DP[0][10] = 0\). Differ, so <strong>Item A (10 kg) is selected</strong>. Remaining capacity: \(10 - 10 = 0\text{ kg}\).</li>
+      </ol>
+      <p>
+        <strong>Optimal DP Manifest:</strong> Items A, D, and E with total weight \(= 10 + 15 + 25 = 50\text{ kg}\) and maximum utility \(= 60 + 70 + 80 = \mathbf{240}\).<br>
+        <strong>Comparison with Greedy:</strong> Greedy sorts by ratio (A: 6.0, B: 5.0, D: 4.67). It loads A (10 kg) and B (20 kg), then D (15 kg), reaching 45 kg and 230 utility. It cannot fit remaining items, attaining only \(\mathbf{230}\) (10 utility points lost!). DP achieves 240.
+      </p>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 4: 7. JAVA PROGRAM (PART 1: MODEL & 0/1 DP ALGORITHM) -->
+    <!-- ================================================================= -->
+    <div class="page">
+      <h2>7. Java Program (Part 1: Data Model & 0/1 DP Algorithm)</h2>
+      <p>
+        The following Java program models each disaster relief item and implements the exact 0/1 Knapsack Dynamic Programming algorithm with backtracking:
+      </p>
+      <div class="code-window-light">
+        <div class="code-header-light">
+          <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+          <span class="code-title-light">DisasterReliefKnapsack.java - Part 1: Model & DP Solver</span>
+        </div>
+        <pre><code class="language-java">import java.util.*;
+
+// Model representation of an emergency relief supply item
+class ReliefItem {
+    int id;
+    String name;
+    String category;
+    int weight;      // in kg
+    int utility;     // humanitarian life-saving value
+    boolean perishable;
+
+    public ReliefItem(int id, String name, String category, int weight, int utility, boolean perishable) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.weight = weight;
+        this.utility = utility;
+        this.perishable = perishable;
+    }
+}
+
+public class DisasterReliefKnapsack {
+
+    // 0/1 Knapsack using Dynamic Programming with Backtracking
+    public static void knapsack01DP(ReliefItem[] items, int capacity) {
+        int n = items.length;
+        int[][] dp = new int[n + 1][capacity + 1];
+
+        // 1. Build DP Table Bottom-Up
+        for (int i = 1; i &lt;= n; i++) {
+            int wt = items[i - 1].weight;
+            int val = items[i - 1].utility;
+
+            for (int w = 0; w &lt;= capacity; w++) {
+                if (wt &lt;= w) {
+                    dp[i][w] = Math.max(dp[i - 1][w], dp[i - 1][w - wt] + val);
+                } else {
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+
+        // 2. Backtracking to identify selected items
+        List&lt;ReliefItem&gt; selected = new ArrayList&lt;&gt;();
+        int w = capacity;
+        for (int i = n; i &gt; 0 && dp[i][w] &gt; 0; i--) {
+            if (dp[i][w] != dp[i - 1][w]) {
+                selected.add(items[i - 1]);
+                w -= items[i - 1].weight;
+            }
+        }
+        Collections.reverse(selected);
+
+        // Display results
+        int totalWeight = capacity - w;
+        int totalUtility = dp[n][capacity];
+
+        System.out.println("\n===== DISASTER RELIEF RESOURCE ALLOCATION (0/1 KNAPSACK DP) =====");
+        System.out.println("Maximum Truck Payload Capacity : " + capacity + " kg\n");
+        System.out.printf("%-4s %-34s %-12s %-10s %-10s\n", "ID", "Relief Item", "Category", "Weight", "Utility");
+        System.out.println("--------------------------------------------------------------------------");
+        for (ReliefItem item : selected) {
+            System.out.printf("#%-3d %-34s %-12s %2d kg     %-10d\n",
+                    item.id, item.name, item.category, item.weight, item.utility);
+        }
+        System.out.println("--------------------------------------------------------------------------");
+        System.out.println("Payload Used          : " + totalWeight + " kg");
+        System.out.println("Remaining Capacity    : " + (capacity - totalWeight) + " kg");
+        System.out.printf("Capacity Utilization  : %.1f%%\n", (double) totalWeight / capacity * 100.0);
+        System.out.println("Total Utility Value   : " + totalUtility);
+    }</code></pre>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 5: 7. JAVA PROGRAM (PART 2: RUNNER), 8. OUTPUT, 9. DETAILS -->
+    <!-- ================================================================= -->
+    <div class="page">
+      <h2>7. Java Program (Part 2: Main Execution Runner)</h2>
+      <p>
+        The main method initializes the earthquake relief inventory with 10 essential supplies and executes the DP solver:
+      </p>
+      <div class="code-window-light">
+        <div class="code-header-light">
+          <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+          <span class="code-title-light">DisasterReliefKnapsack.java - Part 2: Main Runner</span>
+        </div>
+        <pre><code class="language-java">    public static void main(String[] args) {
+        int capacity = 100; // Truck capacity in kg
+        ReliefItem[] items = {
+            new ReliefItem(1, "Trauma & Surgical First Aid Kits", "Medical", 12, 50, false),
+            new ReliefItem(2, "Blood Plasma & Cold Vaccines", "Medical", 15, 70, true),
+            new ReliefItem(3, "Field Water Purification Units", "Sanitation", 25, 80, false),
+            new ReliefItem(4, "Ready-to-Eat Emergency Rations", "Nutrition", 20, 55, false),
+            new ReliefItem(5, "Infant Formula & Pediatric Milk", "Nutrition", 10, 45, true),
+            new ReliefItem(6, "Weatherproof Shelter Tents", "Shelter", 30, 60, false),
+            new ReliefItem(7, "Satellite Comms & GPS Transceiver", "Comms", 8, 40, false),
+            new ReliefItem(8, "Portable Generator & Fuel Canister", "Power", 35, 75, false),
+            new ReliefItem(9, "Thermal Emergency Blankets Pack", "Shelter", 18, 35, false),
+            new ReliefItem(10, "Hydraulic Extraction Rescue Cutter", "Rescue", 28, 65, false)
+        };
+
+        knapsack01DP(items, capacity);
+    }
+}</code></pre>
+      </div>
+
+      <h2>8. OUTPUT</h2>
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+          <span class="terminal-title">Console Output - DisasterReliefKnapsack</span>
+        </div>
+        <div class="terminal-body"><span class="term-cyan">===== DISASTER RELIEF RESOURCE ALLOCATION (0/1 KNAPSACK DP) =====</span>
+Maximum Truck Payload Capacity : 100 kg
+
+ID   Relief Item                        Category     Weight     Utility   
+--------------------------------------------------------------------------
+#1   Trauma & Surgical First Aid Kits   Medical      12 kg     50        
+#2   Blood Plasma & Cold Vaccines       Medical      15 kg     70        
+#3   Field Water Purification Units     Sanitation   25 kg     80        
+#5   Infant Formula & Pediatric Milk    Nutrition    10 kg     45        
+#7   Satellite Comms & GPS Transceiver  Comms         8 kg     40        
+#10  Hydraulic Extraction Rescue Cutter Rescue       28 kg     65        
+--------------------------------------------------------------------------
+Payload Used          : <span class="term-white">98 kg</span>
+Remaining Capacity    : <span class="term-warn">2 kg</span>
+Capacity Utilization  : <span class="term-highlight">98.0%</span>
+Total Utility Value   : <span class="term-highlight">350</span></div>
+      </div>
+
+      <h2>9. Implementation Details</h2>
+      <p>
+        The 0/1 Knapsack Algorithm is implemented using Dynamic Programming via a bottom-up 2D matrix approach. Each disaster relief item is modeled with its unique ID, name, category, weight, and utility value. A 2D array <code>dp[N+1][capacity+1]</code> is allocated where <code>dp[i][w]</code> records the maximum utility achievable considering the first \(i\) items with a weight limit \(w\).
+      </p>
+      <p>
+        The algorithm iterates through all items and weights: if an item's weight exceeds the current capacity \(w\), it inherits the value from the row above (<code>dp[i-1][w]</code>); otherwise, it takes the maximum between excluding the item and including it. After filling the matrix, a backtracking loop traces from <code>dp[N][capacity]</code> back to identify exactly which relief supplies were selected.
+      </p>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 6: 10. TIME, 11. SPACE, 12. COMPARISON TABLE -->
+    <!-- ================================================================= -->
+    <div class="page">
+      <h2>10. Time Complexity Analysis</h2>
+      <p>
+        The computational time of the 0/1 Knapsack Dynamic Programming algorithm is broken down across three primary sequential phases:
+      </p>
+      <ul>
+        <li><strong>Table Initialization:</strong> Allocating the \((N+1) \times (W+1)\) table requires initializing \(W+1\) entries in row 0 to 0: \(\mathcal{O}(W)\).</li>
+        <li><strong>Nested Table Filling:</strong> The outer loop runs \(N\) times (for each item). The inner loop runs \(W+1\) times (for capacities \(0\) to \(W\)). Inside the loop, each state transition evaluates a constant number of comparisons and additions: \(\mathcal{O}(N \times W)\).</li>
+        <li><strong>Backtracking Recovery:</strong> Tracing backwards through \(N\) rows to extract the selected items list takes: \(\mathcal{O}(N)\).</li>
+        <li><strong>Overall Time Complexity:</strong> \(\mathbf{\Theta(N \cdot W)}\) (Pseudo-polynomial time).</li>
+      </ul>
+
+      <h2>11. Space Complexity Analysis</h2>
+      <p>
+        The memory utilization is characterized by the storage needed for subproblem state memoization:
+      </p>
+      <ul>
+        <li><strong>DP Matrix Table:</strong> The 2D array requires \((N+1) \times (W+1)\) integer memory cells: \(\mathbf{\Theta(N \cdot W)}\).</li>
+        <li><strong>Space-Optimized Alternative:</strong> If only the maximum value is required without backtracking, a single 1D array traversed in reverse from \(W\) down to \(w_i\) uses: \(\mathbf{\Theta(W)}\) auxiliary space.</li>
+        <li><strong>Input Storage:</strong> Storing the \(N\) relief items in memory requires: \(\mathcal{O}(N)\).</li>
+        <li><strong>Overall Auxiliary Space Complexity:</strong> \(\mathbf{\Theta(N \cdot W)}\) for 2D DP (or \(\Theta(W)\) for 1D DP).</li>
+      </ul>
+
+      <h2>12. Comparison of Different Implementations</h2>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Approach</th>
+            <th>Strategy / Paradigm</th>
+            <th>Time Complexity</th>
+            <th>Space Complexity</th>
+            <th>Optimality Guarantee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Brute Force Recursion</strong></td>
+            <td>Exhaustive subset search (\(2^N\))</td>
+            <td class="center">\(\mathcal{O}(2^N)\)</td>
+            <td class="center">\(\mathcal{O}(N)\) stack</td>
+            <td class="center">Optimal (Impractical for \(N > 30\))</td>
+          </tr>
+          <tr>
+            <td><strong>Greedy Heuristic</strong></td>
+            <td>Sort descending by ratio (\(v_i/w_i\))</td>
+            <td class="center">\(\mathcal{O}(N \log N)\)</td>
+            <td class="center">\(\mathcal{O}(1)\)</td>
+            <td class="center"><strong>Suboptimal</strong> (Fails for 0/1)</td>
+          </tr>
+          <tr>
+            <td><strong>Dynamic Programming (2D)</strong></td>
+            <td>Bottom-up matrix tabulation</td>
+            <td class="center">\(\Theta(N \cdot W)\)</td>
+            <td class="center">\(\Theta(N \cdot W)\)</td>
+            <td class="center"><strong>Guaranteed Optimal</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Space-Optimized DP (1D)</strong></td>
+            <td>Reverse single array sweep</td>
+            <td class="center">\(\Theta(N \cdot W)\)</td>
+            <td class="center">\(\Theta(W)\)</td>
+            <td class="center"><strong>Guaranteed Optimal</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Branch and Bound</strong></td>
+            <td>State-space tree with pruning</td>
+            <td class="center">\(\mathcal{O}(2^N)\) worst</td>
+            <td class="center">\(\mathcal{O}(2^N)\)</td>
+            <td class="center">Optimal (Good with tight bounds)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 7: 13. ADVANTAGES, 14. LIMITATIONS, 15. APPS, 16. RES, 17. CONC -->
+    <!-- ================================================================= -->
+    <div class="page">
+      <h2>13. Advantages</h2>
+      <ul>
+        <li><strong>Guaranteed Mathematical Optimality:</strong> Consistently identifies the global maximum utility, unlike heuristics.</li>
+        <li><strong>Handles Discrete Indivisible Assets:</strong> Eliminates fractional splits impossible for real-world supplies.</li>
+        <li><strong>Complete Item Identification:</strong> Enables fast \(\mathcal{O}(N)\) backtracking to recover exact manifests.</li>
+        <li><strong>Avoids Redundant Work:</strong> Solves each subproblem once, preventing exponential recursion explosions.</li>
+        <li><strong>Adaptable to Constraints:</strong> Accommodates priority weighting, perishability, and multi-vehicle dispatch.</li>
+      </ul>
+
+      <h2>14. Limitations</h2>
+      <ul>
+        <li><strong>Pseudo-Polynomial Complexity:</strong> Time complexity depends on capacity \(W\); inefficient if \(W\) is astronomical.</li>
+        <li><strong>Requires Integer Weights:</strong> Fractional or floating-point weights require scaling or approximation.</li>
+        <li><strong>Higher Memory Footprint:</strong> Requires \(\Theta(NW)\) memory for the 2D table during full backtracking.</li>
+        <li><strong>Indivisibility Slack:</strong> May leave small unutilized payload slack when remaining items exceed capacity.</li>
+      </ul>
+
+      <h2>15. Applications</h2>
+      <ul>
+        <li><strong>Disaster Relief Logistics:</strong> Loading emergency medical, nutritional, and rescue gear onto relief convoys.</li>
+        <li><strong>Military Cargo Deployment:</strong> Strategic transport of non-divisible mission defense equipment.</li>
+        <li><strong>Space Mission Planning:</strong> Packing science experiments, rovers, and rovers into planetary spacecraft.</li>
+        <li><strong>Data Center Job Scheduling:</strong> Assigning memory-intensive virtual machines to physical server clusters.</li>
+        <li><strong>Financial Portfolio Optimization:</strong> Selecting non-fractional venture capital investment projects.</li>
+      </ul>
+
+      <h2>16. Result</h2>
+      <p>
+        The 0/1 Knapsack Algorithm using Dynamic Programming successfully optimized the loading of the emergency disaster relief transport truck. Out of \(N = 10\) available relief assets, the algorithm selected items #1, #2, #3, #5, #7, and #10, achieving a <strong>maximum humanitarian utility value of 350</strong> while utilizing <strong>98 kg of the 100 kg payload capacity (98.0% efficiency)</strong>. The Greedy heuristic failed by achieving only 340 utility (-10 point deficit), proving the necessity and superiority of the Dynamic Programming approach.
+      </p>
+
+      <h2>17. Conclusion</h2>
+      <p>
+        The 0/1 Knapsack Algorithm successfully resolved the Disaster Relief Resource Allocation problem using a Dynamic Programming tabular strategy. By decomposing the combinatorial challenge into overlapping subproblems and evaluating the optimal choice at each capacity state, the algorithm guaranteed the maximum life-saving utility without violating strict vehicle weight limits. This experiment demonstrated that while Greedy heuristics are suitable for fractional resources, Dynamic Programming is essential for discrete, indivisible assets in mission-critical logistics and resource management.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Prism JS core and Java components -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+</body>
+</html>

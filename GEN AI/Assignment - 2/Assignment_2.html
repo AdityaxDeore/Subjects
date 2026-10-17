@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preprocessing Datasets - GEN AI Assignment 2</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: Calibri, "Segoe UI", Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: #000000;
+            background: #e5e7eb;
+            padding: 20px;
+        }
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+        }
+        .page {
+            min-height: 11in;
+            width: 8.5in;
+            padding: 0.8in;
+            background: #ffffff;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .page:focus-within {
+            outline: 2px dashed #666;
+            outline-offset: 4px;
+        }
+        @media print {
+            body { background: #ffffff; padding: 0; color: #000000; }
+            .container { max-width: 100%; margin: 0; box-shadow: none; }
+            .page { width: 100%; min-height: auto; margin: 0; padding: 0.2in; box-shadow: none; border: none; border-radius: 0; page-break-after: always; }
+            * { color: #000000 !important; }
+            pre, .inline-code { border: 1px solid #000000 !important; border-left: 4px solid #000000 !important; background: transparent !important; }
+            h2, h3, h4 { border-bottom-color: #000000 !important; }
+        }
+        /* Cover Table CSS */
+        .cover-table {
+            width: 100%; border-collapse: collapse; margin-bottom: 20px; font-family: "Times New Roman", Times, serif;
+        }
+        .cover-table td { border: 1px solid #000; padding: 8px 10px; }
+        .cover-table .college-info { text-align: center; font-weight: bold; font-size: 16pt; line-height: 1.4; color: #000; }
+        .cover-table .row-centered { text-align: center; font-weight: bold; font-size: 13pt; color: #000; }
+        .cover-table .row-left { text-align: left; font-weight: bold; font-size: 13pt; color: #000; }
+        .logo-container { text-align: center; width: 18%; padding: 5px !important; }
+        .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto; }
+        /* Typography */
+        h2 { font-family: "Times New Roman", Times, serif; font-weight: bold; font-size: 18pt; color: #1e3a8a; margin-top: 32px; margin-bottom: 12px; border-bottom: 1.5px solid #bfdbfe; padding-bottom: 6px; }
+        h3 { font-family: "Times New Roman", Times, serif; font-weight: bold; font-size: 15pt; color: #000; margin-top: 28px; margin-bottom: 8px; }
+        h4 { font-family: Calibri, sans-serif; font-weight: bold; font-size: 13pt; color: #000; margin-top: 18px; margin-bottom: 6px; }
+        p { font-size: 12pt; text-align: left; margin-bottom: 12px; color: #000000; }
+        ul, ol { margin-left: 20px; font-size: 12pt; margin-bottom: 12px; color: #000000; }
+        li { margin-bottom: 6px; }
+        /* Modern Code blocks */
+        pre { 
+            background: #f8fafc; 
+            color: #000000; 
+            padding: 14px 16px; 
+            border-radius: 8px; 
+            overflow-x: auto; 
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; 
+            font-size: 9.5pt; 
+            line-height: 1.45; 
+            margin-bottom: 16px; 
+            border: 1px solid #cbd5e1; 
+            border-left: 4px solid #3b82f6; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+        code { 
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; 
+        }
+        .inline-code { 
+            background: #f1f5f9; 
+            color: #b91c1c; 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; 
+            font-size: 10.5pt; 
+            font-weight: 500; 
+            border: 1px solid #cbd5e1; 
+        }
+        /* Light theme syntax highlighting */
+        .comment { color: #475569; font-style: italic; }
+        .keyword { color: #0369a1; font-weight: 600; }
+        .function { color: #b45309; font-weight: 500; }
+        .string { color: #15803d; }
+        .number { color: #c2410c; }
+        .output { color: #000000; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container" contenteditable="true">
+        
+        <!-- PAGE 1: Cover Page & Objectives -->
+        <div class="page">
+            <table class="cover-table">
+                <tr>
+                    <td class="logo-container"><img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false"></td>
+                    <td class="college-info">Pimpri Chinchwad Education Trust's<br>Pimpri Chinchwad College of Engineering</td>
+                </tr>
+                <tr><td colspan="2" class="row-centered">Assignment No. 2 : Preprocess and clean datasets for Generative AI applications</td></tr>
+                <tr><td colspan="2" class="row-left">Course:- Generative AI (GEN AI)</td></tr>
+                <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+                <tr><td colspan="2" class="row-left">PRN:- 124B1F116</td></tr>
+                <tr><td colspan="2" class="row-left">Batch:- B3</td></tr>
+            </table>
+
+            <div style="margin-top: 40px;">
+                <h3 style="color: #1e3a8a; font-size: 16pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 4px;">TITLE:</h3>
+                <p>Preprocess and clean datasets for Generative AI applications using Python libraries such as Pandas and NumPy. Handle missing data, normalize features, and encode categorical variables.</p>
+
+                <h3 style="color: #1e3a8a; font-size: 16pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 4px; margin-top: 30px;">OBJECTIVES:</h3>
+                <p>To learn Python and TensorFlow skills for Generative AI.<br>
+                This assignment focuses on preparing real-world data for downstream tasks such as Generative AI by ensuring the dataset is clean, normalized, and machine-learning-ready.</p>
+                
+                <h3 style="color: #1e3a8a; font-size: 16pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 4px; margin-top: 30px;">OUTCOME:</h3>
+                <p><strong>CO1:</strong> Implement Python and TensorFlow basics, including data handling and preprocessing techniques.</p>
+                
+                <h3 style="color: #1e3a8a; font-size: 16pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 4px; margin-top: 30px;">THEORY:</h3>
+                <p>In the world of Generative AI, models rely heavily on high-quality and well-structured data. Before feeding data into any generative or predictive model, it must undergo a thorough preprocessing phase. This assignment is designed to help you master essential data preparation steps using Python libraries.</p>
+                <p>You will be provided with a real-world dataset (Churn_Modelling.csv) that includes a variety of numerical, categorical, and target features. Your task is to apply various preprocessing techniques using Pandas and NumPy to make the data suitable for machine learning workflows and deep learning models.</p>
+            </div>
+        </div>
+
+        <!-- PAGE 2: Tasks to be Performed -->
+        <div class="page">
+            <h3 style="color: #1e3a8a; font-size: 16pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 4px;">Tasks to be Performed</h3>
+            
+            <h4>Part A: Load and Understand the Data</h4>
+            <ol>
+                <li>Load the dataset using <span class="inline-code">pandas.read_csv()</span></li>
+                <li>View the first few rows using <span class="inline-code">.head()</span></li>
+                <li>Display column names, data types, and dataset shape</li>
+                <li>Identify missing data using <span class="inline-code">.isnull().sum()</span></li>
+            </ol>
+
+            <h4>Part B: Handle Missing Data</h4>
+            <ol>
+                <li>Replace missing numerical values with the mean of the column (if any)</li>
+                <li>Replace missing categorical values with the mode</li>
+                <li>Drop columns with excessive missing values (if justified)</li>
+            </ol>
+
+            <h4>Part C: Normalize Numerical Features</h4>
+            <ol>
+                <li>Select important numerical columns such as: CreditScore, Age, Balance, EstimatedSalary</li>
+                <li>Apply Min-Max Normalization or Z-score Standardization using NumPy:
+                    <ul>
+                        <li>Min-Max: <span class="inline-code">X_scaled = (X - X_min) / (X_max - X_min)</span></li>
+                        <li>Z-score: <span class="inline-code">X_scaled = (X - mean) / std</span></li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <h4>Part D: Encode Categorical Variables</h4>
+            <ol>
+                <li>Apply Label Encoding or One-Hot Encoding to: Gender, Geography</li>
+                <li>Use <span class="inline-code">pd.get_dummies()</span> for one-hot encoding with <span class="inline-code">drop_first=True</span> to avoid multicollinearity</li>
+            </ol>
+
+            <h4>Part E: Final Check</h4>
+            <ol>
+                <li>Combine all cleaned columns into a new DataFrame</li>
+                <li>Ensure no missing values remain</li>
+                <li>Confirm that all categorical columns are now numeric</li>
+                <li>Save the final preprocessed data as a new CSV</li>
+            </ol>
+        </div>
+
+        <!-- PAGE 2: Python Code Implementation (Part 1) -->
+        <div class="page">
+            <h2>Python Code Implementation</h2>
+<pre><code><span class="comment"># ============================================================
+# ASSIGNMENT NO. 2
+# PREPROCESS AND CLEAN DATASET FOR GENERATIVE AI APPLICATIONS
+# ============================================================
+
+# Import required libraries</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="keyword">print</span>(<span class="string">"Libraries imported successfully."</span>)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Libraries imported successfully.</code></pre>
+
+<pre><code><span class="comment"># ============================================================
+# PART A: LOAD AND UNDERSTAND THE DATA
+# ============================================================
+
+# Load the dataset</span>
+df = pd.read_excel(<span class="string">"Employee_Preprocessing_Practice (1).xlsx"</span>)
+
+<span class="keyword">print</span>(<span class="string">"Dataset loaded successfully!"</span>)
+<span class="keyword">print</span>()
+
+<span class="comment"># Basic information</span>
+<span class="keyword">print</span>(<span class="string">"Number of Rows   :"</span>, df.shape[<span class="number">0</span>])
+<span class="keyword">print</span>(<span class="string">"Number of Columns:"</span>, df.shape[<span class="number">1</span>])
+
+<span class="keyword">print</span>(<span class="string">"\nFirst 5 Rows:"</span>)
+display(df.head())
+
+<span class="comment"># Display column names and data types</span>
+<span class="keyword">print</span>(<span class="string">"Column Names:"</span>)
+<span class="keyword">print</span>(df.columns.tolist())
+
+<span class="keyword">print</span>(<span class="string">"\nData Types:"</span>)
+<span class="keyword">print</span>(df.dtypes)
+
+<span class="keyword">print</span>(<span class="string">"\nDataset Shape:"</span>)
+<span class="keyword">print</span>(df.shape)
+
+<span class="comment"># Display detailed information about the dataset</span>
+<span class="keyword">print</span>(<span class="string">"Dataset Information:"</span>)
+df.info()
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Dataset loaded successfully!
+
+Number of Rows   : 350
+Number of Columns: 8
+
+First 5 Rows:
+           name   age    salary department gender  experience    city  performance_score
+0   Priya Deore  46.0  110319.0         IT   Male          17    Pune               73.0
+1   Varun Patil  53.0   53140.0         IT   male          27  Nagpur               54.0
+2  Rohan Sharma  56.0   80642.0      sales   Male          14  Nashik               53.0
+3  Varun Jadhav  24.0   53977.0         IT   Male           2  Nagpur               59.0
+4  Kabir Sharma  57.0   65433.0      sales   Male           6  Nashik               86.0
+Column Names:
+['name', 'age', 'salary', 'department', 'gender', 'experience', 'city', 'performance_score']
+
+Data Types:
+name                  object
+age                  float64
+salary               float64
+department            object
+gender                object
+experience             int64
+city                  object
+performance_score    float64
+dtype: object
+
+Dataset Shape:
+(350, 8)
+Dataset Information:
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 350 entries, 0 to 349
+Data columns (total 8 columns):
+ #   Column             Non-Null Count  Dtype  
+---  ------             --------------  -----  
+ 0   name               350 non-null    object 
+ 1   age                335 non-null    float64
+ 2   salary             334 non-null    float64
+ 3   department         337 non-null    object 
+ 4   gender             350 non-null    object 
+ 5   experience         350 non-null    int64  
+ 6   city               340 non-null    object 
+ 7   performance_score  341 non-null    float64
+dtypes: float64(3), int64(1), object(4)
+memory usage: 22.0+ KB</code></pre>
+        </div>
+
+        <!-- PAGE 3: Python Code Implementation (Part 2) -->
+        <div class="page">
+<pre><code><span class="comment"># ============================================================
+# PART A: CHECK MISSING VALUES
+# ============================================================
+
+# Find missing values</span>
+missing = df.isnull().sum()
+
+<span class="comment"># Calculate percentage of missing values</span>
+missing_percentage = (missing / <span class="keyword">len</span>(df)) * <span class="number">100</span>
+
+missing_table = pd.DataFrame({
+    <span class="string">"Missing Values"</span>: missing,
+    <span class="string">"Percentage"</span>: missing_percentage.round(<span class="number">2</span>)
+})
+
+<span class="keyword">print</span>(<span class="string">"Missing Value Summary:"</span>)
+display(missing_table)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Missing Value Summary:
+                   Missing Values  Percentage
+name                            0        0.00
+age                            15        4.29
+salary                         16        4.57
+department                     13        3.71
+gender                          0        0.00
+experience                      0        0.00
+city                           10        2.86
+performance_score               9        2.57</code></pre>
+
+<pre><code><span class="comment"># ============================================================
+# PART B: HANDLE MISSING DATA
+# ============================================================
+
+# Identify numerical columns</span>
+numerical_columns = df.select_dtypes(
+    include=np.number
+).columns
+
+<span class="comment"># Identify categorical columns</span>
+categorical_columns = df.select_dtypes(
+    include=<span class="string">"object"</span>
+).columns
+
+<span class="keyword">print</span>(<span class="string">"Numerical Columns:"</span>)
+<span class="keyword">print</span>(numerical_columns.tolist())
+
+<span class="keyword">print</span>(<span class="string">"\nCategorical Columns:"</span>)
+<span class="keyword">print</span>(categorical_columns.tolist())
+
+<span class="comment"># Fill missing numerical values with the mean</span>
+<span class="keyword">for</span> column <span class="keyword">in</span> numerical_columns:
+    <span class="keyword">if</span> df[column].isnull().sum() > <span class="number">0</span>:
+        df[column] = df[column].fillna(
+            df[column].mean()
+        )
+
+<span class="keyword">print</span>(<span class="string">"Numerical missing values filled with mean."</span>)
+
+<span class="comment"># Fill missing categorical values with the mode</span>
+<span class="keyword">for</span> column <span class="keyword">in</span> categorical_columns:
+    <span class="keyword">if</span> df[column].isnull().sum() > <span class="number">0</span>:
+        df[column] = df[column].fillna(
+            df[column].mode()[<span class="number">0</span>]
+        )
+
+<span class="keyword">print</span>(<span class="string">"Categorical missing values filled with mode."</span>)
+
+<span class="comment"># Check missing values after treatment</span>
+<span class="keyword">print</span>(<span class="string">"Missing Values After Preprocessing:"</span>)
+
+remaining_missing = df.isnull().sum()
+
+display(
+    remaining_missing.to_frame(<span class="string">"Missing Values"</span>)
+)
+
+<span class="keyword">print</span>(
+    <span class="string">"Total Missing Values:"</span>,
+    remaining_missing.sum()
+)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Numerical Columns:
+['age', 'salary', 'experience', 'performance_score']
+
+Categorical Columns:
+['name', 'department', 'gender', 'city']
+Numerical missing values filled with mean.
+Categorical missing values filled with mode.
+Missing Values After Preprocessing:
+                   Missing Values
+name                            0
+age                             0
+salary                          0
+department                      0
+gender                          0
+experience                      0
+city                            0
+performance_score               0
+Total Missing Values: 0</code></pre>
+        </div>
+
+        <!-- PAGE 4: Python Code Implementation (Part 3) -->
+        <div class="page">
+<pre><code><span class="comment"># ============================================================
+# PART B: REMOVE DUPLICATES
+# ============================================================
+
+# Count duplicate records</span>
+duplicates = df.duplicated().sum()
+
+<span class="keyword">print</span>(<span class="string">"Duplicate Records Found:"</span>, duplicates)
+
+<span class="comment"># Remove duplicate records</span>
+df = df.drop_duplicates()
+
+<span class="keyword">print</span>(<span class="string">"Duplicate records removed successfully."</span>)
+<span class="keyword">print</span>(<span class="string">"New Dataset Shape:"</span>, df.shape)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Duplicate Records Found: 10
+Duplicate records removed successfully.
+New Dataset Shape: (340, 8)</code></pre>
+
+<pre><code><span class="comment"># ============================================================
+# PART C: NORMALIZE NUMERICAL FEATURES
+# ============================================================
+
+# Select important numerical features</span>
+selected_features = [
+    <span class="string">"age"</span>,
+    <span class="string">"salary"</span>,
+    <span class="string">"experience"</span>,
+    <span class="string">"performance_score"</span>
+]
+
+<span class="keyword">print</span>(<span class="string">"Features Selected for Normalization:"</span>)
+<span class="keyword">print</span>(selected_features)
+
+<span class="comment"># Min-Max Normalization
+#
+# Formula:
+# X_scaled = (X - X_min) / (X_max - X_min)</span>
+
+<span class="keyword">for</span> column <span class="keyword">in</span> selected_features:
+
+    minimum = np.min(df[column])
+    maximum = np.max(df[column])
+
+    df[column + <span class="string">"_normalized"</span>] = (
+        (df[column] - minimum) /
+        (maximum - minimum)
+    )
+
+<span class="keyword">print</span>(<span class="string">"Min-Max Normalization completed."</span>)
+
+<span class="comment"># Display original and normalized values together</span>
+comparison = df[
+    [
+        <span class="string">"age"</span>,
+        <span class="string">"age_normalized"</span>,
+        <span class="string">"salary"</span>,
+        <span class="string">"salary_normalized"</span>,
+        <span class="string">"experience"</span>,
+        <span class="string">"experience_normalized"</span>,
+        <span class="string">"performance_score"</span>,
+        <span class="string">"performance_score_normalized"</span>
+    ]
+].head()
+
+<span class="keyword">print</span>(<span class="string">"Original vs Normalized Values:"</span>)
+display(comparison)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Features Selected for Normalization:
+['age', 'salary', 'experience', 'performance_score']
+Min-Max Normalization completed.
+Original vs Normalized Values:
+    age  age_normalized    salary  salary_normalized  experience  experience_normalized  performance_score  performance_score_normalized
+0  46.0           0.408  110319.0           0.933610          17               0.515152               73.0                       0.51875
+1  53.0           0.464   53140.0           0.489932          27               0.818182               54.0                       0.40000
+2  56.0           0.488   80642.0           0.703333          14               0.424242               53.0                       0.39375
+3  24.0           0.232   53977.0           0.496427           2               0.060606               59.0                       0.43125
+4  57.0           0.496   65433.0           0.585319           6               0.181818               86.0                       0.60000</code></pre>
+
+<pre><code><span class="comment"># Verify that normalized values are between 0 and 1</span>
+normalized_columns = [
+    <span class="string">"age_normalized"</span>,
+    <span class="string">"salary_normalized"</span>,
+    <span class="string">"experience_normalized"</span>,
+    <span class="string">"performance_score_normalized"</span>
+]
+
+normalization_check = pd.DataFrame({
+    <span class="string">"Minimum"</span>: df[normalized_columns].min(),
+    <span class="string">"Maximum"</span>: df[normalized_columns].max()
+})
+
+<span class="keyword">print</span>(<span class="string">"Normalization Verification:"</span>)
+display(normalization_check)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Normalization Verification:
+                              Minimum  Maximum
+age_normalized                    0.0      1.0
+salary_normalized                 0.0      1.0
+experience_normalized             0.0      1.0
+performance_score_normalized      0.0      1.0</code></pre>
+        </div>
+
+        <!-- PAGE 5: Python Code Implementation (Part 4) -->
+        <div class="page">
+<pre><code><span class="comment"># ============================================================
+# PART D: ENCODE CATEGORICAL VARIABLES
+# ============================================================
+
+# Categorical features that need encoding</span>
+categorical_features = [
+    <span class="string">"gender"</span>,
+    <span class="string">"department"</span>,
+    <span class="string">"city"</span>
+]
+
+<span class="keyword">print</span>(<span class="string">"Categorical Features:"</span>)
+<span class="keyword">print</span>(categorical_features)
+
+<span class="comment"># Apply One-Hot Encoding
+# drop_first=True avoids redundant dummy variables</span>
+df = pd.get_dummies(
+    df,
+    columns=categorical_features,
+    drop_first=<span class="keyword">True</span>
+)
+
+<span class="keyword">print</span>(<span class="string">"One-Hot Encoding completed successfully."</span>)
+
+<span class="comment"># Convert True/False values into 1/0</span>
+boolean_columns = df.select_dtypes(
+    include=<span class="string">"bool"</span>
+).columns
+
+<span class="keyword">for</span> column <span class="keyword">in</span> boolean_columns:
+    df[column] = df[column].astype(<span class="keyword">int</span>)
+
+<span class="keyword">print</span>(<span class="string">"Encoded values converted to 0 and 1."</span>)
+
+<span class="comment"># Name is an identifier and is not required for ML processing</span>
+df = df.drop(<span class="string">"name"</span>, axis=<span class="number">1</span>)
+
+<span class="keyword">print</span>(<span class="string">"Name column removed."</span>)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Categorical Features:
+['gender', 'department', 'city']
+One-Hot Encoding completed successfully.
+Encoded values converted to 0 and 1.
+Name column removed.</code></pre>
+
+<pre><code><span class="comment"># ============================================================
+# PART E: FINAL CHECK
+# ============================================================</span>
+
+<span class="keyword">print</span>(<span class="string">"="</span> * <span class="number">55</span>)
+<span class="keyword">print</span>(<span class="string">"FINAL DATASET CHECK"</span>)
+<span class="keyword">print</span>(<span class="string">"="</span> * <span class="number">55</span>)
+
+<span class="comment"># Dataset shape</span>
+<span class="keyword">print</span>(<span class="string">"\nFinal Dataset Shape:"</span>)
+<span class="keyword">print</span>(df.shape)
+
+<span class="comment"># Missing values</span>
+<span class="keyword">print</span>(<span class="string">"\nTotal Missing Values:"</span>)
+<span class="keyword">print</span>(df.isnull().sum().sum())
+
+<span class="comment"># Duplicate rows</span>
+<span class="keyword">print</span>(<span class="string">"\nTotal Duplicate Rows:"</span>)
+<span class="keyword">print</span>(df.duplicated().sum())
+
+<span class="comment"># Remaining categorical columns</span>
+categorical_remaining = df.select_dtypes(
+    include=<span class="string">"object"</span>
+).columns.tolist()
+
+<span class="keyword">print</span>(<span class="string">"\nRemaining Categorical Columns:"</span>)
+<span class="keyword">print</span>(categorical_remaining)
+
+<span class="comment"># Check whether the dataset is completely numeric</span>
+<span class="keyword">if</span> <span class="keyword">len</span>(categorical_remaining) == <span class="number">0</span>:
+    <span class="keyword">print</span>(<span class="string">"\nAll columns are numeric."</span>)
+<span class="keyword">else</span>:
+    <span class="keyword">print</span>(<span class="string">"\nCategorical columns are still present."</span>)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">=======================================================
+FINAL DATASET CHECK
+=======================================================
+
+Final Dataset Shape:
+(340, 30)
+
+Total Missing Values:
+0
+
+Total Duplicate Rows:
+0
+
+Remaining Categorical Columns:
+[]
+
+All columns are numeric.</code></pre>
+        </div>
+
+        <!-- PAGE 6: Python Code Implementation (Part 5) -->
+        <div class="page">
+<pre><code><span class="comment"># ============================================================
+# FINAL DATASET INFORMATION
+# ============================================================</span>
+
+<span class="keyword">print</span>(<span class="string">"Final Dataset Information:"</span>)
+df.info()
+
+<span class="comment"># Statistical summary of the processed dataset</span>
+<span class="keyword">print</span>(<span class="string">"Statistical Summary:"</span>)
+display(df.describe().T)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Final Dataset Information:
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+Index: 340 entries, 0 to 349
+Data columns (total 30 columns):
+ #   Column                        Non-Null Count  Dtype  
+---  ------                        --------------  -----  
+ 0   age                           340 non-null    float64
+ 1   salary                        340 non-null    float64
+ 2   experience                    340 non-null    int64  
+ 3   performance_score             340 non-null    float64
+ 4   age_normalized                340 non-null    float64
+ 5   salary_normalized             340 non-null    float64
+ 6   experience_normalized         340 non-null    float64
+ 7   performance_score_normalized  340 non-null    float64
+ 8   gender_Female                 340 non-null    int64  
+ 9   gender_MALE                   340 non-null    int64  
+ 10  gender_Male                   340 non-null    int64  
+ 11  gender_female                 340 non-null    int64  
+ 12  gender_male                   340 non-null    int64  
+ 13  department_Finance            340 non-null    int64  
+ 14  department_H.R.               340 non-null    int64  
+ 15  department_HR                 340 non-null    int64  
+ 16  department_IT                 340 non-null    int64  
+ 17  department_IT                 340 non-null    int64  
+ 18  department_Marketing          340 non-null    int64  
+ 19  department_Sales              340 non-null    int64  
+ 20  department_hr                 340 non-null    int64  
+ 21  department_sales              340 non-null    int64  
+ 22  city_Kolhapur                 340 non-null    int64  
+ 23  city_MUMBAI                   340 non-null    int64  
+ 24  city_Mumbai                   340 non-null    int64  
+ 25  city_NAGPUR                   340 non-null    int64  
+ 26  city_Nagpur                   340 non-null    int64  
+ 27  city_Nashik                   340 non-null    int64  
+ 28  city_Pune                     340 non-null    int64  
+ 29  city_kolhapur                 340 non-null    int64  
+dtypes: float64(7), int64(23)
+memory usage: 82.3 KB
+Statistical Summary:
+                              count          mean  ...           75%       max
+age                           340.0     40.064750  ...     49.000000     120.0
+salary                        340.0  70857.532397  ...  92316.000000  118875.0
+experience                    340.0      8.479412  ...     13.000000      33.0
+performance_score             340.0     74.565361  ...     88.000000     150.0
+age_normalized                340.0      0.360518  ...      0.432000       1.0
+salary_normalized             340.0      0.627411  ...      0.793917       1.0
+experience_normalized         340.0      0.256952  ...      0.393939       1.0
+performance_score_normalized  340.0      0.528534  ...      0.612500       1.0
+gender_Female                 340.0      0.470588  ...      1.000000       1.0
+gender_Male                   340.0      0.505882  ...      1.000000       1.0
+department_Finance            340.0      0.250000  ...      0.250000       1.0
+department_HR                 340.0      0.176471  ...      0.000000       1.0
+department_IT                 340.0      0.214706  ...      0.000000       1.0
+department_Marketing          340.0      0.164706  ...      0.000000       1.0
+department_Sales              340.0      0.173529  ...      0.000000       1.0
+city_Kolhapur                 340.0      0.158824  ...      0.000000       1.0
+city_Mumbai                   340.0      0.238235  ...      0.000000       1.0
+city_Nagpur                   340.0      0.173529  ...      0.000000       1.0
+city_Nashik                   340.0      0.202941  ...      0.000000       1.0
+city_Pune                     340.0      0.202941  ...      0.000000       1.0
+
+[30 rows x 8 columns]</code></pre>
+
+<pre><code><span class="comment"># ============================================================
+# FINAL PREPROCESSED DATASET
+# ============================================================</span>
+
+<span class="keyword">print</span>(<span class="string">"First 10 Rows of Final Dataset:"</span>)
+display(df.head(<span class="number">10</span>))
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">First 10 Rows of Final Dataset:
+         age    salary  experience  ...  city_Nashik  city_Pune  city_kolhapur 
+0  46.000000  110319.0          17  ...            0          1               0
+1  53.000000   53140.0          27  ...            0          0               0
+2  56.000000   80642.0          14  ...            1          0               0
+3  24.000000   53977.0           2  ...            0          0               0
+4  57.000000   65433.0           6  ...            1          0               0
+5  40.134328   37770.0          18  ...            0          1               0
+6  55.000000   81045.0          29  ...            0          0               0
+7  36.000000   35728.0          15  ...            0          0               0
+8  25.000000   40475.0           1  ...            0          0               0
+9  47.000000   30138.0          10  ...            0          0               0
+
+[10 rows x 30 columns]</code></pre>
+
+<pre><code><span class="comment"># ============================================================
+# SAVE FINAL DATASET
+# ============================================================</span>
+
+output_file = <span class="string">"processed_employee_data.csv"</span>
+
+df.to_csv(
+    output_file,
+    index=<span class="keyword">False</span>
+)
+
+<span class="keyword">print</span>(<span class="string">"Processed dataset saved successfully!"</span>)
+<span class="keyword">print</span>(<span class="string">"File:"</span>, output_file)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">Processed dataset saved successfully!
+File: processed_employee_data.csv</code></pre>
+
+<pre><code><span class="comment"># ============================================================
+# FINAL RESULT
+# ============================================================</span>
+
+<span class="keyword">print</span>(<span class="string">"="</span> * <span class="number">55</span>)
+<span class="keyword">print</span>(<span class="string">"PREPROCESSING COMPLETED SUCCESSFULLY"</span>)
+<span class="keyword">print</span>(<span class="string">"="</span> * <span class="number">55</span>)
+
+<span class="keyword">print</span>(<span class="string">"Original Dataset : 350 rows × 8 columns"</span>)
+<span class="keyword">print</span>(<span class="string">"Final Dataset    :"</span>, df.shape)
+<span class="keyword">print</span>(<span class="string">"Missing Values   :"</span>, df.isnull().sum().sum())
+<span class="keyword">print</span>(<span class="string">"Duplicate Rows   :"</span>, df.duplicated().sum())
+<span class="keyword">print</span>(
+    <span class="string">"All Numeric      :"</span>,
+    <span class="keyword">len</span>(df.select_dtypes(include=<span class="string">"object"</span>).columns) == <span class="number">0</span>
+)
+
+<span class="keyword">print</span>(<span class="string">"="</span> * <span class="number">55</span>)
+</code></pre>
+            <h4>Output:</h4>
+<pre><code class="output">=======================================================
+PREPROCESSING COMPLETED SUCCESSFULLY
+=======================================================
+Original Dataset : 350 rows × 8 columns
+Final Dataset    : (340, 30)
+Missing Values   : 0
+Duplicate Rows   : 0
+All Numeric      : True
+=======================================================</code></pre>
+        </div>
+    </div>
+</body>
+</html>

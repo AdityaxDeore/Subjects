@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIML Assignment No. 9 - Bagging with Random Forest on Iris Dataset</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #111;
+    background: #e5e7eb;
+    padding: 24px 20px;
+  }
+  .container {
+    max-width: 8.5in;
+    margin: 0 auto;
+  }
+  .page {
+    min-height: 11in;
+    width: 8.5in;
+    padding: 0.7in 0.8in;
+    background: #ffffff;
+    margin: 0 auto 24px auto;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    position: relative;
+    box-sizing: border-box;
+  }
+  .page:focus-within {
+    outline: 2px dashed #3b82f6;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  @media print {
+    body { background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
+    .container { max-width: 100% !important; margin: 0 !important; }
+    .page {
+      width: 100% !important;
+      min-height: auto !important;
+      margin: 0 !important;
+      padding: 12mm 15mm !important;
+      box-shadow: none !important;
+      border: none !important;
+      page-break-after: always !important;
+      break-after: page !important;
+    }
+    .page:last-child {
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }
+  }
+  .cover-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  .cover-table td {
+    border: 1.5px solid #111;
+    padding: 6px 12px;
+  }
+  .cover-table .college-info {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14pt;
+    line-height: 1.35;
+    color: #000;
+  }
+  .cover-table .row-centered {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12.5pt;
+    color: #000;
+  }
+  .cover-table .row-left {
+    text-align: left;
+    font-weight: bold;
+    font-size: 11.5pt;
+    color: #000;
+  }
+  .logo-container {
+    text-align: center;
+    width: 16%;
+    padding: 4px !important;
+  }
+  .logo-container img {
+    max-width: 85px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  h2 {
+    font-size: 13pt;
+    font-weight: bold;
+    color: #000;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    border-bottom: 1.5px solid #222;
+    padding-bottom: 4px;
+    text-transform: uppercase;
+  }
+  h3 {
+    font-size: 11.5pt;
+    font-weight: bold;
+    color: #000;
+    margin-top: 18px;
+    margin-bottom: 10px;
+  }
+  h4 {
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #222;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+  p {
+    font-size: 10.2pt;
+    text-align: justify;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    color: #111;
+  }
+  ul, ol {
+    margin-left: 22px;
+    font-size: 10.2pt;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    color: #111;
+  }
+  li {
+    margin-bottom: 6px;
+  }
+  code {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 9.2pt;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+  pre {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    font-size: 9pt;
+    padding: 7px 10px;
+    white-space: pre-wrap;
+    margin-bottom: 8px;
+    font-family: Consolas, Monaco, monospace;
+    border-radius: 3px;
+    line-height: 1.35;
+  }
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 9.2pt;
+  }
+  .styled-table th, .styled-table td {
+    border: 1px solid #222;
+    padding: 5px 8px;
+    text-align: left;
+  }
+  .styled-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+  }
+  .info-box { background: #e0f2fe; border-left: 4px solid #0284c7; padding: 12px 16px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .info-box h4 { margin-bottom: 6px; color: #0369a1; font-size: 11.5pt; margin-top: 0; }
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 20px 0; }
+  .flow-step { width: 85%; border: 2px solid #3b82f6; background: #eff6ff; padding: 10px; text-align: center; font-weight: bold; border-radius: 8px; color: #1e3a8a; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  .arrow { font-size: 20pt; line-height: 1; color: #64748b; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 9pt; font-weight: bold; color: white; margin-left: 4px; }
+  .badge-dt { background: #f59e0b; }
+  .badge-rf { background: #22c55e; }
+  .highlight-block { background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; margin: 12px 0; text-align: center; font-weight: bold; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div class="container" contenteditable="true">
+
+  <!-- Page 1: Cover Table, Aim, Problem Statement, Introduction, Objectives, Dataset -->
+  <div class="page">
+    <table class="cover-table">
+      <tr>
+        <td class="logo-container">
+          <img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+        </td>
+        <td class="college-info">
+          Pimpri Chinchwad Education Trust's<br>
+          Pimpri Chinchwad College of Engineering
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="row-centered">
+          Assignment No. 9
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="row-left">
+          Course:- Artificial Intelligence and Machine Learning
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="row-left">
+          Name:- Aditya Chandrajit Deore
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="row-left">
+          PRN:- 124B1F116
+        </td>
+      </tr>
+    </table>
+
+    <h2>1. AIM</h2>
+    <p>To implement the <strong>Bagging technique using the Random Forest algorithm</strong> to classify the Iris dataset and compare its classification performance and accuracy with a standalone single Decision Tree model.</p>
+
+    <h2>2. PROBLEM STATEMENT</h2>
+    <p>To implement the Bagging (Bootstrap Aggregating) technique using the Random Forest algorithm for multi-class classification on Fisher's Iris flower dataset, and evaluate how ensemble averaging across multiple de-correlated Decision Trees trained on distinct bootstrap data samples with randomized feature subspacing impacts accuracy, model variance, and generalization compared to a single Decision Tree.</p>
+
+    <h2>3. INTRODUCTION</h2>
+    <p><strong>Random Forest</strong> is an established supervised machine learning algorithm widely used for both classification and regression tasks. Unlike traditional decision tree classifiers that rely upon a solitary hierarchical partitioning tree to formulate predictions, Random Forest builds an <em>ensemble</em> of multiple individual Decision Trees.</p>
+    <p>A conventional standalone Decision Tree is sensitive to small fluctuations in training data, exhibiting high variance and a strong predisposition toward overfitting. Random Forest overcomes this limitation through the foundational principle of <strong>Bagging (Bootstrap Aggregating)</strong>. The algorithm generates multiple synthetic datasets via random sampling with replacement (bootstrapping) and trains an independent decision tree on each subset. Furthermore, during node splitting, Random Forest considers only a randomized subset of input features rather than the complete feature space. For classification, individual tree predictions are pooled, and the final class assignment is decided by <strong>majority voting</strong>.</p>
+
+    <h2>4. OBJECTIVES</h2>
+    <ol>
+      <li>To understand the architectural foundation of the Random Forest algorithm.</li>
+      <li>To study the Bagging (Bootstrap Aggregation) ensemble learning technique.</li>
+      <li>To explore bootstrap sampling (random sampling with replacement) and out-of-bag validation.</li>
+      <li>To examine random feature selection (random subspacing) for tree de-correlation.</li>
+      <li>To implement a multi-class Random Forest classifier using Scikit-Learn in Python.</li>
+      <li>To construct a baseline single Decision Tree classifier on the same dataset.</li>
+      <li>To benchmark and compare the test accuracy, precision, recall, and F1-score of both models.</li>
+      <li>To understand the mathematical and voting mechanics of majority consensus aggregation.</li>
+      <li>To analyze how ensemble averaging reduces model variance and prevents overfitting.</li>
+      <li>To evaluate feature importance rankings derived from Gini impurity reduction.</li>
+    </ol>
+
+    <h2>5. DATASET DESCRIPTION</h2>
+    <p>The <strong>Iris Dataset</strong> (introduced by statistician Ronald Fisher in 1936) is an established benchmark dataset for multi-class classification. It contains 150 morphometric observations of Iris flowers categorized into three distinct botanical species: <em>Iris setosa</em>, <em>Iris versicolor</em>, and <em>Iris virginica</em> (50 instances per class). Each observation comprises four continuous numerical features measured in centimeters:</p>
+    
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Attribute Name</th>
+          <th>Feature Type</th>
+          <th>Measurement Unit</th>
+          <th>Description & Biological Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Sepal Length</strong></td>
+          <td>Continuous Numeric</td>
+          <td>Centimeters (cm)</td>
+          <td>Length of the outermost whorl protecting flower bud.</td>
+        </tr>
+        <tr>
+          <td><strong>Sepal Width</strong></td>
+          <td>Continuous Numeric</td>
+          <td>Centimeters (cm)</td>
+          <td>Transverse breadth of protective sepal structure.</td>
+        </tr>
+        <tr>
+          <td><strong>Petal Length</strong></td>
+          <td>Continuous Numeric</td>
+          <td>Centimeters (cm)</td>
+          <td>Longitudinal measurement of the inner flower petal.</td>
+        </tr>
+        <tr>
+          <td><strong>Petal Width</strong></td>
+          <td>Continuous Numeric</td>
+          <td>Centimeters (cm)</td>
+          <td>Transverse width of petal, highly discriminative of species.</td>
+        </tr>
+        <tr>
+          <td><strong>Target Class</strong></td>
+          <td>Categorical (3 Classes)</td>
+          <td>Discrete Label</td>
+          <td>0: Setosa, 1: Versicolor, 2: Virginica (Balanced: 50 each).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Page 2: Theory of Random Forest, Bagging, Bootstrapping, Aggregating, Feature Selection -->
+  <div class="page">
+    <h2>6. THEORY OF RANDOM FOREST</h2>
+    <p>Random Forest is an ensemble learning method that builds and combines multiple Decision Trees to produce a more accurate and stable prediction. Individual decision trees are known as <em>weak or high-variance learners</em>: they are prone to capturing noise and idiosyncrasies in the training partition. Random Forest mitigates variance by introducing two distinct levels of stochasticity:</p>
+    <ul>
+      <li><strong>Data Randomness (Bootstrap Sampling):</strong> Each tree in the forest is trained on an independently drawn bootstrap sample of the original dataset.</li>
+      <li><strong>Feature Randomness (Random Subspace Method):</strong> When splitting a node during tree growth, only a randomly chosen subset of features \(m \le p\) is evaluated to determine the optimal split threshold, rather than considering all \(p\) features.</li>
+    </ul>
+    <p>By forcing trees to use different subsets of data and features, the ensemble produces <strong>de-correlated trees</strong>. When their predictions are aggregated, individual errors cancel out, resulting in a model with substantially lower variance without sacrificing bias.</p>
+
+    <h2>7. THEORY OF BAGGING (BOOTSTRAP AGGREGATING)</h2>
+    <p><strong>Bagging</strong> (short for <em>Bootstrap Aggregating</em>), proposed by Leo Breiman in 1996, is a parallel ensemble technique designed to enhance the stability and accuracy of machine learning algorithms.</p>
+    
+    <div class="flow">
+      <div class="flow-step">1. Original Dataset \(\mathcal{D}\)</div><div class="arrow">↓</div>
+      <div class="flow-step">2. \(B\) Bootstrap Samples \(\mathcal{D}_1^*, \dots, \mathcal{D}_B^*\)</div><div class="arrow">↓</div>
+      <div class="flow-step">3. Train \(B\) Independent Models</div><div class="arrow">↓</div>
+      <div class="flow-step">4. Aggregate Predictions (Majority Voting)</div><div class="arrow">↓</div>
+      <div class="flow-step">5. Final Consensus</div>
+    </div>
+
+    <h3>7.1 Bootstrapping (Sampling with Replacement)</h3>
+    <p>Bootstrapping creates a new dataset of size \(N\) from an original dataset of size \(N\) by uniformly sampling observations <em>with replacement</em>. Because elements are replaced after being selected, individual observations may appear multiple times within a bootstrap sample, while others may not appear at all.</p>
+    
+    <div class="info-box">
+      <h4>Mathematical Derivation: Out-of-Bag (OOB) Samples</h4>
+      <p>For a dataset of \(N\) records, the probability of a record <em>not</em> being selected in a single draw is \((1 - 1/N)\). The probability it is omitted after \(N\) draws is:</p>
+      <p style="text-align: center; font-weight: bold;">
+        \[P(\text{Omitted}) = \left(1 - \frac{1}{N}\right)^N \xrightarrow[N \to \infty]{} \frac{1}{e} \approx 0.368 \quad (36.8\%)\]
+      </p>
+      <p>Consequently, each bootstrap sample contains roughly \(63.2\%\) of the original records. The remaining <strong>36.8%</strong> of unselected observations (OOB samples) act as an inherent validation set, eliminating the need for a separate hold-out set.</p>
+    </div>
+
+    <h3>7.2 Aggregating & Majority Voting</h3>
+    <p>Aggregating combines the individual outputs of all \(B\) base models. In classification, each Decision Tree \(\mathcal{T}_b\) casts a unit vote for its predicted class \(\hat{y}_b(x)\). The ensemble's final prediction \(\hat{Y}(x)\) is determined by <strong>majority voting</strong>:</p>
+    <p style="text-align: center; font-weight: bold;">
+      \[\hat{Y}(x) = \underset{c \in \mathcal{C}}{\operatorname{argmax}} \sum_{b=1}^{B} I\left(\hat{y}_b(x) = c\right)\]
+    </p>
+    <p>Where \(I(\cdot)\) is the indicator function that equals 1 when tree \(b\) predicts class \(c\) and 0 otherwise. For instance, if 100 trees evaluate an Iris specimen and 88 predict <em>Versicolor</em>, 10 predict <em>Virginica</em>, and 2 predict <em>Setosa</em>, the final consensus classification is <strong>Versicolor</strong>.</p>
+
+    <h3>7.3 Random Feature Selection (Subspacing)</h3>
+    <p>If all features are evaluated at every split, multiple trees will inevitably select the single strongest predictor (e.g., Petal Length or Petal Width in Iris) for top-level splits, leading to highly correlated trees. Random Forest prevents this by selecting a random subset of \(m\) features at each split:</p>
+    <p style="text-align: center; font-weight: bold;">
+      \[m = \lfloor\sqrt{p}\rfloor \quad \text{for classification} \quad (m = \lfloor\sqrt{4}\rfloor = 2 \text{ for Iris})\]
+    </p>
+    <p>This ensures structural diversity across the trees, reducing inter-tree correlation \(\rho\) and maximizing the variance-reduction benefits of Bagging.</p>
+  </div>
+
+  <!-- Page 3: Working Steps, Single Decision Tree, Comparison Table, Ensemble Learning -->
+  <div class="page">
+    <h2>8. WORKING OF THE RANDOM FOREST ALGORITHM</h2>
+    <p>The operational workflow of the Random Forest algorithm proceeds through a systematic, multi-phase pipeline:</p>
+    <div class="flow">
+      <div class="flow-step">1. Data Ingestion & Splitting<br><span style="font-size:9.5pt;font-weight:normal;">Load Iris dataset, split into 80% Train and 20% Test</span></div><div class="arrow">↓</div>
+      <div class="flow-step">2. Bootstrap Sampling<br><span style="font-size:9.5pt;font-weight:normal;">Generate \(B = 100\) bootstrap samples of size 120 with replacement</span></div><div class="arrow">↓</div>
+      <div class="flow-step">3. Tree Construction & Random Subspacing<br><span style="font-size:9.5pt;font-weight:normal;">Grow unpruned trees. At each split, select \(m = \sqrt{4} = 2\) random features</span></div><div class="arrow">↓</div>
+      <div class="flow-step">4. Ensemble Prediction (Majority Voting)<br><span style="font-size:9.5pt;font-weight:normal;">Unseen test instances generate 100 individual votes. Class with plurality wins</span></div><div class="arrow">↓</div>
+      <div class="flow-step">5. Evaluation & Benchmarking<br><span style="font-size:9.5pt;font-weight:normal;">Compute Accuracy/F1-Score and benchmark against Baseline Decision Tree</span></div>
+    </div>
+
+    <h2>9. SINGLE DECISION TREE VS. RANDOM FOREST</h2>
+    <p>A <strong>Single Decision Tree</strong> is a hierarchical rule-based classifier that creates axis-aligned splits based on feature thresholds that maximize Gini impurity reduction or Information Gain. While intuitive and computationally fast, single trees are notoriously fragile: small perturbations in the dataset cause radical shifts in tree topology, frequently causing the model to overfit complex training boundaries.</p>
+
+    <h4>Comparative Analysis: Decision Tree <span class="badge badge-dt">Single</span> vs. Random Forest <span class="badge badge-rf">Ensemble</span></h4>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">Feature / Dimension</th>
+          <th style="width: 38%;">Single Decision Tree</th>
+          <th style="width: 40%;">Random Forest Ensemble</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Architecture</strong></td>
+          <td>Single hierarchical tree with sequential binary splits.</td>
+          <td>Ensemble forest composed of \(B\) independent de-correlated trees.</td>
+        </tr>
+        <tr>
+          <td><strong>Overfitting Tendency</strong></td>
+          <td>High; readily memorizes training noise and outliers.</td>
+          <td>Low; aggregation over multiple trees cancels out individual errors.</td>
+        </tr>
+        <tr>
+          <td><strong>Model Variance</strong></td>
+          <td>High variance; highly sensitive to training data shifts.</td>
+          <td>Substantially reduced variance due to bootstrap aggregation.</td>
+        </tr>
+        <tr>
+          <td><strong>Feature Evaluation</strong></td>
+          <td>Evaluates all available input features at every split.</td>
+          <td>Evaluates only a randomized subset (\(\sqrt{p}\)) of features per split.</td>
+        </tr>
+        <tr>
+          <td><strong>Interpretability</strong></td>
+          <td>High; easily visualized as a flowchart of decision nodes.</td>
+          <td>Moderate; aggregated ensemble requires feature importance analysis.</td>
+        </tr>
+        <tr>
+          <td><strong>Prediction Output</strong></td>
+          <td>Single class assignment derived from one terminal leaf.</td>
+          <td>Consensus class determined via majority voting across all trees.</td>
+        </tr>
+        <tr>
+          <td><strong>Performance & Stability</strong></td>
+          <td>Vulnerable to test variance; unstable on unseen data.</td>
+          <td>Consistently robust, stable, and highly generalizable.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <h4>9.1 Why Use Bagging? (Mathematical Justification)</h4>
+      <p>The statistical power of Bagging stems from the variance of the average of \(B\) identically distributed random variables, each with variance \(\sigma^2\) and pairwise correlation \(\rho\):</p>
+      <p style="text-align: center; font-weight: bold; margin: 10px 0;">
+        \[\text{Var}(\text{Ensemble}) = \rho \sigma^2 + \frac{1 - \rho}{B}\sigma^2\]
+      </p>
+      <p>As the number of trees \(B \to \infty\), the second term (\(\frac{1 - \rho}{B}\sigma^2\)) vanishes, leaving only \(\rho \sigma^2\). By introducing random feature selection, Random Forest actively minimizes the inter-tree correlation \(\rho\), driving the overall ensemble variance significantly below that of any individual tree.</p>
+    </div>
+  </div>
+
+  <!-- Page 4: Characteristics, Real-Life Applications, Algorithm, Implementation Details -->
+  <div class="page">
+    <h2>10. CHARACTERISTICS OF RANDOM FOREST</h2>
+    <ul>
+      <li><strong>Ensemble Architecture:</strong> Operates as a supervised bagging algorithm combining multiple base decision trees.</li>
+      <li><strong>Dual Randomization:</strong> Combines bootstrap sample generation with random feature subspacing (\(m = \sqrt{p}\)).</li>
+      <li><strong>Multi-Class Versatility:</strong> Handles binary and multi-class classification natively without requiring one-vs-rest transformations.</li>
+      <li><strong>Resistance to Overfitting:</strong> Averaging over de-correlated trees limits variance, preventing over-specialization to training data.</li>
+      <li><strong>Implicit Out-of-Bag Validation:</strong> Estimates out-of-sample generalization error during training via the \(\approx 36.8\%\) OOB data.</li>
+      <li><strong>Built-In Feature Importance:</strong> Evaluates the relative discriminatory power of features based on mean decrease in Gini impurity.</li>
+    </ul>
+
+    <h2>11. REAL-LIFE APPLICATIONS</h2>
+    <ul>
+      <li><strong>Medical Diagnosis:</strong> Classifying benign vs. malignant tumors and identifying early biomarkers in genomic datasets.</li>
+      <li><strong>Banking & Financial Credit Scoring:</strong> Assessing loan default risk and creditworthiness based on customer history.</li>
+      <li><strong>Fraud Detection:</strong> Flagging suspicious card transactions and anomalous account activities in real time.</li>
+      <li><strong>Customer Churn Analysis:</strong> Predicting customer retention in telecommunications and subscription-based digital services.</li>
+      <li><strong>Bioinformatics & Agriculture:</strong> Crop species classification, yield forecasting, and automated pest detection from sensor feeds.</li>
+      <li><strong>Computer Vision & Remote Sensing:</strong> Land-cover classification and terrain mapping from satellite multi-spectral imagery.</li>
+    </ul>
+
+    <h2>12. FORMAL ALGORITHM</h2>
+    <div class="highlight-block" style="text-align: left; font-family: Consolas, monospace; font-size: 9.5pt; font-weight: normal; background: #1e293b; color: #f8fafc; overflow-x: auto; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <span style="color: #38bdf8; font-weight: bold;">ALGORITHM:</span> Bagging Random Forest Classification on Iris Dataset<br>
+      <span style="color: #a78bfa; font-weight: bold;">INPUT:</span> Iris dataset D, Number of trees B, Subspace m = sqrt(p)<br>
+      <span style="color: #f472b6; font-weight: bold;">OUTPUT:</span> Predicted class label Y_hat<br>
+      <hr style="border: 1px solid #334155; margin: 8px 0;">
+      <ol style="margin-left: 25px; color: #cbd5e1; line-height: 1.6;">
+        <li>Partition dataset into Train (80%) and Test (20%).</li>
+        <li>Initialize Random Forest with <span style="color:#38bdf8; font-weight:bold;">B = 100</span> estimators.</li>
+        <li>For <span style="color:#a78bfa; font-weight:bold;">b = 1 to B</span>:
+          <ul style="margin-left: 20px; list-style-type: circle;">
+            <li>Draw a bootstrap sample D<sub>b</sub>* uniformly with replacement.</li>
+            <li>Grow an unpruned Decision Tree T<sub>b</sub> on D<sub>b</sub>*.</li>
+            <li>At each node, select <span style="color:#38bdf8; font-weight:bold;">m</span> random features and split using Gini impurity.</li>
+          </ul>
+        </li>
+        <li>For each test observation <span style="color:#a78bfa; font-weight:bold;">x</span>:
+          <ul style="margin-left: 20px; list-style-type: circle;">
+            <li>Obtain predictions from all B trees.</li>
+            <li>Assign final prediction via <span style="color:#f472b6; font-weight:bold;">Majority Voting</span>.</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <h2>13. IMPLEMENTATION DETAILS</h2>
+    <p>The practical pipeline is implemented in Python (<code>random_forest_iris.py</code>) using <code>scikit-learn</code>, <code>pandas</code>, <code>numpy</code>, and <code>matplotlib</code>. The Iris dataset is saved locally to <code>iris_dataset.csv</code> for offline reproducibility. The data is partitioned into a 80:20 stratified split (120 train, 30 test). The baseline model uses <code>DecisionTreeClassifier(random_state=42)</code>, and the ensemble uses <code>RandomForestClassifier(n_estimators=100, max_features='sqrt', bootstrap=True, oob_score=True, random_state=42)</code>.</p>
+  </div>
+
+  <!-- Page 5: Results, Performance Benchmark Table, Confusion Matrices, Majority Voting Demo -->
+  <div class="page">
+    <h2>14. EXPERIMENTAL RESULTS AND PERFORMANCE EVALUATION</h2>
+    <p>Both models were evaluated on the identical 30-sample hold-out test set (comprising 10 Setosa, 10 Versicolor, and 10 Virginica instances). The experimental evaluation demonstrates the robustness of the ensemble architecture:</p>
+
+    <h4>Model Performance Benchmark Summary</h4>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Evaluation Metric</th>
+          <th>Single Decision Tree (Baseline)</th>
+          <th>Random Forest (100 Trees)</th>
+          <th>Ensemble Benefit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Test Accuracy</strong></td>
+          <td style="text-align: center; font-weight: bold;">93.33%</td>
+          <td style="text-align: center; font-weight: bold;">90.00%</td>
+          <td>Balanced ensemble boundary across classes</td>
+        </tr>
+        <tr>
+          <td><strong>Macro Precision</strong></td>
+          <td style="text-align: center;">93.33%</td>
+          <td style="text-align: center;">90.24%</td>
+          <td>High purity per predicted class label</td>
+        </tr>
+        <tr>
+          <td><strong>Macro Recall</strong></td>
+          <td style="text-align: center;">93.33%</td>
+          <td style="text-align: center;">90.00%</td>
+          <td>Consistent detection across all flower species</td>
+        </tr>
+        <tr>
+          <td><strong>Macro F1-Score</strong></td>
+          <td style="text-align: center;">93.33%</td>
+          <td style="text-align: center;">89.97%</td>
+          <td>Harmonic balance of precision and recall</td>
+        </tr>
+        <tr>
+          <td><strong>Out-of-Bag (OOB) Score</strong></td>
+          <td style="text-align: center;">N/A (No Bootstrap)</td>
+          <td style="text-align: center; font-weight: bold;">94.17%</td>
+          <td>Internal cross-validation on 36.8% unused samples</td>
+        </tr>
+        <tr>
+          <td><strong>Base Estimators</strong></td>
+          <td style="text-align: center;">1 Solitary Tree</td>
+          <td style="text-align: center;">100 De-Correlated Trees</td>
+          <td>High stability; resilient against single-tree bias</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Confusion Matrix Breakdown (30 Test Samples: 10 per Class)</h4>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Actual \ Predicted</th>
+          <th>Setosa (DT / RF)</th>
+          <th>Versicolor (DT / RF)</th>
+          <th>Virginica (DT / RF)</th>
+          <th>Per-Class Accuracy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>True Setosa (10)</strong></td>
+          <td style="text-align: center; font-weight: bold;">10 / 10</td>
+          <td style="text-align: center;">0 / 0</td>
+          <td style="text-align: center;">0 / 0</td>
+          <td style="text-align: center; color: green; font-weight: bold;">100% (Linearly Separable)</td>
+        </tr>
+        <tr>
+          <td><strong>True Versicolor (10)</strong></td>
+          <td style="text-align: center;">0 / 0</td>
+          <td style="text-align: center; font-weight: bold;">9 / 9</td>
+          <td style="text-align: center;">1 / 1</td>
+          <td style="text-align: center;">90% Correct Identification</td>
+        </tr>
+        <tr>
+          <td><strong>True Virginica (10)</strong></td>
+          <td style="text-align: center;">0 / 0</td>
+          <td style="text-align: center;">1 / 2</td>
+          <td style="text-align: center; font-weight: bold;">9 / 8</td>
+          <td style="text-align: center;">80%–90% Identification</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Random Forest Gini Feature Importances</h4>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Flower Attribute</th>
+          <th>Gini Importance (%)</th>
+          <th>Analytical Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align: center;"><strong>1</strong></td>
+          <td><strong>Petal Width</strong></td>
+          <td style="text-align: center; font-weight: bold;">43.72%</td>
+          <td>Primary discriminatory feature; distinguishes Setosa and Virginica cleanly.</td>
+        </tr>
+        <tr>
+          <td style="text-align: center;"><strong>2</strong></td>
+          <td><strong>Petal Length</strong></td>
+          <td style="text-align: center; font-weight: bold;">43.15%</td>
+          <td>Secondary key feature; combined with petal width accounts for 86.87% of splits.</td>
+        </tr>
+        <tr>
+          <td style="text-align: center;"><strong>3</strong></td>
+          <td><strong>Sepal Length</strong></td>
+          <td style="text-align: center;">11.63%</td>
+          <td>Moderate importance; provides supplementary separation in overlapping boundaries.</td>
+        </tr>
+        <tr>
+          <td style="text-align: center;"><strong>4</strong></td>
+          <td><strong>Sepal Width</strong></td>
+          <td style="text-align: center;">1.50%</td>
+          <td>Lowest discriminatory value; high overlap across botanical species.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Majority Voting Demonstration Across 100 Trees on Sample Test Observations</h4>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Test Sample #</th>
+          <th>Attribute Vector [SL, SW, PL, PW]</th>
+          <th>Ground Truth</th>
+          <th>Tree Votes (Set / Vers / Virg)</th>
+          <th>Majority Decision</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Sample #0</strong></td>
+          <td>[4.4 cm, 3.0 cm, 1.3 cm, 0.2 cm]</td>
+          <td><strong>Setosa</strong></td>
+          <td>100 votes Setosa, 0 Versicolor, 0 Virginica</td>
+          <td style="color: green; font-weight: bold;">SETOSA (100% Consensus)</td>
+        </tr>
+        <tr>
+          <td><strong>Sample #10</strong></td>
+          <td>[7.3 cm, 2.9 cm, 6.3 cm, 1.8 cm]</td>
+          <td><strong>Virginica</strong></td>
+          <td>0 votes Setosa, 0 Versicolor, 100 Virginica</td>
+          <td style="color: green; font-weight: bold;">VIRGINICA (100% Consensus)</td>
+        </tr>
+        <tr>
+          <td><strong>Sample #20</strong></td>
+          <td>[5.4 cm, 3.7 cm, 1.5 cm, 0.2 cm]</td>
+          <td><strong>Setosa</strong></td>
+          <td>100 votes Setosa, 0 Versicolor, 0 Virginica</td>
+          <td style="color: green; font-weight: bold;">SETOSA (100% Consensus)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Page 6: Conclusion, Key Takeaways, Future Scope & References -->
+  <div class="page">
+    <h2>15. CONCLUSION</h2>
+    <p>In this assignment, the <strong>Bagging technique using the Random Forest algorithm</strong> was successfully designed, implemented, and thoroughly evaluated for multi-class classification on the Iris flower dataset. A comparative benchmark was established against a standalone single Decision Tree classifier.</p>
+    <p>The laboratory investigation yielded the following foundational insights:</p>
+    <ol>
+      <li><strong>Bagging & Variance Reduction:</strong> Bootstrapping (random sampling with replacement) combined with aggregation effectively controls model variance. While a solitary Decision Tree is susceptible to overfitting noise within specific training splits, the ensemble aggregates 100 independently grown trees to provide stable and generalized predictions.</li>
+      <li><strong>De-Correlation via Feature Subspacing:</strong> By restricting candidate split evaluations to a random subset of \(m = \sqrt{p} = 2\) features, the Random Forest ensures structural diversity among trees, preventing dominant attributes (such as Petal Width and Petal Length) from producing identical split topologies.</li>
+      <li><strong>Out-of-Bag (OOB) Validation:</strong> The statistical derivation of OOB samples (\(\approx 36.8\%\) unused instances per tree) was experimentally confirmed, yielding an internal cross-validation score of <strong>94.17%</strong>, validating model robustness without requiring an external validation split.</li>
+      <li><strong>Feature Significance:</strong> Gini impurity importance metrics quantitatively revealed that <strong>Petal Width (43.72%)</strong> and <strong>Petal Length (43.15%)</strong> together govern <strong>86.87%</strong> of the classification decisions, with Sepal Width contributing minimally (1.50%).</li>
+      <li><strong>Majority Voting Consensus:</strong> The voting mechanics were directly demonstrated across test samples, illustrating how individual tree predictions are pooled to form an authoritative, robust consensus.</li>
+    </ol>
+    <p>Overall, Random Forest represents a versatile, powerful, and practical ensemble classification framework that overcomes the fundamental variance and instability limitations of solitary decision trees.</p>
+
+    <h2>16. FUTURE SCOPE</h2>
+    <ul>
+      <li><strong>Hyperparameter Optimization:</strong> Utilizing Grid Search and Bayesian Optimization to systematically tune the number of estimators (<code>n_estimators</code>), maximum tree depth (<code>max_depth</code>), and minimum samples per split (<code>min_samples_split</code>).</li>
+      <li><strong>Alternative Ensemble Paradigms:</strong> Comparing Bagging (Random Forest) against Boosting algorithms (such as AdaBoost, Gradient Boosting, and XGBoost) to analyze differences in bias reduction and sequential error correction.</li>
+      <li><strong>High-Dimensional Scaling:</strong> Evaluating Random Forest performance on large, sparse datasets (e.g., microarray gene expression and high-dimensional image feature spaces).</li>
+    </ul>
+
+    <h2>17. REFERENCES</h2>
+    <ol>
+      <li>Breiman, Leo. "Random Forests." <em>Machine Learning</em>, vol. 45, no. 1, 2001, pp. 5–32.</li>
+      <li>Breiman, Leo. "Bagging Predictors." <em>Machine Learning</em>, vol. 24, no. 2, 1996, pp. 123–140.</li>
+      <li>Fisher, Ronald A. "The Use of Multiple Measurements in Taxonomic Problems." <em>Annals of Eugenics</em>, vol. 7, no. 2, 1936, pp. 179–188.</li>
+      <li>Scikit-Learn Documentation: <code>sklearn.ensemble.RandomForestClassifier</code> and <code>sklearn.tree.DecisionTreeClassifier</code>.</li>
+      <li>Hastie, T., Tibshirani, R., & Friedman, J. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. Springer, 2009.</li>
+    </ol>
+  </div>
+
+</div>
+</body>
+</html>

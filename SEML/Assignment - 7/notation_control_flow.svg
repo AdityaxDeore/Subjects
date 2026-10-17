@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" width="240" height="140" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_cf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Activity A -->
+  <rect x="50" y="12" width="140" height="34" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.8"/>
+  <text x="120" y="34" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Activity A</text>
+  <!-- Flow Arrow -->
+  <line x1="120" y1="46" x2="120" y2="78" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr_cf)"/>
+  <text x="145" y="66" font-size="10.5" font-weight="bold" fill="#0284c7">flow</text>
+  <!-- Activity B -->
+  <rect x="50" y="82" width="140" height="34" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.8"/>
+  <text x="120" y="104" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Activity B</text>
+  <!-- Label -->
+  <text x="120" y="132" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Control Flow</text>
+</svg>

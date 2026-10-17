@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIML Assignment No. 2 - Output &amp; AI Usage</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.7;
+      color: #111;
+      background: #b0b8c1;
+      padding: 28px 20px;
+    }
+    .container { max-width: 8.5in; margin: 0 auto; }
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.85in 0.95in;
+      background: #ffffff;
+      margin: 0 auto 28px auto;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    @page { size: A4 portrait; margin: 18mm 16mm; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page {
+        width: 100%; min-height: auto; margin: 0; padding: 0;
+        box-shadow: none; border-radius: 0;
+        page-break-after: always;
+      }
+      .page:last-child { page-break-after: avoid; }
+      h2, h3 { page-break-after: avoid; }
+      .console-output, .viz-wrap { page-break-inside: avoid; }
+    }
+
+    h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 26px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1.5px solid #333;
+      padding-bottom: 4px;
+    }
+    .page > h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 12pt;
+      text-align: justify;
+      margin-bottom: 12px;
+      color: #111;
+      line-height: 1.7;
+    }
+
+    /* Light-mode terminal output - sized to fit page cleanly without scrolling */
+    .console-output {
+      background: #ffffff;
+      color: #000000;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 8.2pt;
+      font-weight: 500;
+      padding: 14px 16px;
+      border: 1.5px solid #444;
+      border-radius: 3px;
+      white-space: pre;
+      line-height: 1.45;
+      margin-bottom: 20px;
+      overflow-x: hidden;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .console-output .ok   { color: #0d8234; font-weight: bold; }
+    .console-output .head { color: #000000; font-weight: bold; }
+    .console-output .sep  { color: #222222; font-weight: bold; }
+
+    /* AI usage section */
+    .ai-tool-block {
+      border: 1.5px solid #bbb;
+      border-radius: 3px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      background: #fafafa;
+    }
+    .ai-tool-block .tool-name {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #ccc;
+    }
+    .ai-tool-block ul {
+      margin-left: 24px;
+      font-size: 11.5pt;
+      line-height: 1.7;
+      color: #222;
+    }
+    .ai-tool-block li { margin-bottom: 7px; text-align: justify; }
+
+    /* Visualisation images - displayed one after another, full width */
+    .viz-section-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12.5pt;
+      font-weight: bold;
+      color: #111;
+      margin-top: 24px;
+      margin-bottom: 14px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #ccc;
+    }
+    .viz-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-top: 18px;
+      margin-bottom: 24px;
+    }
+    .viz-wrap {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 14px;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+    .viz-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .viz-caption {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11pt;
+      color: #333;
+      margin-top: 10px;
+      font-style: italic;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+
+    <!-- PAGE 1: PROGRAM OUTPUT -->
+    <div class="page">
+      <h2>Program Execution Output</h2>
+      <div class="console-output"><span class="head">Initializing PCCOE SmartExam CSP Environment...</span>
+<span class="sep">======================================================================================</span>
+<span class="head"> PCCOE SMARTEXAM: CSP EXAMINATION TIMETABLE SCHEDULER</span>
+ Department of Information Technology | Pimpri Chinchwad College of Engineering
+<span class="sep">======================================================================================</span>
+ Total Examinations Scheduled : 14
+ Total Available Rooms        : 10
+ Total Available Time Slots   : 4
+ CSP Search Algorithm         : Backtracking Search + MRV Variable Ordering + LCV
+<span class="sep">--------------------------------------------------------------------------------------</span>
+<span class="head"> SOLVER EXECUTION METRICS:</span>
+ &gt;&gt; Search Status             : <span class="ok">SUCCESS</span>
+ &gt;&gt; Decision Nodes Explored   : 14
+ &gt;&gt; Backtrack Operations      : 0
+ &gt;&gt; Domain Pruning Events     : 88
+ &gt;&gt; Execution Runtime         : 0.0028 seconds
+<span class="sep">--------------------------------------------------------------------------------------</span>
+<span class="head"> GENERATED TIMETABLE ASSIGNMENTS:</span>
+ Day        Time Slot       Code       Students   Assigned Rooms     Course Name
+ --------------------------------------------------------------------------------------
+ Monday     09:00–12:00     AIML       60         5-301, 6-101       Artificial Intelligence &amp; ML
+ Monday     09:00–12:00     FE-MATH    60         6-201, 6-301       Engineering Mathematics
+ Monday     09:00–12:00     OOP        60         5-101, 5-201       Object-Oriented Programming
+ Monday     09:00–12:00     SEC        60         9-101, 9-201       Cybersecurity Fundamentals
+ Monday     13:30–16:30     DAA        60         6-201, 6-301       Design &amp; Analysis of Algorithms
+ Monday     13:30–16:30     DBMS       60         5-301, 6-101       Database Management System
+ Monday     13:30–16:30     DS         60         5-101, 5-201       Data Structures
+ Monday     13:30–16:30     FE-PHY     60         9-101, 9-201       Engineering Physics
+ Monday     13:30–16:30     PE         60         9-301, 9-401       IT Programme Elective
+ Tuesday    09:00–12:00     CN         60         5-301, 6-101       Computer Networks Technology
+ Tuesday    09:00–12:00     COA        60         5-101, 5-201       Computer Organization &amp; Arch.
+ Tuesday    09:00–12:00     FE-PROG    60         9-101, 9-201       Programming Fundamentals
+ Tuesday    09:00–12:00     OS         60         6-201, 6-301       Operating Systems
+ Tuesday    13:30–16:30     AUT        60         5-101, 5-201       Automata Theory
+<span class="sep">--------------------------------------------------------------------------------------</span>
+<span class="head"> TIMETABLE RIGOROUS VERIFICATION:</span>
+ &gt;&gt; Validation : <span class="ok">PASSED</span>
+ &gt;&gt; Status     : <span class="ok">ZERO student conflicts | ZERO room double-bookings | 100% capacity met.</span>
+<span class="sep">======================================================================================</span></div>
+    </div>
+
+    <!-- PAGE 2: OUTPUT VISUALISATIONS (FIGURES 1 & 2) -->
+    <div class="page">
+      <h2>Output Visualisations</h2>
+      <p>The following charts were generated from the CSP solver output to illustrate slot utilisation, search space complexity, cohort conflict structure, and backtracking reduction across algorithm variants.</p>
+
+      <div class="viz-list">
+        <div class="viz-wrap">
+          <img src="viz_slot_distribution.png" alt="Slot Distribution Chart" />
+          <p class="viz-caption">Figure 1: Examinations &amp; classrooms allocated per time slot across the schedule.</p>
+        </div>
+        <div class="viz-wrap">
+          <img src="viz_conflict_edges.png" alt="Conflict Edges Chart" />
+          <p class="viz-caption">Figure 2: Subjects and binary conflict edges per student cohort.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: OUTPUT VISUALISATIONS (FIGURES 3 & 4) -->
+    <div class="page">
+      <h2>Output Visualisations (Continued)</h2>
+
+      <div class="viz-list">
+        <div class="viz-wrap">
+          <img src="viz_nodes_visited.png" alt="Nodes Visited Chart" />
+          <p class="viz-caption">Figure 3: Search space explored &mdash; Nodes visited per algorithm variant (log scale).</p>
+        </div>
+        <div class="viz-wrap">
+          <img src="viz_backtrack_reduction.png" alt="Backtrack Reduction Chart" />
+          <p class="viz-caption">Figure 4: Backtracking count reduction with progressive heuristic integration.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: AI USAGE DECLARATION -->
+    <div class="page">
+      <h2>Generative AI Usage Declaration</h2>
+
+      <div class="ai-tool-block">
+        <div class="tool-name">AI Tool Used: Gemini (Google)</div>
+        <p style="margin-bottom: 14px; font-size: 11.5pt;">The following describes the specific purposes for which Gemini was consulted during the development of this assignment:</p>
+        <ul>
+          <li>To understand the working and theoretical concepts of Constraint Satisfaction Problems (CSPs), including the formal definitions of variables, domains, and hard/soft constraints as applied to scheduling problems.</li>
+          <li>To understand variable ordering heuristics &mdash; specifically the Minimum Remaining Values (MRV) / fail-first strategy &mdash; and how backtracking combined with constraint propagation reduces the effective search space from exponential to near-linear.</li>
+          <li>To understand resource-allocation mapping; specifically, modelling time slots and physical classroom pairs as composite domain values, and verifying that room capacity constraints are structurally encoded in the domain generation phase.</li>
+          <li>To clarify doubts regarding dataset handling and structure validation using Python dataclasses and CSV parsing for the examination schedule data (14 courses, 10 classrooms, 4 slots).</li>
+          <li>To understand evaluation approaches for verifying schedule validity, such as checking backtrack counts, room capacity compliance, and student cohort non-overlap across all assigned time slots.</li>
+        </ul>
+      </div>
+
+      <h3>Interaction Summary</h3>
+      <p>The AI was used strictly as a conceptual reference and clarification tool. All code was written, structured, and debugged independently. The solver architecture, dataclass design, heuristic implementations, and validation engine were designed by myself with AI assistance limited to understanding the underlying theory.</p>
+    </div>
+
+  </div>
+</body>
+</html>

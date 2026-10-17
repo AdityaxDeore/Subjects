@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" width="240" height="150" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Incoming -->
+  <line x1="120" y1="10" x2="120" y2="35" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_d)"/>
+  <!-- Diamond -->
+  <polygon points="120,40 155,68 120,96 85,68" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="120" y="72" font-size="10.5" font-weight="bold" fill="#854d0e" text-anchor="middle">Valid?</text>
+  <!-- Down branch [Yes] -->
+  <line x1="120" y1="96" x2="120" y2="125" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr_d)"/>
+  <text x="135" y="116" font-size="10" font-weight="bold" fill="#16a34a">[Yes]</text>
+  <!-- Right branch [No] -->
+  <line x1="155" y1="68" x2="205" y2="68" stroke="#dc2626" stroke-width="2.2" marker-end="url(#arr_d)"/>
+  <text x="180" y="60" font-size="10" font-weight="bold" fill="#dc2626" text-anchor="middle">[No]</text>
+  <!-- Label -->
+  <text x="120" y="144" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Decision Node</text>
+</svg>

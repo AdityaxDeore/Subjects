@@ -1,0 +1,58 @@
+sequenceDiagram
+    actor Player
+    participant UI as Registration / Login UI
+    participant Auth as Authentication Service
+    participant User as User
+    participant DB as Database
+
+    Player->>UI: selectRegister()
+    UI-->>Player: displayRegistrationForm()
+
+    loop Until valid registration details are entered
+        Player->>UI: enterName(name)
+        Player->>UI: enterEmail(email)
+        Player->>UI: enterPassword(password)
+        
+        activate UI
+        UI->>UI: validateInput()
+        deactivate UI
+        
+        alt Invalid input
+            UI-->>Player: displayValidationError()
+        else Valid input
+            activate UI
+            UI->>Auth: register(name, email, password)
+            
+            activate Auth
+            Auth->>Auth: validateEmail()
+            Auth->>Auth: hashPassword()
+            Auth->>DB: checkEmailExists(email)
+            
+            activate DB
+            DB-->>Auth: emailStatus()
+            deactivate DB
+            
+            alt Email already exists
+                Auth-->>UI: registrationFailed()
+                UI-->>Player: showEmailAlreadyRegistered()
+            else Email available
+                Auth->>User: createUser(name, email, password)
+                
+                activate User
+                User->>DB: saveUser(userData)
+                
+                activate DB
+                DB-->>User: userSaved()
+                deactivate DB
+                
+                User-->>Auth: userCreated()
+                deactivate User
+                
+                Auth-->>UI: registrationSuccessful()
+                deactivate Auth
+                
+                UI-->>Player: showRegistrationSuccess()
+                deactivate UI
+            end
+        end
+    end

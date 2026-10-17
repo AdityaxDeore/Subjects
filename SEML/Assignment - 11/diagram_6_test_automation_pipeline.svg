@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 260" width="100%" height="260" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow6" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0284c7"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="10" width="820" height="32" rx="6" fill="#1e293b"/>
+  <text x="430" y="31" font-size="12.5" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    AUTOMATED TEST EXECUTION PIPELINE (MAVEN + JUNIT 5 SUREFIRE)
+  </text>
+
+  <!-- Step 1: Java Sources -->
+  <g transform="translate(25, 65)">
+    <rect x="0" y="0" width="135" height="150" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.8" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="135" height="24" rx="6" fill="#64748b"/>
+    <text x="67" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">1. Source Modules</text>
+    <text x="10" y="44" font-size="9" fill="#1e293b">&bull; 15 Java Classes</text>
+    <text x="10" y="62" font-size="9" fill="#1e293b">&bull; 6 Service Layers</text>
+    <text x="10" y="80" font-size="9" fill="#1e293b">&bull; 4 Model Entities</text>
+    <text x="10" y="98" font-size="9" fill="#1e293b">&bull; 4 Custom Exceptions</text>
+    <text x="10" y="125" font-size="8.5" fill="#64748b" font-style="italic">src/main/java</text>
+  </g>
+  <line x1="160" y1="140" x2="190" y2="140" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr6)"/>
+
+  <!-- Step 2: Maven Compiler -->
+  <g transform="translate(195, 65)">
+    <rect x="0" y="0" width="135" height="150" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="135" height="24" rx="6" fill="#3b82f6"/>
+    <text x="67" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">2. Maven Compiler</text>
+    <text x="10" y="44" font-size="9" fill="#1e3a8a">&bull; Java 21 Target</text>
+    <text x="10" y="62" font-size="9" fill="#1e3a8a">&bull; debug symbols [on]</text>
+    <text x="10" y="80" font-size="9" fill="#1e3a8a">&bull; UTF-8 Encoding</text>
+    <text x="10" y="98" font-size="9" fill="#1e3a8a">&bull; Incremental checks</text>
+    <text x="10" y="125" font-size="8.5" fill="#3b82f6" font-style="italic">target/classes</text>
+  </g>
+  <line x1="330" y1="140" x2="360" y2="140" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr6)"/>
+
+  <!-- Step 3: Test Discovery -->
+  <g transform="translate(365, 65)">
+    <rect x="0" y="0" width="145" height="150" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="145" height="24" rx="6" fill="#10b981"/>
+    <text x="72" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">3. Jupiter Discovery</text>
+    <text x="10" y="44" font-size="9" fill="#065f46">&bull; 6 Test Classes</text>
+    <text x="10" y="62" font-size="9" fill="#065f46">&bull; Master @Suite</text>
+    <text x="10" y="80" font-size="9" fill="#065f46">&bull; @ParameterizedTest</text>
+    <text x="10" y="98" font-size="9" fill="#065f46">&bull; @Nested hierarchies</text>
+    <text x="10" y="125" font-size="8.5" fill="#059669" font-style="italic">JUnit Platform</text>
+  </g>
+  <line x1="510" y1="140" x2="540" y2="140" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr6)"/>
+
+  <!-- Step 4: Surefire Execution -->
+  <g transform="translate(545, 65)">
+    <rect x="0" y="0" width="140" height="150" rx="8" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.8" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="140" height="24" rx="6" fill="#a855f7"/>
+    <text x="70" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">4. Surefire Runner</text>
+    <text x="10" y="44" font-size="9" fill="#581c87">&bull; 66 Tests Executed</text>
+    <text x="10" y="62" font-size="9" fill="#581c87">&bull; 0 Failures</text>
+    <text x="10" y="80" font-size="9" fill="#581c87">&bull; 0 Errors</text>
+    <text x="10" y="98" font-size="9" fill="#581c87">&bull; 1 Skipped (@Disabled)</text>
+    <text x="10" y="125" font-size="8.5" fill="#7e22ce" font-style="italic">Time: 42.37s</text>
+  </g>
+  <line x1="685" y1="140" x2="710" y2="140" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr6)"/>
+
+  <!-- Step 5: Reports Generated -->
+  <g transform="translate(715, 65)">
+    <rect x="0" y="0" width="125" height="150" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#shadow6)"/>
+    <rect x="0" y="0" width="125" height="24" rx="6" fill="#16a34a"/>
+    <text x="62" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">5. Test Reports</text>
+    <text x="10" y="44" font-size="8.5" fill="#14532d">&bull; 14 Surefire XMLs</text>
+    <text x="10" y="62" font-size="8.5" fill="#14532d">&bull; 14 TXT Logs</text>
+    <text x="10" y="80" font-size="8.5" fill="#14532d">&bull; 100% Pass Rate</text>
+    <rect x="8" y="100" width="108" height="26" rx="4" fill="#dcfce7" stroke="#86efac"/>
+    <text x="62" y="117" font-size="10" font-weight="bold" fill="#15803d" text-anchor="middle">BUILD SUCCESS</text>
+  </g>
+</svg>

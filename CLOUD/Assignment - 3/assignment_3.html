@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Assignment 4 - Hosting a Static Website on AWS S3</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  font-size: 10pt;
+  line-height: 1.45;
+  color: #000;
+  background: #e5e7eb;
+  padding: 20px;
+}
+.container {
+  max-width: 8.5in;
+  margin: 0 auto;
+}
+.page {
+  min-height: 11in;
+  width: 8.5in;
+  padding: 0.5in 0.55in;
+  background: #ffffff;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  box-sizing: border-box;
+}
+.page:focus-within {
+  outline: 2px dashed #4299e1;
+}
+@media print {
+  body { background: #ffffff; padding: 0; }
+  .container { max-width: 100%; margin: 0; box-shadow: none; }
+  .page { 
+    width: 100%; 
+    min-height: auto; 
+    margin: 0; 
+    padding: 0.25in; 
+    box-shadow: none; 
+    border: none; 
+    page-break-after: always; 
+    box-sizing: border-box; 
+  }
+}
+.cover-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Times New Roman', Times, serif; }
+.cover-table td { border: 1px solid #000; padding: 8px 12px; }
+.cover-table .college-info { text-align: center; font-weight: bold; font-size: 16pt; line-height: 1.4; color: #000; }
+.cover-table .row-centered { text-align: center; font-weight: bold; font-size: 14pt; color: #000; }
+.cover-table .row-left { text-align: left; font-weight: bold; font-size: 14pt; color: #000; }
+.logo-container { text-align: center; width: 18%; padding: 5px !important; }
+.logo-container img { max-width: 100px; height: auto; display: block; margin: 0 auto; }
+h2 { 
+  font-family: Arial, sans-serif; 
+  font-size: 16pt; 
+  font-weight: bold;
+  color: #000; 
+  margin-top: 22px; 
+  margin-bottom: 8px;
+}
+h3 { 
+  font-family: Arial, sans-serif; 
+  font-size: 13.5pt; 
+  font-weight: bold;
+  color: #000; 
+  margin-top: 15px; 
+  margin-bottom: 6px; 
+}
+h4 {
+  font-family: Arial, sans-serif;
+  font-size: 11pt;
+  font-weight: bold;
+  color: #000;
+  margin-top: 12px;
+  margin-bottom: 5px;
+}
+p { 
+  font-family: Arial, sans-serif; 
+  font-size: 10pt; 
+  text-align: justify; 
+  line-height: 1.45; 
+  margin-bottom: 10px; 
+  color: #000;
+}
+ul, ol { 
+  margin-left: 20px; 
+  font-size: 10pt; 
+  line-height: 1.45; 
+  margin-bottom: 10px; 
+  color: #000;
+}
+li {
+  margin-bottom: 3px;
+}
+code {
+  font-family: Consolas, Monaco, 'Courier New', Courier, monospace;
+  font-size: 9.5pt;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  padding: 1px 4px;
+}
+.screenshot {
+  width: 100%;
+  max-width: 100%;
+  max-height: 420px;
+  height: auto;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  margin: 6px auto 6px auto;
+  display: block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.screenshot.large {
+  max-height: 520px;
+}
+.image-tag {
+  font-family: Arial, sans-serif;
+  font-size: 9pt;
+  color: #374151;
+  text-align: center;
+  margin-top: 4px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.image-tag strong {
+  color: #111827;
+}
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+  font-size: 9pt;
+}
+.styled-table th, .styled-table td {
+  border: 1px solid #000;
+  padding: 5px 7px;
+  text-align: left;
+}
+.styled-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+pre {
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  font-size: 9pt;
+  padding: 8px 10px;
+  white-space: pre-wrap;
+  margin-bottom: 14px;
+  font-family: Consolas, Monaco, monospace;
+}
+</style>
+</head>
+<body>
+<div class="container" contenteditable="true">
+  
+  <!-- Page 1: Cover Table, Aim, Objectives, and Theory Q1 (Storage, Types & Characteristics) -->
+  <div class="page">
+    <table class="cover-table">
+      <tr>
+        <td class="logo-container">
+          <img src="../pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false">
+        </td>
+        <td class="college-info">
+          Pimpri Chinchwad Education Trust's<br>
+          Pimpri Chinchwad College of Engineering
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="row-centered">
+          Assignment No. 4
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="row-left">
+          Course:- Cloud Computing
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="row-left">
+          Name:- Aditya Chandrajit Deore
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="row-left">
+          PRN:- 124B1F116
+        </td>
+      </tr>
+    </table>
+
+    <h2>AIM</h2>
+    <p>To understand cloud storage and Storage as a Service (STaaS), and get practical knowledge of Amazon S3 by creating a bucket, uploading files and managing access permissions.</p>
+
+    <h2>OBJECTIVES</h2>
+    <ol>
+      <li>To understand basic concept of storage and its types.</li>
+      <li>To understand Storage as a Service and its benefits.</li>
+      <li>To understand Amazon S3 and S3 buckets.</li>
+      <li>To create an S3 bucket using AWS Console.</li>
+      <li>To upload and manage objects in the bucket.</li>
+      <li>To understand Block Public Access settings.</li>
+      <li>To create and apply an S3 bucket policy.</li>
+    </ol>
+
+    <h2>THEORY</h2>
+    <h3>Q1. What is Storage?</h3>
+    <p>Storage means saving digital data so it can be used later. It is one of the important parts of a computer system along with CPU and RAM.</p>
+
+    <h4>Types of Storage:</h4>
+    <ol>
+      <li><strong>Primary Storage:</strong> It is fast and directly used by CPU, but it is temporary. <em>Example: RAM and Cache.</em></li>
+      <li><strong>Secondary Storage:</strong> It stores data permanently even when power is removed. <em>Example: HDD, SSD and USB drives.</em></li>
+      <li><strong>Tertiary / Archival Storage:</strong> Used mainly for long term backup and archive. <em>Example: Tape storage and Amazon S3 Glacier.</em></li>
+    </ol>
+  </div>
+
+  <!-- Page 2: Storage Characteristics, Cloud Storage, STaaS (Q2) -->
+  <div class="page">
+    <h4>Important Storage Characteristics</h4>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">Characteristic</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Capacity</strong></td><td>Amount of data which can be stored</td></tr>
+        <tr><td><strong>Speed</strong></td><td>How fast data can be read or written</td></tr>
+        <tr><td><strong>Latency</strong></td><td>Delay while accessing data</td></tr>
+        <tr><td><strong>Durability</strong></td><td>Ability to keep data safe without loss</td></tr>
+        <tr><td><strong>Availability</strong></td><td>How often storage is accessible</td></tr>
+        <tr><td><strong>Scalability</strong></td><td>Ability to increase storage when required</td></tr>
+        <tr><td><strong>Cost</strong></td><td>Price of storing the data</td></tr>
+        <tr><td><strong>Security</strong></td><td>Protection from unauthorized access</td></tr>
+        <tr><td><strong>Redundancy</strong></td><td>Keeping copies of data to reduce data loss</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Storage in Cloud Computing</h3>
+    <p>Cloud storage means storing data on remote servers managed by a cloud provider instead of maintaining physical storage ourselves.</p>
+
+    <h4>Types of Cloud Storage</h4>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Example</th>
+          <th>Primary Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Object Storage</strong></td><td>Amazon S3</td><td>Images, videos, static website files, and backups</td></tr>
+        <tr><td><strong>Block Storage</strong></td><td>Amazon EBS</td><td>Persistent storage for virtual machines (EC2)</td></tr>
+        <tr><td><strong>File Storage</strong></td><td>Amazon EFS</td><td>Shared, scalable networked file system</td></tr>
+        <tr><td><strong>Archive Storage</strong></td><td>S3 Glacier</td><td>Long term, low-cost compliance backup</td></tr>
+        <tr><td><strong>Database Storage</strong></td><td>RDS, DynamoDB</td><td>Structured and semi-structured operational data</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Advantages of Cloud Storage:</h4>
+    <ul>
+      <li>Lower upfront hardware cost (pay-as-you-go).</li>
+      <li>Storage can scale easily and instantly on demand.</li>
+      <li>Data can be accessed globally through the internet.</li>
+      <li>Provider manages hardware redundancy and maintenance.</li>
+      <li>Robust built-in automated backup and disaster recovery options.</li>
+    </ul>
+
+    <h3>Q2. What is Storage as a Service (STaaS)?</h3>
+    <p>Storage as a Service means storage is provided by a cloud company through the internet and we use it according to our requirement. Instead of buying physical storage, we use storage from a provider and pay according to usage.</p>
+  </div>
+
+  <!-- Page 3: STaaS Models, Q3 S3 Bucket, Architecture Diagram, Storage Classes -->
+  <div class="page">
+    <h4>Main Features of STaaS:</h4>
+    <ul>
+      <li>Storage can be provisioned instantly when needed.</li>
+      <li>Pay only for the exact storage capacity and transfer used.</li>
+      <li>Hardware maintenance and patching are fully handled by provider.</li>
+      <li>Seamless elastic scalability with global accessibility.</li>
+      <li>Enterprise security, encryption, and granular access controls are available.</li>
+    </ul>
+
+    <h4>STaaS Models:</h4>
+    <ul>
+      <li><strong>Public STaaS:</strong> Storage provided by public cloud providers like Amazon S3.</li>
+      <li><strong>Private STaaS:</strong> Storage dedicated within an organization's private data center.</li>
+      <li><strong>Hybrid STaaS:</strong> Combination of on-premise private and scalable public cloud storage.</li>
+    </ul>
+
+    <h3>Q3. What is an S3 Bucket?</h3>
+    <ul>
+      <li><strong>Amazon S3 (Simple Storage Service):</strong> An AWS object storage service designed for storing and retrieving any amount of data from anywhere.</li>
+      <li><strong>S3 Bucket:</strong> A container where objects (files and metadata) are stored. Every object uploaded to S3 belongs to a specific bucket.</li>
+      <li><strong>Flat Structure:</strong> S3 uses a flat namespace rather than a hierarchical folder tree. Folders in S3 are prefixes used for logical organization.</li>
+    </ul>
+
+    <div class="mermaid" style="text-align: center; margin: 15px 0;">
+    graph LR
+        Client([Internet User / Web Browser]) -->|HTTP GET Request| Endpoint["S3 Website Endpoint<br/>(aditya124b1f116.s3-website...)"]
+        Endpoint --> Bucket["AWS S3 Bucket<br/>(aditya124b1f116)"]
+        Bucket --> Index["Index Document: index.html"]
+        Bucket --> Assets["Assets: styles.css, script.js"]
+        Index -->|200 OK & Render| Client
+        Assets -->|200 OK & Render| Client
+    </div>
+    <p class="image-tag"><strong>Figure A:</strong> Architecture and request flow for static website hosting on Amazon S3.</p>
+
+    <h4>Common S3 Storage Classes</h4>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Storage Class</th>
+          <th>Main Use Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>S3 Standard</strong></td><td>Frequently accessed data with high throughput and low latency</td></tr>
+        <tr><td><strong>S3 Intelligent-Tiering</strong></td><td>Data with unknown or changing access patterns (automatic cost savings)</td></tr>
+        <tr><td><strong>S3 Standard-IA</strong></td><td>Infrequently accessed data requiring rapid access when needed</td></tr>
+        <tr><td><strong>S3 One Zone-IA</strong></td><td>Lower-cost infrequent data stored redundantly within a single AZ</td></tr>
+        <tr><td><strong>S3 Glacier Instant Retrieval</strong></td><td>Archival data requiring retrieval in milliseconds</td></tr>
+        <tr><td><strong>S3 Glacier Flexible Retrieval</strong></td><td>Long term archive with configurable retrieval times (1 min to 5 hours)</td></tr>
+        <tr><td><strong>S3 Glacier Deep Archive</strong></td><td>Lowest cost cloud storage for long-term retention (retrieval in 12 hours)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Page 4: Naming Rules, Q4 Procedure, Step 1 with Figure 1 & Figure 2 -->
+  <div class="page">
+    <h4>S3 Bucket Naming Rules:</h4>
+    <ul>
+      <li>Bucket name must be globally unique across all AWS accounts.</li>
+      <li>Must use lowercase letters, numbers, and hyphens (3 to 63 characters long).</li>
+      <li>Must not be formatted as an IP address (e.g., 192.168.5.4).</li>
+      <li>Must begin and end with a letter or number.</li>
+    </ul>
+
+    <h2>PROCEDURE</h2>
+    <h3>Q4. Create S3 Bucket, Upload Files and Manage Access</h3>
+
+    <h3>Step 1: Create an S3 Bucket</h3>
+    <ol>
+      <li>Open AWS Management Console, search for <strong>S3</strong> and open the service.</li>
+      <li>Click the orange <strong>Create bucket</strong> button.</li>
+      <li>Enter a unique bucket name (e.g., <code>aditya124b1f116</code>).</li>
+      <li>Select your target AWS Region (e.g., <code>ap-southeast-2</code> Sydney).</li>
+      <li>Keep Object Ownership set to <strong>ACLs disabled (recommended)</strong>.</li>
+    </ol>
+
+    <img src="images/create_part1.png" alt="Bucket Creation Part 1" class="screenshot">
+    <p class="image-tag"><strong>Figure 1:</strong> Configuring general bucket settings (Bucket name: <code>aditya124b1f116</code>, Region: <code>ap-southeast-2</code>) and setting Object Ownership to ACLs disabled.</p>
+
+    <ol start="6">
+      <li>Uncheck <em>"Block all public access"</em> to permit website traffic over the web, and acknowledge the safety confirmation prompt.</li>
+      <li>Keep Bucket Versioning disabled and default SSE-S3 encryption enabled.</li>
+      <li>Click <strong>Create bucket</strong>.</li>
+    </ol>
+
+    <img src="images/create_part2.png" alt="Bucket Creation Part 2" class="screenshot">
+    <p class="image-tag"><strong>Figure 2:</strong> Disabling "Block all public access" and acknowledging the settings to permit public website traffic.</p>
+  </div>
+
+  <!-- Page 5: Figure 3, Step 1 Verification (Figure 4), and Step 2 Upload Objects (Figure 5) -->
+  <div class="page">
+    <img src="images/create_part3.png" alt="Bucket Creation Part 3" class="screenshot">
+    <p class="image-tag"><strong>Figure 3:</strong> Reviewing default encryption (SSE-S3), disabling Object Lock, and clicking the "Create bucket" button.</p>
+
+    <h4>Verification of Bucket Creation:</h4>
+    <p>The S3 console confirms successful bucket provisioning with the status message "Successfully created bucket aditya124b1f116".</p>
+
+    <img src="images/create_success.png" alt="Bucket Created Success" class="screenshot">
+    <p class="image-tag"><strong>Figure 4:</strong> Verification in the Amazon S3 console confirming successful creation of the bucket <code>aditya124b1f116</code>.</p>
+
+    <h3>Step 2: Upload Objects</h3>
+    <ol>
+      <li>Open the created bucket <code>aditya124b1f116</code> and click <strong>Upload</strong>.</li>
+      <li>Click <strong>Add files</strong> and select the website files: <code>index.html</code>, <code>styles.css</code>, and <code>script.js</code> (35.9 KB total).</li>
+    </ol>
+
+    <img src="images/upload_part1.png" alt="Upload Files Part 1" class="screenshot">
+    <p class="image-tag"><strong>Figure 5:</strong> Selecting and staging static portfolio assets (<code>index.html</code>, <code>script.js</code>, <code>styles.css</code>) for upload.</p>
+  </div>
+
+  <!-- Page 6: Storage Class (Figure 6), Upload Completion (Figure 7), and Accessing an Object -->
+  <div class="page">
+    <ol start="3">
+      <li>Keep the storage class set to <strong>Standard</strong> and server-side encryption as default SSE-S3.</li>
+      <li>Scroll down and click <strong>Upload</strong>. Check that all uploaded objects are visible in the bucket root.</li>
+    </ol>
+
+    <img src="images/upload_part2.png" alt="Upload Files Part 2" class="screenshot">
+    <p class="image-tag"><strong>Figure 6:</strong> Specifying the "Standard" storage class and server-side encryption settings for the uploaded website files.</p>
+
+    <img src="images/upload_part3.png" alt="Upload Files Part 3" class="screenshot">
+    <p class="image-tag"><strong>Figure 7:</strong> Reviewing checksums and metadata settings, and clicking "Upload" to upload the website files to the bucket.</p>
+
+    <h4>Accessing an Object:</h4>
+    <p>Open any uploaded object to view its Object Overview. For private buckets, clicking its public Object URL yields an <em>Access Denied (403)</em> error. The object can still be previewed privately using the AWS console "Open" button.</p>
+  </div>
+
+  <!-- Page 7: Step 3 Block Public Access, Step 4 Bucket Policy JSON, and Step 5 Static Website Hosting -->
+  <div class="page">
+    <h3>Step 3: Manage Block Public Access</h3>
+    <p>Block Public Access provides centralized controls across an AWS account and bucket to prevent accidental data leaks.</p>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Setting</th>
+          <th>Security Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>BlockPublicAcls</strong></td><td>Prevents new public Access Control Lists (ACLs) from being applied</td></tr>
+        <tr><td><strong>IgnorePublicAcls</strong></td><td>Ignores all existing public ACLs on bucket and objects</td></tr>
+        <tr><td><strong>BlockPublicPolicy</strong></td><td>Rejects bucket policies that grant public read/write access</td></tr>
+        <tr><td><strong>RestrictPublicBuckets</strong></td><td>Restricts access to buckets with public policies to AWS services and authorized users</td></tr>
+      </tbody>
+    </table>
+    <p><em>Navigation path: S3 &rarr; Your Bucket &rarr; Permissions &rarr; Block public access (bucket settings)</em></p>
+
+    <h3>Step 4: Create Bucket Policy</h3>
+    <p>A Bucket Policy is a JSON-based access control document attached to an S3 bucket that defines fine-grained permissions.</p>
+    <pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadObjects",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::aditya124b1f116/*"
+    }
+  ]
+}</code></pre>
+
+    <h3>Step 5: Enabling Static Website Hosting</h3>
+    <ol>
+      <li>Navigate to the <strong>Properties</strong> tab and scroll to <strong>Static website hosting</strong> &rarr; click <strong>Edit</strong>.</li>
+      <li>Select <strong>Enable</strong>, set Index document to <code>index.html</code>, and save changes.</li>
+    </ol>
+
+    <img src="images/static_hosting.png" alt="Static Hosting Disabled" class="screenshot">
+    <p class="image-tag"><strong>Figure 8:</strong> Navigating to the "Static website hosting" setting under the bucket Properties tab (initially disabled).</p>
+  </div>
+
+  <!-- Page 8: Endpoint (Figure 9), Output (Figure 10), and Comprehensive Conclusion -->
+  <div class="page">
+    <img src="images/hosted.png" alt="Static Hosting Enabled" class="screenshot">
+    <p class="image-tag"><strong>Figure 9:</strong> Enabling static website hosting, designating <code>index.html</code> as the index document, and obtaining the public website endpoint.</p>
+
+    <h2>OUTPUT: Accessing the Live Website</h2>
+    <p>Opening the generated Bucket website endpoint (<code>http://aditya124b1f116.s3-website-ap-southeast-2.amazonaws.com</code>) renders our portfolio website live over the internet.</p>
+
+    <img src="images/web.png" alt="Live Portfolio Website" class="screenshot large">
+    <p class="image-tag"><strong>Figure 10:</strong> Accessing and viewing the deployed portfolio website live in the browser via the Amazon S3 website endpoint.</p>
+
+    <h2>CONCLUSION</h2>
+    <p>In this assignment, I learned about storage and different types of storage used in computing and cloud. I understood Storage as a Service (STaaS) and why cloud storage is useful because of scalability, accessibility, cost-efficiency, and automated backup.</p>
+    <p>I also explored Amazon S3 and learned that an S3 bucket is used to store objects like images, documents, and web assets. I created an S3 bucket (<code>aditya124b1f116</code>), uploaded different objects (HTML, CSS, JS), and inspected their storage classes and encryption details.</p>
+    <p>After that, I explored Block Public Access settings and understood how they safeguard S3 data. Finally, I learned about S3 bucket policies and static website hosting, enabling direct web access via the generated website endpoint. This practical gave me a comprehensive, hands-on understanding of cloud object storage and how AWS S3 is utilized for scalable data management and web hosting.</p>
+  </div>
+
+</div>
+</body>
+</html>

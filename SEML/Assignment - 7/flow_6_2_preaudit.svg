@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 230" width="100%" height="auto" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arr2_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arr2_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr2_amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- Incoming Flow from Upload -->
+  <line x1="15" y1="95" x2="45" y2="95" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr2)"/>
+
+  <!-- Action: Pre-Audit Checks -->
+  <rect x="45" y="68" width="195" height="54" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="142" y="92" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Execute Automated</text>
+  <text x="142" y="108" font-size="11" fill="#334155" text-anchor="middle">Pre-Audit Diagnostics</text>
+
+  <line x1="240" y1="95" x2="275" y2="95" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr2)"/>
+
+  <!-- Decision: Pre-Audit Passed? -->
+  <polygon points="295,95 315,75 335,95 315,115" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="315" y="99" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Pre-Audit?</text>
+
+  <!-- Invalid branch -> loop back to correct -->
+  <path d="M 315,75 L 315,30 L 142,30 L 142,68" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr2_red)"/>
+  <text x="228" y="24" font-size="10" font-weight="bold" fill="#dc2626">[Pre-Audit Failed: Re-upload Docs]</text>
+
+  <!-- Valid branch -> Forward to External Auditor (Point 9) -->
+  <line x1="335" y1="95" x2="380" y2="95" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr2_green)"/>
+  <text x="355" y="87" font-size="9.5" font-weight="bold" fill="#16a34a">[Passed]</text>
+
+  <!-- Action: Verify with External Auditor (Swimlane 3) -->
+  <rect x="380" y="68" width="225" height="54" rx="10" fill="#ccfbf1" stroke="#0d9488" stroke-width="2"/>
+  <text x="492" y="92" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="middle">Verify Recycling Partner</text>
+  <text x="492" y="108" font-size="10.5" fill="#0f766e" text-anchor="middle">&amp; Marine Sanctuaries (Auditor)</text>
+
+  <line x1="605" y1="95" x2="640" y2="95" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr2)"/>
+
+  <!-- Decision: Compliant? -->
+  <polygon points="660,95 680,75 700,95 680,115" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="680" y="99" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Compliant?</text>
+
+  <!-- Flagged / Reject branch -->
+  <path d="M 680,115 L 680,158 L 745,158" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr2_red)"/>
+  <text x="698" y="145" font-size="9.5" font-weight="bold" fill="#dc2626">[Hazard Flagged: Adjust Bounds]</text>
+
+  <rect x="745" y="136" width="215" height="46" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="1.6"/>
+  <text x="852" y="156" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="middle">Return to Operator</text>
+  <text x="852" y="171" font-size="10" fill="#b91c1c" text-anchor="middle">Adjust Grid Coordinates</text>
+
+  <!-- Approved branch -->
+  <line x1="700" y1="95" x2="745" y2="95" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr2_green)"/>
+  <text x="720" y="87" font-size="10" font-weight="bold" fill="#16a34a">[Certified]</text>
+
+  <rect x="745" y="68" width="215" height="54" rx="10" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <text x="852" y="92" font-size="12" font-weight="bold" fill="#78350f" text-anchor="middle">Proceed to Faculty Mentor</text>
+  <text x="852" y="108" font-size="11" fill="#78350f" text-anchor="middle">Proposal Review</text>
+
+  <text x="490" y="212" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Figure 6.2: Pre-Audit Telemetry Check &amp; External Environmental Verification</text>
+</svg>

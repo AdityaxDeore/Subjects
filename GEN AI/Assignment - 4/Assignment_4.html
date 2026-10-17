@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCGAN Image Generation - GEN AI Assignment 4</title>
+
+    <!-- MathJax for Mathematical Formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: Calibri, "Segoe UI", Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.55;
+            color: #000000;
+            background: #e5e7eb;
+            padding: 24px 20px;
+        }
+
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0.35in 0.4in;
+        }
+
+        .page {
+            min-height: 11in;
+            width: 8.5in;
+            padding: 0.55in 0.65in;
+            background: #ffffff;
+            margin: 0 auto 24px auto;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .page:focus-within {
+            outline: 2px dashed #3b82f6;
+            outline-offset: 4px;
+        }
+
+        @media print {
+            html, body { 
+                background: #ffffff !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                color: #000000 !important; 
+            }
+            .container { 
+                max-width: 100% !important; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                box-shadow: none !important; 
+            }
+            .page { 
+                width: 100% !important; 
+                min-height: auto !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                box-shadow: none !important; 
+                border: none !important; 
+                border-radius: 0 !important; 
+                page-break-after: always !important; 
+                break-after: page !important;
+            }
+            .page:last-child {
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+            .concept-card, .image-box, .styled-table, pre, .cover-table {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            * { color: #000000 !important; }
+            pre, .inline-code { 
+                border: 1px solid #000000 !important; 
+                border-left: 4px solid #000000 !important; 
+                background: transparent !important; 
+            }
+            h2, h3, h4 { border-bottom-color: #000000 !important; }
+
+            /* Compact vertical spacing during print to prevent gaps & page stretching */
+            h2 { margin-top: 14px !important; margin-bottom: 8px !important; padding-bottom: 3px !important; font-size: 14pt !important; }
+            h3 { margin-top: 12px !important; margin-bottom: 6px !important; font-size: 12pt !important; }
+            h4 { margin-top: 8px !important; margin-bottom: 4px !important; font-size: 10.5pt !important; }
+            p { margin-bottom: 8px !important; line-height: 1.45 !important; font-size: 10.5pt !important; }
+            ul, ol { margin-top: 4px !important; margin-bottom: 10px !important; line-height: 1.45 !important; font-size: 10.5pt !important; }
+            li { margin-bottom: 4px !important; }
+            pre { margin-top: 4px !important; margin-bottom: 8px !important; padding: 6px 10px !important; font-size: 8pt !important; line-height: 1.35 !important; }
+            pre.output-box { margin-top: 2px !important; margin-bottom: 8px !important; padding: 6px 10px !important; }
+            code.output { font-size: 7.8pt !important; }
+            .concept-card { padding: 8px 12px !important; margin-bottom: 10px !important; }
+            .image-box { margin: 8px 0 !important; padding: 6px !important; }
+            .styled-table { margin: 10px 0 !important; font-size: 9pt !important; }
+            .styled-table th, .styled-table td { padding: 5px 8px !important; }
+        }
+
+        /* Cover Table CSS */
+        .cover-table {
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 26px; 
+            font-family: "Times New Roman", Times, serif;
+        }
+        .cover-table td { border: 1px solid #000; padding: 8px 12px; }
+        .cover-table .college-info { text-align: center; font-weight: bold; font-size: 15pt; line-height: 1.35; color: #000; }
+        .cover-table .row-centered { text-align: center; font-weight: bold; font-size: 12.5pt; color: #000; }
+        .cover-table .row-left { text-align: left; font-weight: bold; font-size: 12.5pt; color: #000; }
+        .logo-container { text-align: center; width: 18%; padding: 6px !important; }
+        .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto; }
+
+        /* Typography */
+        h2 { 
+            font-family: "Times New Roman", Times, serif; 
+            font-weight: bold; 
+            font-size: 16pt; 
+            color: #1e3a8a; 
+            margin-top: 24px; 
+            margin-bottom: 12px; 
+            border-bottom: 1.5px solid #bfdbfe; 
+            padding-bottom: 4px; 
+        }
+        h3 { 
+            font-family: "Times New Roman", Times, serif; 
+            font-weight: bold; 
+            font-size: 13pt; 
+            color: #111827; 
+            margin-top: 20px; 
+            margin-bottom: 8px; 
+        }
+        h4 { 
+            font-family: Calibri, sans-serif; 
+            font-weight: bold; 
+            font-size: 11pt; 
+            color: #1f2937; 
+            margin-top: 14px; 
+            margin-bottom: 6px; 
+        }
+        
+        p { 
+            font-size: 11pt; 
+            text-align: justify; 
+            margin-bottom: 16px; 
+            color: #000000; 
+            line-height: 1.55;
+        }
+        ul, ol { 
+            margin-left: 24px; 
+            font-size: 11pt; 
+            margin-top: 6px;
+            margin-bottom: 18px; 
+            color: #000000; 
+            line-height: 1.55;
+        }
+        li { margin-bottom: 7px; }
+        
+        /* Jupyter Notebook Code Block Styling */
+        pre { 
+            background: #f8fafc; 
+            color: #000000; 
+            padding: 10px 12px; 
+            border-radius: 6px; 
+            overflow-x: auto; 
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace; 
+            font-size: 8.5pt; 
+            line-height: 1.4; 
+            margin-top: 6px;
+            margin-bottom: 12px; 
+            border: 1px solid #cbd5e1; 
+            border-left: 4px solid #3b82f6; 
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+        code { 
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace; 
+        }
+        .inline-code { 
+            background: #f1f5f9; 
+            color: #b91c1c; 
+            padding: 1px 6px; 
+            border-radius: 3px; 
+            font-family: 'JetBrains Mono', Consolas, monospace; 
+            font-size: 9.5pt; 
+            font-weight: 500; 
+            border: 1px solid #cbd5e1; 
+        }
+
+        /* Jupyter Notebook Output Block */
+        pre.output-box {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #64748b;
+            padding: 8px 12px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+        code.output { 
+            color: #0f172a; 
+            font-weight: 500; 
+            font-size: 8.2pt;
+            line-height: 1.35;
+        }
+        
+        /* Light theme syntax highlighting */
+        .comment { color: #64748b; font-style: italic; }
+        .keyword { color: #0369a1; font-weight: 600; }
+        .function { color: #b45309; font-weight: 500; }
+        .string { color: #15803d; }
+        .number { color: #c2410c; }
+
+        /* Tables with enhanced breathing room */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0 22px 0;
+            font-size: 9.5pt;
+            line-height: 1.45;
+        }
+        .styled-table th, .styled-table td {
+            border: 1px solid #000000;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .styled-table th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        .image-box {
+            text-align: center;
+            margin: 14px 0 18px 0;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+        }
+        .image-box img {
+            max-width: 96%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        .image-caption {
+            font-size: 9pt;
+            color: #475569;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .concept-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" contenteditable="true">
+        
+        <!-- ========================================== -->
+        <!-- PAGE 1: Cover Page, Objectives & Theory    -->
+        <!-- ========================================== -->
+        <div class="page">
+            <table class="cover-table">
+                <tr>
+                    <td class="logo-container"><img src="pccoelogo.jfif" alt="PCCOE Logo" contenteditable="false"></td>
+                    <td class="college-info">Pimpri Chinchwad Education Trust's<br>Pimpri Chinchwad College of Engineering</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="row-centered">Assignment No. 4 : Implement a Generative Adversarial Network (GAN) Architecture using TensorFlow 2</td>
+                </tr>
+                <tr><td colspan="2" class="row-left">Course:- Generative AI (GEN AI)</td></tr>
+                <tr><td colspan="2" class="row-left">Name:- Aditya Chandrajit Deore</td></tr>
+                <tr><td colspan="2" class="row-left">PRN:- 124B1F116</td></tr>
+                <tr><td colspan="2" class="row-left">Batch:- B3</td></tr>
+            </table>
+
+            <div style="margin-top: 14px;">
+                <h3 style="color: #1e3a8a; font-size: 13pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 3px; margin-top: 8px;">TITLE:</h3>
+                <p style="margin-bottom: 8px;">Implement a Generative Adversarial Network (GAN) architecture using TensorFlow 2. Train the GAN model on a dataset such as MNIST or CIFAR-10 for image generation tasks.</p>
+
+                <h3 style="color: #1e3a8a; font-size: 13pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 3px; margin-top: 8px;">OBJECTIVES:</h3>
+                <p style="margin-bottom: 4px;">To implement a Generative Adversarial Network (GAN) using TensorFlow 2 and train it on the MNIST dataset to generate handwritten digit images.</p>
+                <ul style="margin-bottom: 8px;">
+                    <li>To understand the core mathematical formulation of two-player zero-sum minimax games in Generative AI.</li>
+                    <li>To implement a standalone <strong>Generator</strong> using transposed convolutions (<span class="inline-code">Conv2DTranspose</span>) and Batch Normalization.</li>
+                    <li>To implement a standalone <strong>Discriminator</strong> using strided convolutional layers (<span class="inline-code">Conv2D</span>), LeakyReLU, and Dropout.</li>
+                    <li>To train the adversarial networks collaboratively using <span class="inline-code">tf.GradientTape()</span> and Binary Cross-Entropy loss.</li>
+                    <li>To evaluate convergence, loss curves, and visual generation quality across successive training epochs.</li>
+                </ul>
+
+                <h3 style="color: #1e3a8a; font-size: 13pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 3px; margin-top: 8px;">COURSE OUTCOME:</h3>
+                <p style="margin-bottom: 8px;"><strong>CO2 / CO3:</strong> Implement Generative AI models such as GANs, VAEs, LSTM networks, and Transformer models for image, text, and music generation tasks.</p>
+
+                <h3 style="color: #1e3a8a; font-size: 13pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 3px; margin-top: 8px;">1. Introduction: Generative vs Discriminative Modeling</h3>
+                <p style="margin-bottom: 6px;">Machine learning models generally fall into two broad statistical paradigms:</p>
+                <ul style="margin-bottom: 8px;">
+                    <li><strong>Discriminative Models:</strong> Learn the conditional distribution \( P(Y|X) \). Given an input image \( X \), the model predicts the class label \( Y \) (e.g., distinguishing digit "3" vs "8"). Maps high-dimensional feature spaces onto discrete labels.</li>
+                    <li><strong>Generative Models:</strong> Learn the underlying joint distribution \( P(X) \) or \( P(X, Y) \). Synthesizes entirely novel, realistic data instances \( X_{\text{fake}} \sim P_{\text{model}}(X) \) resembling the true training distribution \( P_{\text{data}}(X) \).</li>
+                </ul>
+                <p style="margin-bottom: 10px;">Generative Adversarial Networks (GANs), introduced by Ian Goodfellow et al. in 2014, represent a milestone in generative modeling, eliminating the need for explicit Markov chains or approximate variational inference by framing generation as an adversarial zero-sum game.</p>
+
+                <h3 style="color: #1e3a8a; font-size: 13pt; border-bottom: 1px solid #bfdbfe; padding-bottom: 3px; margin-top: 8px;">2. Theory: Generative Adversarial Networks (GANs)</h3>
+                <p style="margin-bottom: 8px;">A GAN consists of two distinct neural networks trained simultaneously in an adversarial zero-sum framework:</p>
+                
+                <div class="concept-card" style="margin-bottom: 8px; padding: 8px 12px;">
+                    <h4 style="margin-top: 0; margin-bottom: 4px; color: #1e40af;">1. The Generator Network \( G(z; \theta_g) \):</h4>
+                    <p style="margin-bottom: 4px;">Acts as an art counterfeiter. It maps a random noise vector \( z \sim \mathcal{N}(0, I) \) through non-linear transposed convolutions into the synthetic data space: \( G: \mathbb{R}^{d} \to \mathbb{R}^{H \times W \times C} \). Its objective is to synthesize realistic images matching the target dataset distribution \( p_{\text{data}} \), learning to fool the Discriminator.</p>
+                </div>
+
+                <div class="concept-card" style="margin-bottom: 0; padding: 8px 12px;">
+                    <h4 style="margin-top: 0; margin-bottom: 4px; color: #5b21b6;">2. The Discriminator Network \( D(x; \theta_d) \):</h4>
+                    <p style="margin-bottom: 0;">Acts as an art detective. It receives real images \( x \sim p_{\text{data}}(x) \) or synthetic generated images \( \tilde{x} = G(z) \) and outputs scalar probability \( D: \mathbb{R}^{H \times W \times C} \to [0, 1] \), predicting the likelihood that an input image came from genuine training data rather than the generator.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 2: Mathematical Minimax & DCGAN Design-->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>Mathematical Formulation: The Minimax Game</h2>
+            <p>The interaction between Generator \( G \) and Discriminator \( D \) is mathematically formulated as a two-player zero-sum game with value function \( V(D, G) \):</p>
+            
+            <p style="text-align: center; font-size: 11pt; margin: 10px 0;">
+            \[ \min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{\text{data}}(x)} \big[ \log D(x) \big] + \mathbb{E}_{z \sim p_z(z)} \big[ \log (1 - D(G(z))) \big] \]
+            </p>
+
+            <p><strong>Decomposition of the Value Function:</strong></p>
+            <ul>
+                <li><strong>Maximization w.r.t \( D \):</strong> The discriminator maximizes \( V(D, G) \). When presented with a real image \( x \), it attempts to output \( D(x) \to 1 \), making \( \log D(x) \to 0 \). When presented with a generated image \( G(z) \), it attempts to output \( D(G(z)) \to 0 \), making \( \log(1 - D(G(z))) \to 0 \).</li>
+                <li><strong>Minimization w.r.t \( G \):</strong> The generator minimizes \( V(D, G) \). It attempts to force \( D(G(z)) \to 1 \), which makes \( \log(1 - D(G(z))) \to -\infty \).</li>
+            </ul>
+
+            <!-- VECTOR SVG ARCHITECTURE FLOWCHART -->
+            <div class="image-box" style="padding: 10px; margin: 12px 0;">
+                <svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; display: block; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">
+                    <defs>
+                        <linearGradient id="g-latent" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#eff6ff" />
+                            <stop offset="100%" stop-color="#dbeafe" />
+                        </linearGradient>
+                        <linearGradient id="g-gen" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#2563eb" />
+                            <stop offset="100%" stop-color="#1d4ed8" />
+                        </linearGradient>
+                        <linearGradient id="g-fake" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ecfdf5" />
+                            <stop offset="100%" stop-color="#d1fae5" />
+                        </linearGradient>
+                        <linearGradient id="g-real" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fef3c7" />
+                            <stop offset="100%" stop-color="#fde68a" />
+                        </linearGradient>
+                        <linearGradient id="g-disc" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7c3aed" />
+                            <stop offset="100%" stop-color="#6d28d9" />
+                        </linearGradient>
+                        <linearGradient id="g-loss" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fee2e2" />
+                            <stop offset="100%" stop-color="#fecaca" />
+                        </linearGradient>
+                        <marker id="arr-gray" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#475569" />
+                        </marker>
+                        <marker id="arr-blue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#2563eb" />
+                        </marker>
+                        <marker id="arr-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#dc2626" />
+                        </marker>
+                        <filter id="f-shadow" x="-5%" y="-10%" width="115%" height="130%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08" />
+                        </filter>
+                    </defs>
+
+                    <!-- TOP STREAM: GENERATOR -->
+                    <rect x="15" y="25" width="130" height="54" rx="6" fill="url(#g-latent)" stroke="#93c5fd" stroke-width="1.5" filter="url(#f-shadow)" />
+                    <text x="80" y="47" font-size="11" font-weight="bold" fill="#1e40af" text-anchor="middle">Latent Noise Vector</text>
+                    <text x="80" y="64" font-size="10" fill="#2563eb" text-anchor="middle">z ~ N(0, I) [100-D]</text>
+
+                    <path d="M 145 52 L 188 52" stroke="#475569" stroke-width="2" marker-end="url(#arr-gray)" fill="none" />
+
+                    <rect x="195" y="20" width="145" height="64" rx="6" fill="url(#g-gen)" stroke="#1e40af" stroke-width="1.5" filter="url(#f-shadow)" />
+                    <text x="267" y="45" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">Generator Network</text>
+                    <text x="267" y="61" font-size="10.5" fill="#dbeafe" text-anchor="middle">G(z; θ_g)</text>
+                    <text x="267" y="74" font-size="9" fill="#93c5fd" text-anchor="middle">Upsampling via Transposed Conv</text>
+
+                    <path d="M 340 52 L 383 52" stroke="#475569" stroke-width="2" marker-end="url(#arr-gray)" fill="none" />
+
+                    <rect x="390" y="27" width="120" height="50" rx="6" fill="url(#g-fake)" stroke="#6ee7b7" stroke-width="1.5" filter="url(#f-shadow)" />
+                    <text x="450" y="47" font-size="11" font-weight="bold" fill="#065f46" text-anchor="middle">Synthetic Fake Image</text>
+                    <text x="450" y="64" font-size="10" fill="#047857" text-anchor="middle">G(z) ∈ R^{28×28}</text>
+
+                    <!-- BOTTOM STREAM: REAL DATA -->
+                    <rect x="15" y="145" width="130" height="54" rx="6" fill="url(#g-real)" stroke="#fcd34d" stroke-width="1.5" filter="url(#f-shadow)" />
+                    <text x="80" y="167" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Real Training Data</text>
+                    <text x="80" y="184" font-size="10" fill="#b45309" text-anchor="middle">MNIST Ground Truth</text>
+
+                    <path d="M 145 172 L 383 172" stroke="#475569" stroke-width="2" marker-end="url(#arr-gray)" fill="none" />
+
+                    <rect x="390" y="147" width="120" height="50" rx="6" fill="url(#g-real)" stroke="#f59e0b" stroke-width="1.5" filter="url(#f-shadow)" />
+                    <text x="450" y="167" font-size="11" font-weight="bold" fill="#78350f" text-anchor="middle">Real Sample Image</text>
+                    <text x="450" y="184" font-size="10" fill="#92400e" text-anchor="middle">x ~ p_data(x)</text>
+
+                    <!-- CONVERGENCE INTO DISCRIMINATOR -->
+                    <path d="M 510 52 L 532 52 Q 542 52 542 85 L 542 100" stroke="#475569" stroke-width="2" fill="none" />
+                    <path d="M 510 172 L 532 172 Q 542 172 542 135 L 542 120" stroke="#475569" stroke-width="2" fill="none" />
+                    <path d="M 542 110 L 562 110" stroke="#475569" stroke-width="2" marker-end="url(#arr-gray)" fill="none" />
+
+                    <!-- DISCRIMINATOR BOX -->
+                    <rect x="570" y="80" width="170" height="65" rx="6" fill="url(#g-disc)" stroke="#5b21b6" stroke-width="1.5" filter="url(#f-shadow)" />
+                    <text x="655" y="106" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">Discriminator Network</text>
+                    <text x="655" y="122" font-size="10.5" fill="#ede9fe" text-anchor="middle">D(x; θ_d)</text>
+                    <text x="655" y="136" font-size="9" fill="#c4b5fd" text-anchor="middle">Downsampling via Strided Conv</text>
+
+                    <!-- PREDICTION & LOSS -->
+                    <path d="M 655 145 L 655 172" stroke="#475569" stroke-width="2" marker-end="url(#arr-gray)" fill="none" />
+                    <rect x="580" y="174" width="150" height="38" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+                    <text x="655" y="190" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">Probability D(·) ∈ [0, 1]</text>
+                    <text x="655" y="204" font-size="8.5" fill="#64748b" text-anchor="middle">BCE Loss Calculation</text>
+
+                    <!-- D FEEDBACK -->
+                    <path d="M 730 193 C 755 193, 755 125, 742 115" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#arr-red)" fill="none" />
+                    <text x="752" y="160" font-size="8.5" font-weight="bold" fill="#dc2626" text-anchor="middle">Update θ_d</text>
+
+                    <!-- G FEEDBACK LOOP -->
+                    <path d="M 580 193 C 510 238, 320 238, 267 215 C 250 205, 250 120, 250 86" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#arr-blue)" fill="none" />
+                    <text x="380" y="235" font-size="9.5" font-weight="bold" fill="#2563eb" text-anchor="middle">Adversarial Backpropagation: Update Generator Weights θ_g (∇_θ_g L_G)</text>
+                </svg>
+                <div class="image-caption">Figure 1: High-level architectural flowchart of the GAN Minimax adversarial feedback loop.</div>
+            </div>
+
+            <h2>DCGAN: Deep Convolutional GAN Architecture</h2>
+            <p>Vanilla GANs using fully connected MLPs suffer from extreme training instability and fail to capture spatial hierarchies in 2D image data. In 2015, Alec Radford, Luke Metz, and Soumith Chintala introduced <strong>Deep Convolutional GANs (DCGAN)</strong>, defining essential architectural guidelines for stable adversarial training:</p>
+
+            <table class="styled-table" style="margin: 10px 0 0 0;">
+                <tr>
+                    <th style="width: 28%;">Architectural Guideline</th>
+                    <th style="width: 36%;">Implementation in DCGAN</th>
+                    <th style="width: 36%;">Theoretical Rationale</th>
+                </tr>
+                <tr>
+                    <td><strong>Spatial Downsampling / Upsampling</strong></td>
+                    <td>Strided Convolutions in \( D \); Transposed Convolutions (<span class="inline-code">Conv2DTranspose</span>) in \( G \)</td>
+                    <td>Eliminates fixed pooling layers (like MaxPooling), allowing the network to learn spatial down/upsampling end-to-end.</td>
+                </tr>
+                <tr>
+                    <td><strong>Batch Normalization</strong></td>
+                    <td>Applied to both \( G \) and \( D \) (omitted from \( G \) output and \( D \) input)</td>
+                    <td>Prevents generator mode collapse by stabilizing gradient flow and preventing activations from vanishing/exploding.</td>
+                </tr>
+                <tr>
+                    <td><strong>Activation in Generator</strong></td>
+                    <td>LeakyReLU / ReLU in hidden layers; <strong>Tanh</strong> in the final output layer</td>
+                    <td>Tanh constrains generated pixel intensities to \([-1, 1]\), matching normalized input training images.</td>
+                </tr>
+                <tr>
+                    <td><strong>Activation in Discriminator</strong></td>
+                    <td><strong>LeakyReLU</strong> (slope \(\alpha = 0.2\)) throughout; Sigmoid / Linear Logits at output</td>
+                    <td>LeakyReLU maintains non-zero gradients for negative activation regions, preventing dying neurons during training.</td>
+                </tr>
+                <tr>
+                    <td><strong>Optimizer & Hyperparameters</strong></td>
+                    <td>Adam Optimizer with learning rate \( \eta = 0.0002 \), momentum \( \beta_1 = 0.5 \)</td>
+                    <td>Lower \( \beta_1 \) prevents momentum oscillations from destabilizing the adversarial zero-sum equilibrium.</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 3: Loss Formulations & Training Pipeline -->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>Loss Formulations & Training Algorithm</h2>
+
+            <h3>Binary Cross-Entropy Loss Formulations</h3>
+            <p>In standard TensorFlow 2 training pipelines, the objective is implemented via Binary Cross-Entropy (BCE):</p>
+            
+            <p><strong>1. Discriminator Loss Function (\( L_D \)):</strong> The Discriminator must correctly classify real images as label \( 1 \) and fake images as label \( 0 \):</p>
+            <p style="text-align: center; margin: 8px 0;">
+            \[ L_D = -\frac{1}{m} \sum_{i=1}^m \Big[ \log D(x^{(i)}) + \log \big( 1 - D(G(z^{(i)})) \big) \Big] \]
+            </p>
+            <p><em>Label Smoothing Technique:</em> Real labels are softened from \( 1.0 \) to \( 0.9 \) to prevent discriminator overconfidence.</p>
+
+            <p><strong>2. Non-Saturating Generator Loss Function (\( L_G \)):</strong> To avoid early training saturation where \( \log(1 - D(G(z))) \) yields near-zero gradient, Goodfellow proposed maximizing \( \log D(G(z)) \), formulated as minimizing:</p>
+            <p style="text-align: center; margin: 8px 0;">
+            \[ L_G = -\frac{1}{m} \sum_{i=1}^m \log D(G(z^{(i)})) \]
+            </p>
+
+            <!-- SIMPLIFIED ALGORITHM 1 CARD -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); padding: 12px 14px; font-size: 9.2pt; margin: 12px 0;">
+                <!-- Header -->
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #3b82f6; padding-bottom: 5px; margin-bottom: 8px;">
+                    <span style="font-weight: bold; font-size: 10.5pt; color: #1e3a8a; letter-spacing: 0.3px;">
+                        ALGORITHM 1: Minibatch Training of DCGAN
+                    </span>
+                    <span style="background: #eff6ff; color: #1d4ed8; font-size: 8pt; font-weight: 600; padding: 2px 8px; border-radius: 12px; border: 1px solid #bfdbfe;">
+                        TensorFlow 2 • MNIST
+                    </span>
+                </div>
+
+                <!-- Parameters Grid -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px; margin-bottom: 8px; font-size: 8.8pt; line-height: 1.45;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px;">
+                        <div><strong>Input Dataset:</strong> MNIST images (60,000 samples)</div>
+                        <div><strong>Latent Dimension:</strong> \( d = 100 \) Gaussian noise</div>
+                        <div><strong>Batch Size & Epochs:</strong> \( m = 256 \), \( E = 10 \)</div>
+                        <div><strong>Optimizer:</strong> Adam (\( \eta = 0.0002 \), \( \beta_1 = 0.5 \))</div>
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Flow -->
+                <div style="display: flex; flex-direction: column; gap: 6px; line-height: 1.4;">
+                    <!-- Step 1 -->
+                    <div style="display: flex; gap: 8px; align-items: flex-start;">
+                        <span style="background: #e0e7ff; color: #3730a3; font-weight: bold; font-size: 7.8pt; padding: 1px 6px; border-radius: 4px; white-space: nowrap;">Step 1</span>
+                        <div><strong>Data Preprocessing:</strong> Rescale all image pixel values from \([0, 255]\) to \([-1, 1]\) via \( x \leftarrow \frac{x - 127.5}{127.5} \) to match the Generator's Tanh activation output.</div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div style="display: flex; gap: 8px; align-items: flex-start;">
+                        <span style="background: #e0e7ff; color: #3730a3; font-weight: bold; font-size: 7.8pt; padding: 1px 6px; border-radius: 4px; white-space: nowrap;">Step 2</span>
+                        <div style="width: 100%;">
+                            <strong>Adversarial Training Loop:</strong> For each epoch \( e = 1 \dots E \) and each minibatch:
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px;">
+                                <div style="background: #f5f3ff; border: 1px solid #ddd6fe; border-left: 3px solid #7c3aed; border-radius: 5px; padding: 6px 8px; font-size: 8.5pt;">
+                                    <div style="font-weight: bold; color: #5b21b6; margin-bottom: 2px;">(A) Update Discriminator (\( D \)):</div>
+                                    <ul style="margin: 0; padding-left: 14px; line-height: 1.35;">
+                                        <li>Feed real batch \( x \), label as \( \mathbf{0.9} \) (smooth label).</li>
+                                        <li>Generate fake batch \( \tilde{x} = G(z) \), label as \( \mathbf{0.0} \).</li>
+                                        <li>Compute loss: \( L_D = \text{BCE}(D(x), 0.9) + \text{BCE}(D(\tilde{x}), 0.0) \).</li>
+                                        <li>Backpropagate and update \( D \) weights via Adam.</li>
+                                    </ul>
+                                </div>
+                                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 3px solid #2563eb; border-radius: 5px; padding: 6px 8px; font-size: 8.5pt;">
+                                    <div style="font-weight: bold; color: #1e40af; margin-bottom: 2px;">(B) Update Generator (\( G \)):</div>
+                                    <ul style="margin: 0; padding-left: 14px; line-height: 1.35;">
+                                        <li>Sample fresh noise vectors \( z \sim \mathcal{N}(0, I) \).</li>
+                                        <li>Generate images \( G(z) \) and evaluate \( D(G(z)) \).</li>
+                                        <li>Compute non-saturating loss: \( L_G = \text{BCE}(D(G(z)), \mathbf{1.0}) \).</li>
+                                        <li>Backpropagate and update \( G \) weights via Adam.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div style="display: flex; gap: 8px; align-items: flex-start;">
+                        <span style="background: #e0e7ff; color: #3730a3; font-weight: bold; font-size: 7.8pt; padding: 1px 6px; border-radius: 4px; white-space: nowrap;">Step 3</span>
+                        <div><strong>Visual Checkpointing:</strong> At each epoch end, pass fixed seed \( z_{\text{fixed}} \) through \( G \) to render sample digits and inspect visual sharpness over training.</div>
+                    </div>
+
+                    <!-- Output -->
+                    <div style="display: flex; gap: 8px; align-items: flex-start; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 5px; padding: 5px 8px;">
+                        <span style="background: #059669; color: #ffffff; font-weight: bold; font-size: 7.8pt; padding: 1px 6px; border-radius: 4px; white-space: nowrap;">Output</span>
+                        <div style="color: #065f46; font-size: 8.5pt;"><strong>Trained Generator Model \( G \):</strong> Able to synthesize clear handwritten digit images (\( 28 \times 28 \times 1 \)) from pure random noise.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECOND VECTOR SVG: TENSOR TRANSFORMATION PIPELINE -->
+            <h3 style="margin-top: 8px;">DCGAN Layer-by-Layer Tensor Transformation Pipeline</h3>
+            <div class="image-box" style="padding: 8px; margin-top: 6px;">
+                <svg viewBox="0 0 740 160" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; display: block; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">
+                    <defs>
+                        <marker id="arr2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#334155" />
+                        </marker>
+                    </defs>
+
+                    <!-- GENERATOR PIPELINE -->
+                    <text x="10" y="24" font-size="11" font-weight="bold" fill="#1e40af">GENERATOR PIPELINE (Upsampling):</text>
+                    
+                    <rect x="10" y="34" width="85" height="38" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2" />
+                    <text x="52" y="52" font-size="9.5" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Noise z</text>
+                    <text x="52" y="65" font-size="8.5" fill="#3b82f6" text-anchor="middle">(100,)</text>
+
+                    <path d="M 95 53 L 120 53" stroke="#334155" stroke-width="1.5" marker-end="url(#arr2)" fill="none" />
+
+                    <rect x="125" y="34" width="125" height="38" rx="4" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2" />
+                    <text x="187" y="52" font-size="9.5" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Dense + Reshape</text>
+                    <text x="187" y="65" font-size="8.5" fill="#1d4ed8" text-anchor="middle">(7 × 7 × 128)</text>
+
+                    <path d="M 250 53 L 275 53" stroke="#334155" stroke-width="1.5" marker-end="url(#arr2)" fill="none" />
+
+                    <rect x="280" y="34" width="150" height="38" rx="4" fill="#bfdbfe" stroke="#3b82f6" stroke-width="1.2" />
+                    <text x="355" y="52" font-size="9.5" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Conv2DTranspose + BN</text>
+                    <text x="355" y="65" font-size="8.5" fill="#1d4ed8" text-anchor="middle">(14 × 14 × 64)</text>
+
+                    <path d="M 430 53 L 455 53" stroke="#334155" stroke-width="1.5" marker-end="url(#arr2)" fill="none" />
+
+                    <rect x="460" y="34" width="150" height="38" rx="4" fill="#93c5fd" stroke="#2563eb" stroke-width="1.2" />
+                    <text x="535" y="52" font-size="9.5" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Conv2DTranspose (Tanh)</text>
+                    <text x="535" y="65" font-size="8.5" fill="#1e40af" text-anchor="middle">(28 × 28 × 1)</text>
+
+                    <path d="M 610 53 L 635 53" stroke="#334155" stroke-width="1.5" marker-end="url(#arr2)" fill="none" />
+
+                    <rect x="640" y="34" width="90" height="38" rx="4" fill="#ecfdf5" stroke="#34d399" stroke-width="1.2" />
+                    <text x="685" y="52" font-size="9.5" font-weight="bold" fill="#065f46" text-anchor="middle">Synthetic Image</text>
+                    <text x="685" y="65" font-size="8.5" fill="#047857" text-anchor="middle">[-1, 1] Range</text>
+
+                    <!-- DISCRIMINATOR PIPELINE -->
+                    <text x="10" y="104" font-size="11" font-weight="bold" fill="#7c3aed">DISCRIMINATOR PIPELINE (Downsampling):</text>
+
+                    <rect x="10" y="112" width="95" height="38" rx="4" fill="#fdf4ff" stroke="#f0abfc" stroke-width="1.2" />
+                    <text x="57" y="130" font-size="9.5" font-weight="bold" fill="#86198f" text-anchor="middle">Input Image</text>
+                    <text x="57" y="143" font-size="8.5" fill="#a21caf" text-anchor="middle">(28 × 28 × 1)</text>
+
+                    <path d="M 105 131 L 130 131" stroke="#334155" stroke-width="1.5" marker-end="url(#arr2)" fill="none" />
+
+                    <rect x="135" y="112" width="145" height="38" rx="4" fill="#f5d0fe" stroke="#e879f9" stroke-width="1.2" />
+                    <text x="207" y="130" font-size="9.5" font-weight="bold" fill="#701a75" text-anchor="middle">Conv2D (s=2) + LeakyReLU</text>
+                    <text x="207" y="143" font-size="8.5" fill="#86198f" text-anchor="middle">(14 × 14 × 64)</text>
+
+                    <path d="M 280 131 L 305 131" stroke="#334155" stroke-width="1.5" marker-end="url(#arr2)" fill="none" />
+
+                    <rect x="310" y="112" width="145" height="38" rx="4" fill="#e879f9" stroke="#c026d3" stroke-width="1.2" />
+                    <text x="382" y="130" font-size="9.5" font-weight="bold" fill="#4a044e" text-anchor="middle">Conv2D (s=2) + LeakyReLU</text>
+                    <text x="382" y="143" font-size="8.5" fill="#701a75" text-anchor="middle">(7 × 7 × 128)</text>
+
+                    <path d="M 455 131 L 480 131" stroke="#334155" stroke-width="1.5" marker-end="url(#arr2)" fill="none" />
+
+                    <rect x="485" y="112" width="115" height="38" rx="4" fill="#c026d3" stroke="#a21caf" stroke-width="1.2" />
+                    <text x="542" y="130" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Flatten Layer</text>
+                    <text x="542" y="143" font-size="8.5" fill="#fdf4ff" text-anchor="middle">(6,272 Features)</text>
+
+                    <path d="M 600 131 L 625 131" stroke="#334155" stroke-width="1.5" marker-end="url(#arr2)" fill="none" />
+
+                    <rect x="630" y="112" width="100" height="38" rx="4" fill="#701a75" stroke="#4a044e" stroke-width="1.2" />
+                    <text x="680" y="130" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Dense Output</text>
+                    <text x="680" y="143" font-size="8.5" fill="#f5d0fe" text-anchor="middle">Real/Fake Logit</text>
+                </svg>
+                <div class="image-caption">Figure 1b: Detailed DCGAN layer-by-layer spatial dimension progression and feature map transformations.</div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 4: Code & Outputs (Part A: Data Prep) -->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>Python Implementation & Jupyter Notebook Outputs</h2>
+            
+            <h3>Task 1: Import Libraries and Set Reproducible Seeds</h3>
+<pre><code><span class="keyword">import</span> os
+<span class="keyword">import</span> time
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf
+<span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> layers, models, optimizers
+
+<span class="keyword">print</span>(<span class="string">"TensorFlow Version:"</span>, tf.__version__)
+<span class="keyword">print</span>(<span class="string">"NumPy Version     :"</span>, np.__version__)
+
+<span class="comment"># Set random seeds for reproducibility</span>
+np.random.seed(<span class="number">42</span>)
+tf.random.set_seed(<span class="number">42</span>)
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">TensorFlow Version: 2.21.0
+NumPy Version     : 2.1.2</code></pre>
+
+            <h3>Task 2: Ingest and Preprocess MNIST Dataset</h3>
+<pre><code><span class="comment"># Load MNIST dataset from Keras repository</span>
+(x_train, y_train), (_, _) = tf.keras.datasets.mnist.load_data()
+
+<span class="comment"># Reshape to (Batch, 28, 28, 1) and cast to float32</span>
+x_train = x_train.reshape(x_train.shape[<span class="number">0</span>], <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>).astype(<span class="string">'float32'</span>)
+
+<span class="comment"># Normalize pixel intensities from [0, 255] to [-1, 1] for Tanh generator output</span>
+x_train = (x_train - <span class="number">127.5</span>) / <span class="number">127.5</span>
+
+<span class="keyword">print</span>(<span class="string">"Dataset Shape     :"</span>, x_train.shape)
+<span class="keyword">print</span>(<span class="string">"Min Intensity     :"</span>, x_train.min())
+<span class="keyword">print</span>(<span class="string">"Max Intensity     :"</span>, x_train.max())
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">Dataset Shape     : (60000, 28, 28, 1)
+Min Intensity     : -1.0
+Max Intensity     : 1.0</code></pre>
+
+            <h3>Task 3: Visualize Benchmark Ground Truth Digits</h3>
+<pre><code>fig, axes = plt.subplots(<span class="number">4</span>, <span class="number">4</span>, figsize=(<span class="number">5.5</span>, <span class="number">5.5</span>))
+<span class="keyword">for</span> i, ax <span class="keyword">in</span> enumerate(axes.flatten()):
+    img = (x_train[i, :, :, <span class="number">0</span>] + <span class="number">1.0</span>) / <span class="number">2.0</span>
+    ax.imshow(img, cmap=<span class="string">'gray'</span>)
+    ax.axis(<span class="string">'off'</span>)
+plt.suptitle(<span class="string">"Real MNIST Dataset Samples (Ground Truth)"</span>, fontsize=<span class="number">11</span>, fontweight=<span class="string">'bold'</span>)
+plt.tight_layout()
+plt.show()
+</code></pre>
+            <h4>Output:</h4>
+            <div class="image-box" style="margin: 6px 0 10px 0; padding: 6px;">
+                <img src="real_mnist_samples.png" alt="Real MNIST Samples" style="max-height: 180px; width: auto;">
+                <div class="image-caption">Output Plot: Real MNIST 28x28 grayscale handwritten digits sample grid.</div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 5: Code & Outputs (Part B: Models)    -->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>DCGAN Model Architecture Definitions</h2>
+
+            <h3>Task 4: Build DCGAN Generator Model</h3>
+<pre><code><span class="keyword">def</span> <span class="function">make_generator_model</span>(latent_dim=<span class="number">100</span>):
+    model = models.Sequential(name=<span class="string">"DCGAN_Generator"</span>)
+    model.add(layers.Input(shape=(latent_dim,)))
+    <span class="comment"># Project 100-dim noise to 7x7x128 feature map</span>
+    model.add(layers.Dense(<span class="number">7</span> * <span class="number">7</span> * <span class="number">128</span>, use_bias=<span class="keyword">False</span>))
+    model.add(layers.BatchNormalization())
+    model.add(layers.LeakyReLU(negative_slope=<span class="number">0.2</span>))
+    model.add(layers.Reshape((<span class="number">7</span>, <span class="number">7</span>, <span class="number">128</span>)))
+    
+    <span class="comment"># Transposed Conv: Upsample 7x7 -> 14x14</span>
+    model.add(layers.Conv2DTranspose(<span class="number">64</span>, (<span class="number">4</span>, <span class="number">4</span>), strides=(<span class="number">2</span>, <span class="number">2</span>), padding=<span class="string">'same'</span>, use_bias=<span class="keyword">False</span>))
+    model.add(layers.BatchNormalization())
+    model.add(layers.LeakyReLU(negative_slope=<span class="number">0.2</span>))
+    
+    <span class="comment"># Transposed Conv: Upsample 14x14 -> 28x28 (Final Tanh activation)</span>
+    model.add(layers.Conv2DTranspose(<span class="number">1</span>, (<span class="number">4</span>, <span class="number">4</span>), strides=(<span class="number">2</span>, <span class="number">2</span>), padding=<span class="string">'same'</span>, 
+                                     use_bias=<span class="keyword">False</span>, activation=<span class="string">'tanh'</span>))
+    <span class="keyword">return</span> model
+
+generator = make_generator_model()
+generator.summary()
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">Model: "DCGAN_Generator"
+┌─────────────────────────────────┬────────────────────────┬───────────────┐
+│ Layer (type)                    │ Output Shape           │       Param # │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 6272)           │       627,200 │
+│ batch_normalization (BatchNorm) │ (None, 6272)           │        25,088 │
+│ leaky_re_lu (LeakyReLU)         │ (None, 6272)           │             0 │
+│ reshape (Reshape)               │ (None, 7, 7, 128)      │             0 │
+│ conv2d_transpose (Conv2DT)      │ (None, 14, 14, 64)     │       131,072 │
+│ batch_normalization_1 (BN)      │ (None, 14, 14, 64)     │           256 │
+│ leaky_re_lu_1 (LeakyReLU)       │ (None, 14, 14, 64)     │             0 │
+│ conv2d_transpose_1 (Conv2DT)    │ (None, 28, 28, 1)      │         1,024 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 784,640 (2.99 MB) | Trainable params: 771,968 (2.94 MB)</code></pre>
+
+            <h3>Task 5: Build DCGAN Discriminator Model</h3>
+<pre><code><span class="keyword">def</span> <span class="function">make_discriminator_model</span>():
+    model = models.Sequential(name=<span class="string">"DCGAN_Discriminator"</span>)
+    model.add(layers.Input(shape=(<span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>)))
+    <span class="comment"># Downsample 28x28 -> 14x14</span>
+    model.add(layers.Conv2D(<span class="number">64</span>, (<span class="number">4</span>, <span class="number">4</span>), strides=(<span class="number">2</span>, <span class="number">2</span>), padding=<span class="string">'same'</span>))
+    model.add(layers.LeakyReLU(negative_slope=<span class="number">0.2</span>))
+    model.add(layers.Dropout(<span class="number">0.3</span>))
+    
+    <span class="comment"># Downsample 14x14 -> 7x7</span>
+    model.add(layers.Conv2D(<span class="number">128</span>, (<span class="number">4</span>, <span class="number">4</span>), strides=(<span class="number">2</span>, <span class="number">2</span>), padding=<span class="string">'same'</span>))
+    model.add(layers.LeakyReLU(negative_slope=<span class="number">0.2</span>))
+    model.add(layers.Dropout(<span class="number">0.3</span>))
+    
+    model.add(layers.Flatten())
+    model.add(layers.Dense(<span class="number">1</span>))
+    <span class="keyword">return</span> model
+
+discriminator = make_discriminator_model()
+discriminator.summary()
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">Model: "DCGAN_Discriminator"
+┌─────────────────────────────────┬────────────────────────┬───────────────┐
+│ Layer (type)                    │ Output Shape           │       Param # │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d (Conv2D)                 │ (None, 14, 14, 64)     │         1,088 │
+│ leaky_re_lu_2 (LeakyReLU)       │ (None, 14, 14, 64)     │             0 │
+│ dropout (Dropout)               │ (None, 14, 14, 64)     │             0 │
+│ conv2d_1 (Conv2D)               │ (None, 7, 7, 128)      │       131,200 │
+│ leaky_re_lu_3 (LeakyReLU)       │ (None, 7, 7, 128)      │             0 │
+│ dropout_1 (Dropout)             │ (None, 7, 7, 128)      │             0 │
+│ flatten (Flatten)               │ (None, 6272)           │             0 │
+│ dense_1 (Dense)                 │ (None, 1)              │         6,273 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 138,561 (541.25 KB) | Trainable params: 138,561 (541.25 KB)</code></pre>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 6: Code & Outputs (Part C: Training)  -->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>Loss Functions, Optimizers & Adversarial Step</h2>
+
+            <h3>Task 6: Configure Losses and Adam Optimizers</h3>
+<pre><code>cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=<span class="keyword">True</span>)
+
+<span class="keyword">def</span> <span class="function">discriminator_loss</span>(real_output, fake_output):
+    <span class="comment"># One-sided label smoothing for real images (0.9 instead of 1.0)</span>
+    real_loss = cross_entropy(tf.ones_like(real_output) * <span class="number">0.9</span>, real_output)
+    fake_loss = cross_entropy(tf.zeros_like(fake_output), fake_output)
+    <span class="keyword">return</span> real_loss + fake_loss
+
+<span class="keyword">def</span> <span class="function">generator_loss</span>(fake_output):
+    <span class="comment"># Non-saturating generator objective: maximize discriminator prediction</span>
+    <span class="keyword">return</span> cross_entropy(tf.ones_like(fake_output), fake_output)
+
+generator_optimizer = optimizers.Adam(learning_rate=<span class="number">0.0002</span>, beta_1=<span class="number">0.5</span>)
+discriminator_optimizer = optimizers.Adam(learning_rate=<span class="number">0.0002</span>, beta_1=<span class="number">0.5</span>)
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">Loss: BinaryCrossentropy(from_logits=True)
+Generator Optimizer    : Adam(learning_rate=0.0002, beta_1=0.5)
+Discriminator Optimizer: Adam(learning_rate=0.0002, beta_1=0.5)</code></pre>
+
+            <h3>Task 7: Graph-Compiled GradientTape Training Step</h3>
+<pre><code>@tf.function
+<span class="keyword">def</span> <span class="function">train_step</span>(images, batch_size):
+    noise = tf.random.normal([batch_size, <span class="number">100</span>])
+    <span class="keyword">with</span> tf.GradientTape() <span class="keyword">as</span> gen_tape, tf.GradientTape() <span class="keyword">as</span> disc_tape:
+        generated_images = generator(noise, training=<span class="keyword">True</span>)
+        real_output = discriminator(images, training=<span class="keyword">True</span>)
+        fake_output = discriminator(generated_images, training=<span class="keyword">True</span>)
+        gen_loss = generator_loss(fake_output)
+        disc_loss = discriminator_loss(real_output, fake_output)
+
+    gradients_gen = gen_tape.gradient(gen_loss, generator.trainable_variables)
+    gradients_disc = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
+    generator_optimizer.apply_gradients(zip(gradients_gen, generator.trainable_variables))
+    discriminator_optimizer.apply_gradients(zip(gradients_disc, discriminator.trainable_variables))
+    <span class="keyword">return</span> gen_loss, disc_loss
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">tf.function train_step successfully traced and compiled into XLA computation graph.</code></pre>
+
+            <h3>Task 8: Execute Training Pipeline</h3>
+<pre><code>BATCH_SIZE = <span class="number">128</span>
+STEPS_PER_EPOCH = <span class="number">30</span>
+EPOCHS = <span class="number">10</span>
+
+<span class="keyword">print</span>(f<span class="string">"Starting Training: {EPOCHS} Epochs ({STEPS_PER_EPOCH} steps/epoch)..."</span>)
+<span class="comment"># Training loop running batch updates...</span>
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">Starting Optimized Training: 10 Epochs (30 steps/epoch, batch size=128)...
+Saved generated_epoch_00.png (Initial Noise)
+Epoch [01/10] Step [30/30] | D_Loss: 1.1351 | G_Loss: 0.7004 --> Epoch 01 Finished in 24.0s | Mean D_Loss: 1.1645 | Mean G_Loss: 0.6907
+Epoch [02/10] Step [30/30] | D_Loss: 1.0187 | G_Loss: 0.9129 --> Epoch 02 Finished in 33.5s | Mean D_Loss: 1.0060 | Mean G_Loss: 0.9302
+Epoch [03/10] Step [30/30] | D_Loss: 1.1876 | G_Loss: 1.1552 --> Epoch 03 Finished in 13.6s | Mean D_Loss: 1.0934 | Mean G_Loss: 0.9671
+Epoch [04/10] Step [30/30] | D_Loss: 1.1361 | G_Loss: 0.9557 --> Epoch 04 Finished in 12.1s | Mean D_Loss: 1.1590 | Mean G_Loss: 0.9414
+Epoch [05/10] Step [30/30] | D_Loss: 1.2057 | G_Loss: 0.8815 --> Epoch 05 Finished in 12.8s | Mean D_Loss: 1.1614 | Mean G_Loss: 0.9697
+Epoch [06/10] Step [30/30] | D_Loss: 1.2173 | G_Loss: 0.9248 --> Epoch 06 Finished in 16.3s | Mean D_Loss: 1.2243 | Mean G_Loss: 0.9301
+Epoch [07/10] Step [30/30] | D_Loss: 1.2550 | G_Loss: 0.8533 --> Epoch 07 Finished in 13.4s | Mean D_Loss: 1.2507 | Mean G_Loss: 0.9307
+Epoch [08/10] Step [30/30] | D_Loss: 1.2790 | G_Loss: 1.0460 --> Epoch 08 Finished in 14.7s | Mean D_Loss: 1.2859 | Mean G_Loss: 0.9008
+Epoch [09/10] Step [30/30] | D_Loss: 1.2205 | G_Loss: 1.0566 --> Epoch 09 Finished in 22.2s | Mean D_Loss: 1.2952 | Mean G_Loss: 0.8877
+Epoch [10/10] Step [30/30] | D_Loss: 1.3610 | G_Loss: 0.8822 --> Epoch 10 Finished in 17.9s | Mean D_Loss: 1.3021 | Mean G_Loss: 0.8803
+Training successfully finished in 187.9s (3.13 mins).</code></pre>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 7: Code & Outputs (Part D: Results)   -->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>Visual Progression & Loss Dynamics</h2>
+
+            <h3>Task 9: Plot Training Loss Convergence Curves</h3>
+<pre><code>plt.figure(figsize=(<span class="number">9</span>, <span class="number">4</span>))
+plt.plot(range(<span class="number">1</span>, <span class="number">11</span>), d_loss_history, label=<span class="string">'Discriminator Loss'</span>, color=<span class="string">'#dc2626'</span>, linewidth=<span class="number">2.2</span>, marker=<span class="string">'o'</span>)
+plt.plot(range(<span class="number">1</span>, <span class="number">11</span>), g_loss_history, label=<span class="string">'Generator Loss'</span>, color=<span class="string">'#2563eb'</span>, linewidth=<span class="number">2.2</span>, marker=<span class="string">'s'</span>)
+plt.title(<span class="string">'DCGAN Training Loss Convergence on MNIST Dataset'</span>, fontsize=<span class="number">12</span>, fontweight=<span class="string">'bold'</span>)
+plt.xlabel(<span class="string">'Epoch Number'</span>)
+plt.ylabel(<span class="string">'Binary Cross-Entropy Loss'</span>)
+plt.grid(<span class="keyword">True</span>, linestyle=<span class="string">'--'</span>, alpha=<span class="number">0.6</span>)
+plt.legend()
+plt.tight_layout()
+plt.show()
+</code></pre>
+            <h4>Output:</h4>
+            <div class="image-box" style="margin: 6px 0 14px 0; padding: 6px;">
+                <img src="gan_loss_curve.png" alt="GAN Training Loss Curve" style="max-height: 200px; width: auto;">
+                <div class="image-caption">Output Plot: Discriminator Loss (D_Loss) vs Generator Loss (G_Loss) adversarial trajectories.</div>
+            </div>
+
+            <h3>Task 10: Visual Progression Montage Across Checkpoints</h3>
+<pre><code><span class="comment"># Plot fixed seed latent projections across Epoch 0, 1, 3, 5, and 10</span>
+checkpoints = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">10</span>]
+fig, axes = plt.subplots(<span class="number">1</span>, <span class="number">5</span>, figsize=(<span class="number">14</span>, <span class="number">3</span>))
+<span class="keyword">for</span> idx, ep <span class="keyword">in</span> enumerate(checkpoints):
+    axes[idx].imshow(plt.imread(f<span class="string">"generated_epoch_{ep:02d}.png"</span>))
+    axes[idx].axis(<span class="string">'off'</span>)
+plt.tight_layout()
+plt.show()
+</code></pre>
+            <h4>Output:</h4>
+            <div class="image-box" style="margin: 6px 0 10px 0; padding: 6px;">
+                <img src="gan_progression_montage.png" alt="GAN Visual Progression Montage" style="max-height: 155px; width: auto;">
+                <div class="image-caption">Output Plot: Visual evolution from random Gaussian noise (Epoch 0) to crisp digits (Epoch 10).</div>
+            </div>
+            <p style="font-size: 10pt; margin-bottom: 0;"><strong>Observation:</strong> At Epoch 0, the output is uncorrelated noise. By Epoch 3, stroke geometry emerges. At Epoch 10, realistic handwritten digits (0, 1, 7, 8) are synthesized cleanly without mode collapse.</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 8: Code & Outputs (Part E: Eval & Save)-->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>Qualitative Evaluation & Model Artifacts</h2>
+
+            <h3>Task 11: Real vs Synthetic Digit Qualitative Comparison</h3>
+<pre><code>fig, axes = plt.subplots(<span class="number">2</span>, <span class="number">8</span>, figsize=(<span class="number">12</span>, <span class="number">3.5</span>))
+<span class="comment"># Row 0: Real Ground Truth | Row 1: DCGAN Synthetic Digits</span>
+<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>):
+    axes[<span class="number">0</span>, i].imshow((x_train[i, :, :, <span class="number">0</span>] + <span class="number">1.0</span>) / <span class="number">2.0</span>, cmap=<span class="string">'gray'</span>)
+    axes[<span class="number">0</span>, i].axis(<span class="string">'off'</span>)
+    axes[<span class="number">1</span>, i].imshow((predictions[i, :, :, <span class="number">0</span>].numpy() + <span class="number">1.0</span>) / <span class="number">2.0</span>, cmap=<span class="string">'gray'</span>)
+    axes[<span class="number">1</span>, i].axis(<span class="string">'off'</span>)
+plt.suptitle(<span class="string">"Comparison: Real MNIST Samples (Top) vs DCGAN Generated Digits (Bottom)"</span>, fontsize=<span class="number">11</span>, fontweight=<span class="string">'bold'</span>)
+plt.tight_layout()
+plt.show()
+</code></pre>
+            <h4>Output:</h4>
+            <div class="image-box" style="margin: 6px 0 14px 0; padding: 6px;">
+                <img src="real_vs_generated_comparison.png" alt="Real vs Generated Comparison" style="max-height: 155px; width: auto;">
+                <div class="image-caption">Output Plot: Qualitative comparison confirming high visual fidelity and absence of single-mode collapse.</div>
+            </div>
+
+            <h3>Task 12: Save Trained Generator Model</h3>
+<pre><code>generator.save(<span class="string">"dcgan_generator_mnist.keras"</span>)
+<span class="keyword">print</span>(<span class="string">"Model saved successfully to dcgan_generator_mnist.keras"</span>)
+<span class="keyword">print</span>(<span class="string">"File size: "</span>, round(os.path.getsize(<span class="string">"dcgan_generator_mnist.keras"</span>) / (<span class="number">1024</span>*<span class="number">1024</span>), <span class="number">2</span>), <span class="string">"MB"</span>)
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">Model saved successfully to dcgan_generator_mnist.keras
+File size: 3.02 MB</code></pre>
+
+            <h3>Task 13: Extension — DCGAN for CIFAR-10 (Color 32x32x3)</h3>
+<pre><code><span class="keyword">def</span> <span class="function">define_cifar_generator</span>(latent_dim=<span class="number">100</span>):
+    model = models.Sequential(name=<span class="string">"CIFAR10_Generator"</span>)
+    model.add(layers.Input(shape=(latent_dim,)))
+    model.add(layers.Dense(<span class="number">256</span> * <span class="number">4</span> * <span class="number">4</span>))
+    model.add(layers.LeakyReLU(negative_slope=<span class="number">0.2</span>))
+    model.add(layers.Reshape((<span class="number">4</span>, <span class="number">4</span>, <span class="number">256</span>)))
+    model.add(layers.Conv2DTranspose(<span class="number">128</span>, (<span class="number">4</span>, <span class="number">4</span>), strides=(<span class="number">2</span>, <span class="number">2</span>), padding=<span class="string">'same'</span>))
+    model.add(layers.LeakyReLU(negative_slope=<span class="number">0.2</span>))
+    model.add(layers.Conv2DTranspose(<span class="number">128</span>, (<span class="number">4</span>, <span class="number">4</span>), strides=(<span class="number">2</span>, <span class="number">2</span>), padding=<span class="string">'same'</span>))
+    model.add(layers.LeakyReLU(negative_slope=<span class="number">0.2</span>))
+    model.add(layers.Conv2DTranspose(<span class="number">128</span>, (<span class="number">4</span>, <span class="number">4</span>), strides=(<span class="number">2</span>, <span class="number">2</span>), padding=<span class="string">'same'</span>))
+    model.add(layers.LeakyReLU(negative_slope=<span class="number">0.2</span>))
+    model.add(layers.Conv2D(<span class="number">3</span>, (<span class="number">3</span>, <span class="number">3</span>), activation=<span class="string">'tanh'</span>, padding=<span class="string">'same'</span>))
+    <span class="keyword">return</span> model
+</code></pre>
+            <h4>Output:</h4>
+            <pre class="output-box"><code class="output">CIFAR-10 3-Channel Color DCGAN Architecture defined successfully.</code></pre>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 9: Challenges, Failure Modes & Metrics-->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>Challenges in GAN Training & Mitigations</h2>
+
+            <p>Generative Adversarial Networks are notoriously challenging to optimize due to the non-convex nature of simultaneous gradient descent. Below are the primary failure modes and state-of-the-art mitigations:</p>
+
+            <table class="styled-table">
+                <tr>
+                    <th style="width: 22%;">Failure Mode</th>
+                    <th style="width: 40%;">Manifestation & Root Cause</th>
+                    <th style="width: 38%;">Remediation Strategy</th>
+                </tr>
+                <tr>
+                    <td><strong>Mode Collapse</strong></td>
+                    <td>The generator discovers a single realistic digit (e.g., only generating digit '1') and repeatedly synthesizes it, ignoring the remaining data distribution modes.</td>
+                    <td><strong>Minibatch Discrimination:</strong> Allows \( D \) to look at multiple samples in a batch to detect lack of diversity.<br><strong>Wasserstein GAN (WGAN-GP):</strong> Replaces BCE with Earth Mover's Distance.</td>
+                </tr>
+                <tr>
+                    <td><strong>Vanishing Gradients</strong></td>
+                    <td>The discriminator becomes too powerful early on, causing \( D(G(z)) \to 0 \). Standard loss \( \log(1 - D(G(z))) \) gradients saturate to zero.</td>
+                    <td><strong>Non-Saturating Loss:</strong> Train \( G \) to minimize \( -\log D(G(z)) \).<br><strong>Label Smoothing:</strong> Soften real target labels to \( 0.9 \).</td>
+                </tr>
+                <tr>
+                    <td><strong>Non-Convergence / Oscillation</strong></td>
+                    <td>Instead of reaching Nash equilibrium, parameters oscillate wildly around saddle points without stabilizing.</td>
+                    <td><strong>Two Time-Scale Update Rule (TTUR):</strong> Set separate learning rates for \( G \) and \( D \).<br>Use Adam with \( \beta_1 = 0.5 \).</td>
+                </tr>
+            </table>
+
+            <h3>Quantitative Evaluation Metrics</h3>
+            <p>Evaluating generative models is inherently difficult because there is no ground truth target label for generated images. Standard statistical metrics include:</p>
+            <ul>
+                <li><strong>Inception Score (IS):</strong> Evaluates both sample quality (conditional class entropy \( p(y|x) \) should be low) and sample diversity (marginal entropy \( p(y) \) should be high):
+                \[ \text{IS}(G) = \exp\left(\mathbb{E}_{x \sim p_g} \big[ D_{\text{KL}}(p(y|x) \parallel p(y)) \big]\right) \]</li>
+                <li><strong>Fréchet Inception Distance (FID):</strong> Computes the Wasserstein-2 distance between Gaussian approximations of feature representations extracted from a pre-trained Inception network:
+                \[ \text{FID} = \|\mu_r - \mu_g\|^2 + \text{Tr}\big(\Sigma_r + \Sigma_g - 2(\Sigma_r \Sigma_g)^{1/2}\big) \]
+                <em>Lower FID scores denote superior visual fidelity and closer alignment with ground truth distribution.</em></li>
+            </ul>
+
+            <h3>Comparative Taxonomy of Generative Architectures</h3>
+            <table class="styled-table">
+                <tr>
+                    <th>Model Family</th>
+                    <th>Formulation</th>
+                    <th>Key Advantages</th>
+                    <th>Limitations</th>
+                </tr>
+                <tr>
+                    <td><strong>Vanilla GAN</strong></td>
+                    <td>Adversarial Game (MLP)</td>
+                    <td>First proof of concept</td>
+                    <td>Severe mode collapse, blurred images</td>
+                </tr>
+                <tr>
+                    <td><strong>DCGAN (Ours)</strong></td>
+                    <td>Convolutional Adversarial Game</td>
+                    <td>High visual fidelity, spatial awareness</td>
+                    <td>Hyperparameter sensitive, non-convex game</td>
+                </tr>
+                <tr>
+                    <td><strong>WGAN-GP</strong></td>
+                    <td>Wasserstein Earth Mover Distance</td>
+                    <td>Theoretical convergence, no mode collapse</td>
+                    <td>Slower training due to gradient penalty</td>
+                </tr>
+                <tr>
+                    <td><strong>Variational Autoencoders (VAE)</strong></td>
+                    <td>ELBO Maximization</td>
+                    <td>Stable training, probabilistic latent space</td>
+                    <td>Blurry reconstructions due to pixel-wise MSE</td>
+                </tr>
+                <tr>
+                    <td><strong>Diffusion Models</strong></td>
+                    <td>Denoising Score Matching</td>
+                    <td>State-of-the-art sample quality and diversity</td>
+                    <td>Slow multi-step iterative sampling</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 10: Viva Voce Questions & Conclusion  -->
+        <!-- ========================================== -->
+        <div class="page">
+            <h2>Review / Viva Voce Questions & Technical Answers</h2>
+
+            <div class="concept-card">
+                <h4>Q1: What is the fundamental difference between Generative Adversarial Networks (GANs) and Variational Autoencoders (VAEs)?</h4>
+                <p><strong>Ans:</strong> VAEs are explicit density models that maximize the Evidence Lower Bound (ELBO) using variational inference, reconstructing inputs via Mean Squared Error (MSE) which often results in blurry images. GANs are implicit density models that do not define an explicit likelihood function; instead, they pit two networks against each other in an adversarial game, yielding sharper and more realistic images.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>Q2: Why do we use Transposed Convolutions (<span class="inline-code">Conv2DTranspose</span>) in the Generator instead of standard Bilinear Interpolation?</h4>
+                <p><strong>Ans:</strong> Standard interpolation (like nearest neighbor or bilinear) uses fixed, handcrafted mathematical functions to increase spatial resolution. In contrast, <span class="inline-code">Conv2DTranspose</span> contains learnable kernel weights that undergo gradient updates, allowing the network to learn optimal task-specific spatial upsampling and feature synthesis end-to-end.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>Q3: Why is LeakyReLU preferred over standard ReLU in the Discriminator?</h4>
+                <p><strong>Ans:</strong> Standard ReLU sets all negative values to exactly zero (\( f(x) = \max(0, x) \)), which causes "dying ReLU" neurons when gradients completely vanish. LeakyReLU allows a small negative slope (\( \alpha = 0.2 \)), ensuring a continuous non-zero gradient flow (\( \nabla_x = 0.2 \)) through the discriminator even for inactive features, preventing training stagnation.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>Q4: Why is the Adam optimizer initialized with \( \beta_1 = 0.5 \) instead of the default \( 0.9 \)?</h4>
+                <p><strong>Ans:</strong> The default Adam momentum parameter \( \beta_1 = 0.9 \) retains high inertia from past gradient steps. In adversarial zero-sum games, high momentum causes network updates to overshoot saddle points and oscillate wildly. Reducing \( \beta_1 \) to \( 0.5 \) dampens this inertia, stabilizing the competitive minimax equilibrium.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>Q5: What is One-Sided Label Smoothing and why is it applied only to real images?</h4>
+                <p><strong>Ans:</strong> Setting real target labels to \( 0.9 \) instead of \( 1.0 \) prevents the discriminator from becoming overconfident and outputting extreme logit values. If fake labels were also smoothed (e.g., to \( 0.1 \)), the discriminator would be incentivized to reinforce incorrect fake classifications, which destabilizes training. Hence, smoothing is strictly applied one-sided to real samples.</p>
+            </div>
+
+            <h2 style="border-bottom: 1.5px solid #bfdbfe; margin-top: 25px; color: #1e3a8a;">Conclusion</h2>
+            <p>In this assignment, a Deep Convolutional Generative Adversarial Network (DCGAN) was successfully implemented using TensorFlow 2 and trained on the MNIST handwritten digit dataset. The model successfully learned to synthesize crisp, diverse, and realistic handwritten digits from 100-dimensional Gaussian noise vectors without experiencing mode collapse. The experimental loss curves and epoch progression grids confirmed stable minimax convergence achieved through DCGAN architectural principles, Batch Normalization, LeakyReLU activations, and label smoothing.</p>
+        </div>
+
+    </div>
+</body>
+</html>

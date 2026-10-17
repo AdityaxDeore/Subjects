@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEML Assignment 7 - UML 2.0 Activity Diagram for OceanCleanFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       PCCOE SEML DESIGN SYSTEM & DUAL-PADDING ARCHITECTURE
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 10pt;
+      line-height: 1.5;
+      color: #0f172a;
+      background: #cbd5e1;
+      padding: 24px 10px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 8.5in;
+      margin: 0 auto;
+    }
+
+    .page {
+      min-height: 11in;
+      width: 8.5in;
+      padding: 0.68in 0.75in;
+      background: #ffffff;
+      margin: 0 auto 24px auto;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+      position: relative;
+      box-sizing: border-box;
+      border-radius: 2px;
+    }
+
+    .page:focus-within {
+      outline: 2px dashed #0284c7;
+    }
+
+    /* Print Architecture */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0;
+        box-shadow: none;
+      }
+      .page {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 0.25in 0.35in;
+        box-shadow: none;
+        border: none;
+        page-break-after: always;
+        border-radius: 0;
+      }
+    }
+
+    /* ==========================================================================
+       PCCOE COVER METADATA TABLE
+       ========================================================================== */
+    .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 18px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .cover-table td {
+      border: 1px solid #000;
+      padding: 6px 12px;
+    }
+    .cover-table .college-info {
+      text-align: center;
+      font-weight: bold;
+      font-size: 15pt;
+      line-height: 1.35;
+    }
+    .cover-table .row-centered {
+      text-align: center;
+      font-weight: bold;
+      font-size: 13.5pt;
+    }
+    .cover-table .row-left {
+      text-align: left;
+      font-weight: bold;
+      font-size: 12.5pt;
+    }
+    .logo-container {
+      text-align: center;
+      width: 18%;
+      padding: 6px !important;
+    }
+    .logo-container img {
+      max-width: 95px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       TYPOGRAPHY
+       ========================================================================== */
+    h2 {
+      font-size: 13.5pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 15px;
+      margin-bottom: 7px;
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 3px;
+      letter-spacing: -0.2px;
+    }
+    h3 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 12px;
+      margin-bottom: 5px;
+    }
+    p {
+      text-align: justify;
+      line-height: 1.48;
+      margin-bottom: 7px;
+      color: #334155;
+    }
+    ol, ul {
+      margin-left: 20px;
+      margin-bottom: 8px;
+      color: #334155;
+    }
+    li {
+      margin-bottom: 3px;
+      line-height: 1.42;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: 8.5pt;
+      background: #f1f5f9;
+      color: #0369a1;
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* ==========================================================================
+       INFO BOXES & CALLOUTS
+       ========================================================================== */
+    .info-box {
+      border-radius: 6px;
+      padding: 9px 13px;
+      margin: 9px 0 10px 0;
+      font-size: 9.5pt;
+      line-height: 1.42;
+      border-left: 4px solid;
+    }
+    .info-box.blue {
+      background: #f0f9ff;
+      border-color: #0284c7;
+      color: #0c4a6e;
+    }
+    .info-box.green {
+      background: #f0fdf4;
+      border-color: #16a34a;
+      color: #14532d;
+    }
+
+    /* ==========================================================================
+       PREMIUM STYLED TABLES
+       ========================================================================== */
+    .styled-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 10px 0 14px 0;
+      font-size: 9pt;
+      background: #ffffff;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .styled-table thead th {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 8pt;
+      letter-spacing: 0.5px;
+      padding: 8px 10px;
+      border: none;
+      text-align: left;
+    }
+    .styled-table tbody td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      border-right: 1px solid #f1f5f9;
+      color: #1e293b;
+      vertical-align: top;
+      line-height: 1.42;
+    }
+    .styled-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .styled-table tbody tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    /* ==========================================================================
+       BADGES & ACTOR PILLS
+       ========================================================================== */
+    .badge-actor {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    .badge-operator {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .badge-system {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+    .badge-auditor {
+      background: #ccfbf1;
+      color: #0f766e;
+      border: 1px solid #5eead4;
+    }
+    .badge-faculty {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+    .badge-hod {
+      background: #f3e8ff;
+      color: #6b21a8;
+      border: 1px solid #d8b4fe;
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 8pt;
+      font-weight: 700;
+      border-radius: 4px;
+    }
+    .status-pass {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #86efac;
+    }
+    .status-alert {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+    .status-warn {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde047;
+    }
+
+    /* ==========================================================================
+       DIAGRAM & NOTATION CONTAINERS (100% INLINE SVG)
+       ========================================================================== */
+    .diagram-box {
+      text-align: center;
+      margin: 6px 0 9px 0;
+      padding: 6px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+    }
+    .diagram-box svg {
+      display: block;
+      margin: 0 auto;
+      max-height: 95px;
+      height: auto;
+      width: auto;
+    }
+
+    .flow-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 6px;
+      background: #ffffff;
+      margin: 6px 0 10px 0;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .flow-box svg {
+      width: 100%;
+      max-height: 120px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .interactive-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 4px 0 8px 0;
+      font-size: 9.5pt;
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1.5px solid #0284c7;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: #f0f9ff;
+      transition: all 0.2s;
+    }
+    .interactive-link:hover {
+      background: #0284c7;
+      color: #ffffff;
+    }
+
+    /* ==========================================================================
+       THE 19 IDENTIFIED ACTIVITIES — STRUCTURED PHASE CARDS
+       ========================================================================== */
+    .phase-banner {
+      background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin: 8px 0 6px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .phase-tag {
+      background: #0284c7;
+      color: #ffffff;
+      font-size: 7.5pt;
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    .activity-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 7px 10px;
+      margin-bottom: 6px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+    .act-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .act-pill {
+      background: #0f172a;
+      color: #ffffff;
+      font-family: 'Fira Code', monospace;
+      font-size: 7.5pt;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .act-title {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .act-desc {
+      font-size: 8.5pt;
+      color: #475569;
+      line-height: 1.38;
+      margin-bottom: 3px;
+    }
+    .act-subgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: #f8fafc;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 8pt;
+      border: 1px solid #f1f5f9;
+    }
+    .act-item {
+      color: #334155;
+    }
+    .act-label {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* 4-Stage Reconciliation Protocol Grid */
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 8px 0 12px 0;
+    }
+    .protocol-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #0284c7;
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    .protocol-card .title {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 3px;
+    }
+    .protocol-card .desc {
+      font-size: 8pt;
+      color: #475569;
+      line-height: 1.35;
+    }
+
+    /* Master Diagram Container */
+    .master-diagram-card {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin: 6px 0;
+      text-align: center;
+    }
+    .master-diagram-card svg {
+      width: 100%;
+      max-height: 745px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" contenteditable="true">
+    
+    <!-- ==========================================================================
+         PAGE 1: COVER, AIM, OBJECTIVES & TOKEN FLOW MECHANICS (PURE SE)
+         ========================================================================== -->
+    <div class="page">
+      <table class="cover-table">
+        <tr>
+          <td class="logo-container">
+            <img src="data:image/jpeg;base64,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h2NtqzGL+Km31vabJBlNx23pOlLFpNxFU9AAqagAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH/2Q==" alt="PCCOE Logo" contenteditable="false">
+          </td>
+          <td class="college-info">
+            Pimpri Chinchwad Education Trust's<br>
+            Pimpri Chinchwad College of Engineering
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-centered">
+            Assignment No. 7
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Course:- Software Engineering and Modeling Laboratory (SEML)
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            Name:- Aditya Chandrajit Deore
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="row-left">
+            PRN:- 124B1F116 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Batch:- B3
+          </td>
+        </tr>
+      </table>
+
+      <h2>Aim</h2>
+      <p>To identify and represent the different activities, actions, decisions, and responsibilities involved in the internship and autonomous mission management process of the <strong>OceanCleanFlow &ndash; Department Marine Cleanup Management System</strong> using a UML 2.0 Activity Diagram with swimlanes.</p>
+
+      <h2>Objectives</h2>
+      <ol>
+        <li>To identify the major operational activities involved in the student operator marine internship application, vessel parameter submission, and multi-tier institutional approval process.</li>
+        <li>To represent the flow of activities and decisions from initial cleanup mission proposal to successful 14-week patrol completion, plastic recycling verification, and mission closeout.</li>
+        <li>To model the distinct organizational and computational responsibilities of system stakeholders using structured <strong>Swimlanes (Activity Partitions)</strong> across 5 distinct domains.</li>
+        <li>To model the complete patrol lifecycle, including automated pre-audit diagnostics, external recycling compliance review, faculty mentor supervision, harbor director departure clearance, weekly telemetry logging, and final dockside weighbridge audits.</li>
+        <li>To systematically represent alternative exception flows, including invalid authentication tokens, rejected mission proposals, flagged marine reserve hazards, HOD re-evaluation loops, and iterative document correction loops.</li>
+      </ol>
+
+      <h2>Theoretical Overview of UML 2.0 Activity Diagrams</h2>
+      <p>An <strong>Activity Diagram</strong> is a behavioral modeling diagram standardized by the Object Management Group (OMG) within UML 2.0. It visually represents the stepwise, dynamic flow of operational control and computational actions within a complex system. Unlike state machine diagrams that model the internal state lifecycle of a single object over time, activity diagrams model cross-functional coordination, concurrency, conditional branching, and data flow across distributed software tiers and human actors.</p>
+
+      <h2>Token Flow Execution Semantics in UML 2.0</h2>
+      <p>In UML 2.0, workflow execution is governed by a discrete <strong>token flow mechanism</strong> rather than ad-hoc state transitions. This formal foundation ensures deterministic execution across asynchronous distributed systems:</p>
+      
+      <ul>
+        <li><strong>Token Initiation:</strong> The workflow commences when a control token is deposited at the Initial Node. This token traverses along outgoing directed control edges toward target action nodes.</li>
+        <li><strong>Action Firing &amp; Consumption:</strong> An action node is enabled for execution when all required incoming control and data tokens arrive on its input edges. Upon completion, the action consumes the input tokens and emits new control tokens on each outgoing edge.</li>
+        <li><strong>Deterministic Decision Routing:</strong> At a decision node, mutually exclusive guard conditions (e.g., <code>[Valid Credentials]</code> vs <code>[Invalid Credentials]</code>) are evaluated sequentially. Exactly one guard evaluates to true, directing the token along the chosen branch without ambiguity.</li>
+        <li><strong>Fork &amp; Join Concurrency:</strong> A Fork node duplicates an incoming token across multiple concurrent paths to execute tasks in parallel (e.g., propulsion spin-up and sensor calibration). A Join node halts execution until every incoming concurrent path delivers its token, synchronizing the execution flow.</li>
+      </ul>
+
+      <div class="info-box blue">
+        <strong>Architectural Principle:</strong> Token flow semantics guarantee that the OceanCleanFlow system operates in a deterministic, deadlock-free manner during distributed marine operations, multi-tier approvals, and weekly iterative telemetry logging.
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 2: MAIN ELEMENTS OF ACTIVITY DIAGRAM (ITEMS 1-4)
+         ========================================================================== -->
+    <div class="page">
+      <h2>Main Elements of an Activity Diagram</h2>
+      <p>UML 2.0 standardizes graphical notations to describe workflow sequencing, concurrency, decision branches, and responsibilities with complete visual precision. Below are the primary atomic notations:</p>
+
+      <h3>1. Initial Node</h3>
+      <p>The initial node denotes the starting entry point of the workflow. Graphically, it is rendered as a solid filled circle. An activity diagram can possess only one primary initial node per structured control flow. In OceanCleanFlow, the process triggers when the student operator initiates the mission application workflow.</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" width="160" height="140" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Solid Black Circle -->
+  <circle cx="80" cy="35" r="18" fill="#0f172a"/>
+  <!-- Outgoing Flow -->
+  <line x1="80" y1="53" x2="80" y2="105" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_i)"/>
+  <!-- Label -->
+  <text x="80" y="128" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Initial Node</text>
+</svg>
+      </div>
+
+      <h3>2. Action / Activity Node</h3>
+      <p>An action represents an atomic, non-interruptible operational step or computational task performed by an actor or automated software service. It is rendered as a rectangle with smoothly rounded corners. Typical actions in OceanCleanFlow include <em>Login to Portal</em>, <em>Submit Mission Request</em>, <em>Execute Automated Pre-Audit Diagnostics</em>, and <em>Verify Completion Manifest</em>.</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" width="240" height="140" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Incoming Flow -->
+  <line x1="120" y1="10" x2="120" y2="35" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_a)"/>
+  <!-- Action Rounded Rect -->
+  <rect x="25" y="38" width="190" height="48" rx="12" ry="12" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="120" y="67" font-size="13" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Submit Mission Request</text>
+  <!-- Outgoing Flow -->
+  <line x1="120" y1="86" x2="120" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_a)"/>
+  <!-- Label -->
+  <text x="120" y="132" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Action / Activity</text>
+</svg>
+      </div>
+
+      <h3>3. Control Flow</h3>
+      <p>Control flow lines depict the sequential ordering and direction of activity execution. They are drawn as solid directed lines with an open arrowhead pointing from the source node to the target node. For example: <code>Login → Verify Login Credentials → Submit Mission Request → Upload Permits</code>.</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" width="240" height="140" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_cf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Activity A -->
+  <rect x="50" y="12" width="140" height="34" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.8"/>
+  <text x="120" y="34" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Activity A</text>
+  <!-- Flow Arrow -->
+  <line x1="120" y1="46" x2="120" y2="78" stroke="#0284c7" stroke-width="2.2" marker-end="url(#arr_cf)"/>
+  <text x="145" y="66" font-size="10.5" font-weight="bold" fill="#0284c7">flow</text>
+  <!-- Activity B -->
+  <rect x="50" y="82" width="140" height="34" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.8"/>
+  <text x="120" y="104" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Activity B</text>
+  <!-- Label -->
+  <text x="120" y="132" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Control Flow</text>
+</svg>
+      </div>
+
+      <h3>4. Decision Node</h3>
+      <p>A decision node routes workflow execution along alternative paths based on the evaluation of conditional guard expressions. It is represented by a diamond shape with a single incoming control flow and two or more outgoing flows labeled with mutually exclusive guard conditions (e.g., <code>[Valid]</code> / <code>[Invalid]</code> or <code>[Approved]</code> / <code>[Rejected]</code>).</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" width="240" height="150" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Incoming -->
+  <line x1="120" y1="10" x2="120" y2="35" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_d)"/>
+  <!-- Diamond -->
+  <polygon points="120,40 155,68 120,96 85,68" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="120" y="72" font-size="10.5" font-weight="bold" fill="#854d0e" text-anchor="middle">Valid?</text>
+  <!-- Down branch [Yes] -->
+  <line x1="120" y1="96" x2="120" y2="125" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr_d)"/>
+  <text x="135" y="116" font-size="10" font-weight="bold" fill="#16a34a">[Yes]</text>
+  <!-- Right branch [No] -->
+  <line x1="155" y1="68" x2="205" y2="68" stroke="#dc2626" stroke-width="2.2" marker-end="url(#arr_d)"/>
+  <text x="180" y="60" font-size="10" font-weight="bold" fill="#dc2626" text-anchor="middle">[No]</text>
+  <!-- Label -->
+  <text x="120" y="144" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Decision Node</text>
+</svg>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 3: MAIN ELEMENTS CONTINUED (ITEMS 5-9)
+         ========================================================================== -->
+    <div class="page">
+      <h2>Main Elements of an Activity Diagram (Contd.)</h2>
+
+      <h3>5. Merge Node</h3>
+      <p>A merge node consolidates multiple alternative incoming control paths into a single outgoing flow without requiring synchronization. It is depicted as a diamond shape with multiple incoming flows and one outgoing flow. In OceanCleanFlow, dedicated merge nodes allow operators to retry authentication, revise rejected proposals, re-upload documents, and resubmit weight manifests cleanly without ambiguous loops.</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" width="240" height="150" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Incoming Top -->
+  <line x1="120" y1="10" x2="120" y2="38" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_m)"/>
+  <!-- Incoming Left Alternative -->
+  <line x1="45" y1="68" x2="85" y2="68" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_m)"/>
+  <!-- Diamond -->
+  <polygon points="120,40 155,68 120,96 85,68" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="120" y="72" font-size="10.5" font-weight="bold" fill="#334155" text-anchor="middle">Merge</text>
+  <!-- Unified Outgoing Flow -->
+  <line x1="120" y1="96" x2="120" y2="125" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_m)"/>
+  <!-- Label -->
+  <text x="120" y="144" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Merge Node</text>
+</svg>
+      </div>
+
+      <h3>6. Fork Node</h3>
+      <p>A fork node divides a single incoming control flow into two or more concurrent, parallel execution paths. It is represented by a thick solid horizontal or vertical coordination bar. In OceanCleanFlow, a fork is used during vessel pre-launch diagnostics to trigger concurrent propulsion spin-up, sensor telemetry calibration, and satellite synchronization.</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arrow_f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+  <!-- Incoming Arrow from Top -->
+  <line x1="90" y1="18" x2="90" y2="60" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_f)"/>
+  
+  <!-- Thick Horizontal Bar -->
+  <rect x="25" y="68" width="130" height="8" rx="2" fill="#0f172a"/>
+  
+  <!-- Outgoing Parallel Arrows -->
+  <line x1="50" y1="76" x2="50" y2="128" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_f)"/>
+  <line x1="130" y1="76" x2="130" y2="128" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_f)"/>
+  
+  <!-- Bold Centered Label -->
+  <text x="90" y="162" font-size="20" font-weight="bold" fill="#0f172a" text-anchor="middle">Fork</text>
+</svg>
+      </div>
+
+      <h3>7. Join Node</h3>
+      <p>A join node synchronizes multiple concurrent incoming parallel paths into a single unified control flow. It is represented by a thick solid coordination bar. Control halts at the join bar until all incoming concurrent paths have completed execution and delivered their tokens.</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arrow_j" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+  <!-- Two Incoming Angled Arrows -->
+  <line x1="45" y1="20" x2="76" y2="62" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_j)"/>
+  <line x1="135" y1="20" x2="104" y2="62" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_j)"/>
+  
+  <!-- Thick Horizontal Bar -->
+  <rect x="25" y="70" width="130" height="8" rx="2" fill="#0f172a"/>
+  
+  <!-- Single Outgoing Arrow -->
+  <line x1="90" y1="78" x2="90" y2="128" stroke="#1e293b" stroke-width="3" marker-end="url(#arrow_j)"/>
+  
+  <!-- Bold Centered Label -->
+  <text x="90" y="162" font-size="20" font-weight="bold" fill="#0f172a" text-anchor="middle">Join</text>
+</svg>
+      </div>
+
+      <h3>8. Swimlanes (Activity Partitions)</h3>
+      <p>Swimlanes partition the activity diagram according to the organizational, departmental, or architectural responsibilities of participants. Each action is positioned strictly inside the vertical column of the actor or system tier responsible for its execution (e.g., Operator, Autonomous System, External Auditor, Faculty Mentor, Harbor HOD).</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" width="520" height="160" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_sl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0284c7"/>
+    </marker>
+  </defs>
+  <!-- Outer Box -->
+  <rect x="15" y="10" width="490" height="115" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+  
+  <!-- Dividers -->
+  <line x1="137" y1="10" x2="137" y2="125" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="260" y1="10" x2="260" y2="125" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="382" y1="10" x2="382" y2="125" stroke="#94a3b8" stroke-width="1.2"/>
+  
+  <!-- Header Bar -->
+  <line x1="15" y1="36" x2="505" y2="36" stroke="#64748b" stroke-width="1.2"/>
+  
+  <!-- Column Headers -->
+  <rect x="15" y="10" width="122" height="26" fill="#e0f2fe"/>
+  <text x="76" y="27" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Operator / Player</text>
+  
+  <rect x="137" y="10" width="123" height="26" fill="#f1f5f9"/>
+  <text x="198" y="27" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">System Backend</text>
+  
+  <rect x="260" y="10" width="122" height="26" fill="#fef3c7"/>
+  <text x="321" y="27" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Faculty Mentor</text>
+  
+  <rect x="382" y="10" width="123" height="26" fill="#f3e8ff"/>
+  <text x="443" y="27" font-size="11" font-weight="bold" fill="#6b21a8" text-anchor="middle">Harbor HOD</text>
+  
+  <!-- Example Action Blocks inside Swimlanes -->
+  <rect x="25" y="55" width="102" height="30" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"/>
+  <text x="76" y="74" font-size="9.5" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Request</text>
+  
+  <!-- Cross-lane flow -->
+  <path d="M 127,70 L 155,70 L 155,90 L 165,90" fill="none" stroke="#0284c7" stroke-width="1.8" marker-end="url(#arr_sl)"/>
+  
+  <rect x="165" y="75" width="85" height="30" rx="6" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+  <text x="207" y="94" font-size="9.5" font-weight="bold" fill="#334155" text-anchor="middle">Pre-Audit Check</text>
+
+  <!-- Cross-lane flow to Faculty -->
+  <path d="M 250,90 L 285,90" fill="none" stroke="#0284c7" stroke-width="1.8" marker-end="url(#arr_sl)"/>
+
+  <rect x="285" y="75" width="85" height="30" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+  <text x="327" y="94" font-size="9.5" font-weight="bold" fill="#92400e" text-anchor="middle">Faculty Review</text>
+
+  <!-- Label -->
+  <text x="260" y="148" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Swimlanes (Activity Partitions)</text>
+</svg>
+      </div>
+
+      <h3>9. Activity Final Node</h3>
+      <p>The activity final node indicates the complete termination of the entire workflow. It is represented by a bullseye circle containing a solid filled black circle. In OceanCleanFlow, execution terminates after all 14 patrol weeks are completed, plastic tonnage is verified, the completion certificate is issued, and operator debriefing feedback is submitted.</p>
+      <div class="diagram-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" width="160" height="140" style="background:#ffffff; font-family:Arial, sans-serif;">
+  <defs>
+    <marker id="arr_f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <!-- Incoming Flow -->
+  <line x1="80" y1="12" x2="80" y2="48" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr_f)"/>
+  <!-- Bullseye circle -->
+  <circle cx="80" cy="75" r="22" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+  <circle cx="80" cy="75" r="14" fill="#0f172a"/>
+  <!-- Label -->
+  <text x="80" y="125" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Activity Final</text>
+</svg>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 4: 5 SWIMLANES & CROSS-FUNCTIONAL MATRIX (FIX #9)
+         ========================================================================== -->
+    <div class="page">
+      <h2>Swimlane Partitions &amp; Architectural Responsibilities</h2>
+      <p>Swimlanes establish unambiguous architectural boundaries of responsibility across the <strong>five distinct stakeholders</strong> involved in the ocean cleanup lifecycle. By separating concerns into dedicated partitions, the system prevents role confusion and enforces strict separation of duties:</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Swimlane / Actor</th>
+            <th style="width: 37%;">Core Responsibilities</th>
+            <th style="width: 38%;">Primary Activities Handled</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>1. Operator / Player</strong><br>
+              <span class="badge-actor badge-operator">Student Researcher</span>
+            </td>
+            <td>
+              Initiates mission proposals, inputs vessel technical specifications, uploads compliance documentation, executes autonomous cleanup patrols, submits weekly logs, and uploads dockside weighbridge receipts.
+            </td>
+            <td>
+              <code>ACT-01</code> Login to Portal<br>
+              <code>ACT-03</code> Submit Mission Request<br>
+              <code>ACT-04</code> Upload Seaworthiness Permits<br>
+              <code>ACT-10</code> Start Ocean Cleanup Mission<br>
+              <code>ACT-11</code> Submit Weekly Patrol Log<br>
+              <code>ACT-14</code> Dock Vessel at Slipway<br>
+              <code>ACT-15</code> Upload Waste Manifest<br>
+              <code>ACT-19</code> Submit Final Feedback
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>2. OceanCleanFlow System</strong><br>
+              <span class="badge-actor badge-system">Autonomous Backend</span>
+            </td>
+            <td>
+              Validates cryptographic credentials, executes automated pre-audit diagnostics, activates vessel schedule tokens, records weekly telemetry streams, locks persistent logbooks, and issues digital certificates.
+            </td>
+            <td>
+              <code>ACT-02</code> Verify Login Credentials<br>
+              <code>ACT-05</code> Execute Pre-Audit Diagnostics<br>
+              <code>ACT-09</code> Activate Vessel Schedule<br>
+              <code>ACT-12</code> Record Weekly Telemetry<br>
+              <code>ACT-17</code> Mark Mission COMPLETED<br>
+              <code>ACT-18</code> Record Mass &amp; Issue Certificate
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>3. External Recycling Auditor</strong><br>
+              <span class="badge-actor badge-auditor">Accredited Auditor</span>
+            </td>
+            <td>
+              External statutory authority that audits offloaded recycling partner credentials, verifies marine sanctuary boundary compliance, and issues environmental clearance.
+            </td>
+            <td>
+              <code>ACT-06</code> Verify Recycling Partner &amp; Marine Sanctuary Boundaries
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>4. Faculty Mentor</strong><br>
+              <span class="badge-actor badge-faculty">Academic Supervisor</span>
+            </td>
+            <td>
+              Reviews mission proposals and route safety dossiers, endorses/rejects student applications, audits weekly progress telemetry logs, and inspects final dockside weighbridge receipts.
+            </td>
+            <td>
+              <code>ACT-07</code> Review Mission Proposal<br>
+              <code>ACT-13</code> Review Weekly Progress Log<br>
+              <code>ACT-16</code> Audit Weighbridge Receipts &amp; Sorting Records
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>5. Harbor Director (HOD)</strong><br>
+              <span class="badge-actor badge-hod">Station Chief</span>
+            </td>
+            <td>
+              Institutional maritime authority governing harbor slipway berths, channel navigation safety, and official port departure clearances.
+            </td>
+            <td>
+              <code>ACT-08</code> Review Berth Allocation &amp; Harbor Traffic Clearance
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Cross-Functional Stakeholder Interaction Matrix</h2>
+      <p>The table below summarizes the operational handoffs between swimlane partitions during critical workflow state transitions:</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;">Transition Point</th>
+            <th style="width: 26%;">Source Actor &rarr; Target Actor</th>
+            <th style="width: 26%;">Transferred Artifact / Token</th>
+            <th style="width: 26%;">Validation Criterion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Application Intake</strong></td>
+            <td>Operator &rarr; System</td>
+            <td>Vessel Specs &amp; Insurance PDF</td>
+            <td>Schema validation &amp; file integrity</td>
+          </tr>
+          <tr>
+            <td><strong>Compliance Audit</strong></td>
+            <td>System &rarr; External Auditor</td>
+            <td>One-Time Audit Token Link</td>
+            <td>Recycling facility accreditation</td>
+          </tr>
+          <tr>
+            <td><strong>Academic Review</strong></td>
+            <td>Auditor &rarr; Faculty Mentor</td>
+            <td>Proposal Dossier &amp; Safety Flags</td>
+            <td>Educational &amp; environmental viability</td>
+          </tr>
+          <tr>
+            <td><strong>Harbor Departure</strong></td>
+            <td>Faculty &rarr; Harbor HOD</td>
+            <td>Endorsed Departure Packet</td>
+            <td>Harbor traffic &amp; weather clearance</td>
+          </tr>
+          <tr>
+            <td><strong>Weekly Verification</strong></td>
+            <td>System &rarr; Faculty Mentor</td>
+            <td>Weekly Telemetry &amp; Log Entry</td>
+            <td>Zero bycatch &amp; valid battery curves</td>
+          </tr>
+          <tr>
+            <td><strong>Final Closeout</strong></td>
+            <td>Faculty Mentor &rarr; System</td>
+            <td>Certified Offload Weighbridge Slip</td>
+            <td>Mass balance match (&le; 2% delta)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 5: THE 19 IDENTIFIED ACTIVITIES — PART 1 (PHASES 1 & 2)
+         ========================================================================== -->
+    <div class="page">
+      <h2>The 19 Identified System Activities (Phases 1 &amp; 2)</h2>
+      <p>The OceanCleanFlow workflow is formalized into 19 discrete atomic activities. Each activity features defined trigger preconditions, operational behavior, and deliverable state postconditions:</p>
+
+      <!-- PHASE 1 -->
+      <div class="phase-banner">
+        <span>PHASE 1: OPERATOR AUTHENTICATION &amp; MISSION PROPOSAL</span>
+        <span class="phase-tag">ACTIVITIES 01 &ndash; 04</span>
+      </div>
+
+      <!-- ACT 01 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-01</span>
+            <span class="act-title">Login to OceanCleanFlow Portal</span>
+          </div>
+          <span class="badge-actor badge-operator">Operator / Student</span>
+        </div>
+        <div class="act-desc">Student operator inputs institutional credentials into the web command terminal to initialize a secure session.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> User credentials, institutional password hash.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Inbound authentication request dispatched to backend.</div>
+        </div>
+      </div>
+
+      <!-- ACT 02 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-02</span>
+            <span class="act-title">Verify Login Credentials &amp; Session</span>
+          </div>
+          <span class="badge-actor badge-system">Autonomous System</span>
+        </div>
+        <div class="act-desc">System validates credentials against identity directory. If invalid, displays error and returns to login merge node.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Inbound credentials from ACT-01.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> JWT session token granted [Valid] or error thrown [Invalid].</div>
+        </div>
+      </div>
+
+      <!-- ACT 03 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-03</span>
+            <span class="act-title">Submit Mission Request &amp; Vessel / Sector Specs</span>
+          </div>
+          <span class="badge-actor badge-operator">Operator / Student</span>
+        </div>
+        <div class="act-desc">Operator defines mission profile, hull specifications, battery capacity, debris payload limits, and GPS boundary coordinates.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Validated session; vessel specification form.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Mission draft created with status <code>DRAFT_PROPOSAL</code>.</div>
+        </div>
+      </div>
+
+      <!-- ACT 04 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-04</span>
+            <span class="act-title">Upload Seaworthiness Permits &amp; Insurance PDFs</span>
+          </div>
+          <span class="badge-actor badge-operator">Operator / Student</span>
+        </div>
+        <div class="act-desc">Operator uploads mandatory compliance documents: seaworthiness certificate, hull insurance policy, and safety checklist.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> PDF compliance certificates, signed indemnity bond.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Document attachments hashed and linked to proposal dossier.</div>
+        </div>
+      </div>
+
+      <!-- PHASE 2 -->
+      <div class="phase-banner">
+        <span>PHASE 2: AUTOMATED PRE-AUDIT &amp; EXTERNAL COMPLIANCE</span>
+        <span class="phase-tag">ACTIVITIES 05 &ndash; 06</span>
+      </div>
+
+      <!-- ACT 05 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-05</span>
+            <span class="act-title">Execute Automated Pre-Audit Diagnostics</span>
+          </div>
+          <span class="badge-actor badge-system">Autonomous System</span>
+        </div>
+        <div class="act-desc">System performs automated static diagnostics on vessel specs, verifies digital signatures, and checks power-to-weight safety limits.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Submitted specs and uploaded PDF attachments from ACT-04.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Pre-audit diagnostic report generated; error flags route to retry.</div>
+        </div>
+      </div>
+
+      <!-- ACT 06 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-06</span>
+            <span class="act-title">Verify Recycling Partner &amp; Marine Sanctuaries</span>
+          </div>
+          <span class="badge-actor badge-auditor">External Auditor</span>
+        </div>
+        <div class="act-desc">External auditor accesses proposal via one-time secure token to verify facility recycling licensing and sanctuary proximity.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Audit dispatch link, GPS coordinates, recycling partner ID.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Auditor compliance signoff; hazard flags route to boundary adjustment.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 6: THE 19 IDENTIFIED ACTIVITIES — PART 2 (PHASES 3, 4 & 5)
+         ========================================================================== -->
+    <div class="page">
+      <h2>The 19 Identified System Activities (Phases 3, 4 &amp; 5)</h2>
+      <p>The institutional approval, operational deployment, and mission closeout phases govern vessel departure, patrol tracking, and final certification:</p>
+
+      <!-- PHASE 3 -->
+      <div class="phase-banner">
+        <span>PHASE 3: ACADEMIC &amp; HARBOR INSTITUTIONAL APPROVAL</span>
+        <span class="phase-tag">ACTIVITIES 07 &ndash; 09</span>
+      </div>
+
+      <!-- ACT 07 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-07</span>
+            <span class="act-title">Review Mission Proposal &amp; Route Safety Dossier</span>
+          </div>
+          <span class="badge-actor badge-faculty">Faculty Mentor</span>
+        </div>
+        <div class="act-desc">Faculty mentor reviews proposal dossier, route feasibility, student learning objectives, and environmental flags.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Cleared dossier &amp; environmental report from ACT-06.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Faculty assessment rubric completed [Approved] / [Rejected].</div>
+        </div>
+      </div>
+
+      <!-- ACT 08 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-08</span>
+            <span class="act-title">Review Berth Allocation &amp; Harbor Traffic Clearance</span>
+          </div>
+          <span class="badge-actor badge-hod">Harbor Director (HOD)</span>
+        </div>
+        <div class="act-desc">Harbor Director evaluates port traffic, weather radar, and berth allocation, issuing final legal departure authorization.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Faculty-endorsed departure packet from ACT-07.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Clearance granted [Cleared] or returned [Clearance Denied].</div>
+        </div>
+      </div>
+
+      <!-- ACT 09 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-09</span>
+            <span class="act-title">Activate Vessel Schedule &amp; Issue Departure Token</span>
+          </div>
+          <span class="badge-actor badge-system">Autonomous System</span>
+        </div>
+        <div class="act-desc">System activates vessel operating window in mission registry and generates cryptographically signed departure token.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Harbor Director departure clearance from ACT-08.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Status set to <code>SCHEDULED</code>; token dispatched to vessel.</div>
+        </div>
+      </div>
+
+      <!-- PHASE 4 -->
+      <div class="phase-banner">
+        <span>PHASE 4: AUTONOMOUS DEPLOYMENT &amp; 14-WEEK PATROL LOOP</span>
+        <span class="phase-tag">ACTIVITIES 10 &ndash; 13</span>
+      </div>
+
+      <!-- ACT 10 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-10</span>
+            <span class="act-title">Start Ocean Cleanup Mission (Vessel Enters Sector)</span>
+          </div>
+          <span class="badge-actor badge-operator">Operator &amp; Vessel</span>
+        </div>
+        <div class="act-desc">Vessel propulsion activates, autopilot disengages moorings, and the autonomous boat enters designated patrol coordinates.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Departure token from ACT-09.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> State transitions to <code>IN_PATROL</code>; week counter initialized to 1.</div>
+        </div>
+      </div>
+
+      <!-- ACT 11 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-11</span>
+            <span class="act-title">Submit Weekly Patrol Log (Plastic Tonnage &amp; Telemetry)</span>
+          </div>
+          <span class="badge-actor badge-operator">Operator / Student</span>
+        </div>
+        <div class="act-desc">Operator submits weekly telemetry log: kilograms of plastic recovered, battery degradation curves, and zero-bycatch sensor logs.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> 7-day patrol telemetry packet; weekly prompt.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Weekly progress report submitted for academic review.</div>
+        </div>
+      </div>
+
+      <!-- ACT 12 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-12</span>
+            <span class="act-title">Record Weekly Telemetry &amp; Increment Week Counter</span>
+          </div>
+          <span class="badge-actor badge-system">Autonomous System</span>
+        </div>
+        <div class="act-desc">System persists incoming telemetry to database, verifies payload sensor thresholds, and increments weekly cycle count.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Weekly telemetry log from ACT-11.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Persistent record committed; week counter updated.</div>
+        </div>
+      </div>
+
+      <!-- ACT 13 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-13</span>
+            <span class="act-title">Review Weekly Progress Log &amp; Sign Off Wildlife Safety</span>
+          </div>
+          <span class="badge-actor badge-faculty">Faculty Mentor</span>
+        </div>
+        <div class="act-desc">Faculty mentor reviews debris volume, checks wildlife safety pings, logs operational remarks, and endorses week completion.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Telemetry stream from ACT-12.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Log endorsed; evaluates <code>[Week &lt; 14]</code> vs <code>[Week = 14]</code>.</div>
+        </div>
+      </div>
+
+      <!-- PHASE 5 -->
+      <div class="phase-banner">
+        <span>PHASE 5: DOCKING, RECYCLING AUDIT &amp; MISSION CLOSEOUT</span>
+        <span class="phase-tag">ACTIVITIES 14 &ndash; 19</span>
+      </div>
+
+      <!-- ACT 14 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-14</span>
+            <span class="act-title">Dock Vessel at Harbor Dedicated Recycling Slipway</span>
+          </div>
+          <span class="badge-actor badge-operator">Operator / Student</span>
+        </div>
+        <div class="act-desc">Upon completing 14 weeks, vessel returns to harbor recycling slipway and offloads plastic to shore weighbridge.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Completion of 14-week patrol cycle.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Vessel safely berthed; physical offload commences.</div>
+        </div>
+      </div>
+
+      <!-- ACT 15 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-15</span>
+            <span class="act-title">Upload Final Waste Manifest &amp; Shore Weighbridge Receipts</span>
+          </div>
+          <span class="badge-actor badge-operator">Operator / Student</span>
+        </div>
+        <div class="act-desc">Operator uploads weighbridge weight slips and polymer category sorting manifests for faculty review.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Shore weighbridge receipts &amp; polymer manifest.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Offload completion dossier uploaded for audit.</div>
+        </div>
+      </div>
+
+      <!-- ACT 16 -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT-16</span>
+            <span class="act-title">Audit Weighbridge Receipts &amp; NIR Polymer Sorting Records</span>
+          </div>
+          <span class="badge-actor badge-faculty">Faculty Mentor</span>
+        </div>
+        <div class="act-desc">Faculty mentor audits physical weighbridge certificates against vessel onboard bin load-cell telemetry for mass reconciliation.</div>
+        <div class="act-subgrid">
+          <div class="act-item"><span class="act-label">Trigger / Input:</span> Completion dossier from ACT-15.</div>
+          <div class="act-item"><span class="act-label">Output / State:</span> Verified mass balance certificate [Verified] / [Discrepancy &gt; 2%].</div>
+        </div>
+      </div>
+
+      <!-- ACT 17-19 combined summary -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="act-left">
+            <span class="act-pill">ACT 17-19</span>
+            <span class="act-title">Final Closeout: State Transition, Certificate Issuance &amp; Feedback</span>
+          </div>
+          <span class="badge-actor badge-system">System &amp; Operator</span>
+        </div>
+        <div class="act-desc"><code>ACT-17</code> System marks mission <code>COMPLETED</code> and locks logbooks. <code>ACT-18</code> System records diverted mass and issues completion certificate. <code>ACT-19</code> Operator completes final debriefing survey, terminating at Activity Final Node.</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 7: STEP-BY-STEP ACTIVITY FLOWS (6.1 TO 6.3) (100% INLINE SVG)
+         ========================================================================== -->
+    <div class="page">
+      <h2>Step-by-Step Activity Flows (Phases 6.1 to 6.3)</h2>
+
+      <h3>6.1 Operator Login and Mission Application Flow</h3>
+      <p>The workflow initiates when the operator accesses the portal. The system evaluates login credentials at a decision node. If invalid, the flow returns directly to the login merge node without redundant intermediate merges. Upon valid authentication, the operator submits mission parameters, configures vessel load limits, and uploads seaworthiness compliance documents.</p>
+      
+      <div class="flow-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 230" width="100%" height="auto" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arr1_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arr1_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <!-- Initial Node -->
+  <circle cx="35" cy="115" r="14" fill="#0f172a"/>
+  <line x1="49" y1="115" x2="80" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+  
+  <!-- Merge Node for Login Retry (Point 8) -->
+  <polygon points="95,115 110,100 125,115 110,130" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <line x1="125" y1="115" x2="155" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- Action: Login to OceanCleanFlow -->
+  <rect x="155" y="89" width="165" height="52" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="237" y="112" font-size="12" font-weight="bold" fill="#0369a1" text-anchor="middle">Login to</text>
+  <text x="237" y="128" font-size="11" fill="#0369a1" text-anchor="middle">OceanCleanFlow Portal</text>
+
+  <line x1="320" y1="115" x2="355" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- Action: Verify Login Credentials & Session -->
+  <rect x="355" y="89" width="165" height="52" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="437" y="112" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Verify Login</text>
+  <text x="437" y="128" font-size="11" fill="#334155" text-anchor="middle">Credentials &amp; Session</text>
+
+  <line x1="520" y1="115" x2="555" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- Decision: Credentials Valid? -->
+  <polygon points="575,115 595,95 615,115 595,135" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="595" y="119" font-size="9" font-weight="bold" fill="#854d0e" text-anchor="middle">Valid?</text>
+
+  <!-- [Invalid Credentials] -> Clean Loop back to Merge Node (Point 8) -->
+  <path d="M 595,95 L 595,45 L 110,45 L 110,100" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr1_red)"/>
+  <text x="350" y="38" font-size="10.5" font-weight="bold" fill="#dc2626">[Invalid Credentials: Prompt Retry]</text>
+
+  <!-- [Valid Credentials] -> Submit Mission Request -->
+  <line x1="615" y1="115" x2="665" y2="115" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr1_green)"/>
+  <text x="640" y="106" font-size="10" font-weight="bold" fill="#16a34a">[Valid]</text>
+
+  <!-- Action: Submit Mission Request & Vessel Specs -->
+  <rect x="665" y="89" width="145" height="52" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="737" y="112" font-size="11.5" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Request &amp;</text>
+  <text x="737" y="128" font-size="10.5" fill="#0369a1" text-anchor="middle">Vessel / Sector Specs</text>
+
+  <line x1="810" y1="115" x2="840" y2="115" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr1)"/>
+
+  <!-- Action: Upload Seaworthiness Permits -->
+  <rect x="840" y="89" width="125" height="52" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="902" y="112" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Upload Permits &amp;</text>
+  <text x="902" y="128" font-size="10" fill="#0369a1" text-anchor="middle">Insurance PDFs</text>
+
+  <text x="490" y="200" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Figure 6.1: Operator Authentication &amp; Application Initiation Flow</text>
+</svg>
+      </div>
+
+      <h3>6.2 Pre-Audit Checks and External Auditor Verification Flow</h3>
+      <p>Upon proposal submission, the system executes automated pre-audit diagnostics on telemetry schemas and file signatures. If rejected, the operator is prompted to re-upload documents. If valid, an automated time-locked token is dispatched to the External Recycling Auditor (Swimlane 3), who reviews environmental compliance and sanctuary clearance before forwarding to faculty review.</p>
+
+      <div class="flow-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 230" width="100%" height="auto" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arr2_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arr2_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr2_amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- Incoming Flow from Upload -->
+  <line x1="15" y1="95" x2="45" y2="95" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr2)"/>
+
+  <!-- Action: Pre-Audit Checks -->
+  <rect x="45" y="68" width="195" height="54" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="142" y="92" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Execute Automated</text>
+  <text x="142" y="108" font-size="11" fill="#334155" text-anchor="middle">Pre-Audit Diagnostics</text>
+
+  <line x1="240" y1="95" x2="275" y2="95" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr2)"/>
+
+  <!-- Decision: Pre-Audit Passed? -->
+  <polygon points="295,95 315,75 335,95 315,115" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="315" y="99" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Pre-Audit?</text>
+
+  <!-- Invalid branch -> loop back to correct -->
+  <path d="M 315,75 L 315,30 L 142,30 L 142,68" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr2_red)"/>
+  <text x="228" y="24" font-size="10" font-weight="bold" fill="#dc2626">[Pre-Audit Failed: Re-upload Docs]</text>
+
+  <!-- Valid branch -> Forward to External Auditor (Point 9) -->
+  <line x1="335" y1="95" x2="380" y2="95" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr2_green)"/>
+  <text x="355" y="87" font-size="9.5" font-weight="bold" fill="#16a34a">[Passed]</text>
+
+  <!-- Action: Verify with External Auditor (Swimlane 3) -->
+  <rect x="380" y="68" width="225" height="54" rx="10" fill="#ccfbf1" stroke="#0d9488" stroke-width="2"/>
+  <text x="492" y="92" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="middle">Verify Recycling Partner</text>
+  <text x="492" y="108" font-size="10.5" fill="#0f766e" text-anchor="middle">&amp; Marine Sanctuaries (Auditor)</text>
+
+  <line x1="605" y1="95" x2="640" y2="95" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr2)"/>
+
+  <!-- Decision: Compliant? -->
+  <polygon points="660,95 680,75 700,95 680,115" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="680" y="99" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Compliant?</text>
+
+  <!-- Flagged / Reject branch -->
+  <path d="M 680,115 L 680,158 L 745,158" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr2_red)"/>
+  <text x="698" y="145" font-size="9.5" font-weight="bold" fill="#dc2626">[Hazard Flagged: Adjust Bounds]</text>
+
+  <rect x="745" y="136" width="215" height="46" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="1.6"/>
+  <text x="852" y="156" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="middle">Return to Operator</text>
+  <text x="852" y="171" font-size="10" fill="#b91c1c" text-anchor="middle">Adjust Grid Coordinates</text>
+
+  <!-- Approved branch -->
+  <line x1="700" y1="95" x2="745" y2="95" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr2_green)"/>
+  <text x="720" y="87" font-size="10" font-weight="bold" fill="#16a34a">[Certified]</text>
+
+  <rect x="745" y="68" width="215" height="54" rx="10" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <text x="852" y="92" font-size="12" font-weight="bold" fill="#78350f" text-anchor="middle">Proceed to Faculty Mentor</text>
+  <text x="852" y="108" font-size="11" fill="#78350f" text-anchor="middle">Proposal Review</text>
+
+  <text x="490" y="212" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Figure 6.2: Pre-Audit Telemetry Check &amp; External Environmental Verification</text>
+</svg>
+      </div>
+
+      <h3>6.3 Faculty Mentor and Harbor Director Institutional Approval Flow</h3>
+      <p>The Faculty Mentor evaluates mission route safety, proposed patrol sectors, and auditor notes. If rejected, corrective remarks route back for proposal revision. If approved, the system forwards the dossier to the Harbor Director (HOD) for official maritime clearance. If clearance is denied, control loops back directly to the Faculty Review Merge Node for route re-evaluation.</p>
+
+      <div class="flow-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 240" width="100%" height="auto" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arr3_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arr3_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <line x1="15" y1="90" x2="45" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr3)"/>
+
+  <!-- Priority Fix #6: Merge Node for Faculty Review -->
+  <polygon points="55,90 68,78 81,90 68,102" fill="#f1f5f9" stroke="#475569" stroke-width="1.6"/>
+  <line x1="81" y1="90" x2="105" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr3)"/>
+
+  <!-- Action: Faculty Supervisor Review -->
+  <rect x="105" y="65" width="185" height="52" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="197" y="88" font-size="12" font-weight="bold" fill="#92400e" text-anchor="middle">Review Mission Proposal</text>
+  <text x="197" y="104" font-size="11" fill="#92400e" text-anchor="middle">&amp; Route Safety Dossier</text>
+
+  <line x1="290" y1="90" x2="325" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr3)"/>
+
+  <!-- Decision: Faculty Endorsed? -->
+  <polygon points="345,90 365,70 385,90 365,110" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="365" y="94" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Endorsed?</text>
+
+  <!-- Faculty No -> Return to Proposal Resubmission -->
+  <path d="M 365,70 L 365,30 L 450,30" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr3_red)"/>
+  <text x="375" y="48" font-size="9.5" font-weight="bold" fill="#dc2626">[Faculty Rejected]</text>
+  <rect x="450" y="14" width="175" height="34" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1.4"/>
+  <text x="537" y="35" font-size="10.5" font-weight="bold" fill="#b91c1c" text-anchor="middle">Return to Operator Proposal</text>
+
+  <!-- Faculty Yes -> Forward to Harbor Director HOD -->
+  <line x1="385" y1="90" x2="435" y2="90" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr3_green)"/>
+  <text x="410" y="82" font-size="10" font-weight="bold" fill="#16a34a">[Approved]</text>
+
+  <!-- Action: Harbor Director Berth & Traffic Clearance -->
+  <rect x="435" y="65" width="185" height="52" rx="10" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="527" y="88" font-size="12" font-weight="bold" fill="#6b21a8" text-anchor="middle">Review Berth Allocation</text>
+  <text x="527" y="104" font-size="11" fill="#6b21a8" text-anchor="middle">&amp; Harbor Traffic Clearance</text>
+
+  <line x1="620" y1="90" x2="655" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr3)"/>
+
+  <!-- Decision: Harbor Cleared? -->
+  <polygon points="675,90 695,70 715,90 695,110" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="695" y="94" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Cleared?</text>
+
+  <!-- Priority Fix #6: HOD Clearance Denied -> Loops back directly to Faculty Review Merge Node! -->
+  <path d="M 695,110 L 695,160 L 68,160 L 68,102" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr3_red)"/>
+  <text x="400" y="152" font-size="10" font-weight="bold" fill="#dc2626">[Clearance Denied: Re-evaluate Route via Faculty Review]</text>
+
+  <!-- HOD Yes -> Activate Vessel -->
+  <line x1="715" y1="90" x2="770" y2="90" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr3_green)"/>
+  <text x="740" y="82" font-size="10" font-weight="bold" fill="#16a34a">[Approved]</text>
+
+  <rect x="770" y="65" width="195" height="52" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+  <text x="867" y="88" font-size="12" font-weight="bold" fill="#14532d" text-anchor="middle">Activate Vessel Schedule</text>
+  <text x="867" y="104" font-size="11" fill="#14532d" text-anchor="middle">&amp; Issue Departure Token</text>
+
+  <text x="490" y="220" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Figure 6.3: Institutional Faculty Mentor &amp; Harbor Director Authorization Hierarchy</text>
+</svg>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 8: STEP-BY-STEP ACTIVITY FLOWS (6.4 & 6.5) & RECONCILIATION PROTOCOL
+         ========================================================================== -->
+    <div class="page">
+      <h2>Step-by-Step Activity Flows (Phases 6.4 &amp; 6.5)</h2>
+
+      <h3>6.4 Weekly Progress Tracking and 14-Week Patrol Milestone Loop</h3>
+      <p>Upon maritime departure clearance, the vessel engages autonomous route navigation. Every 7 days, the student operator compiles and submits an operational telemetry log detailing debris tonnage recovered, battery endurance, and marine wildlife pings. The Faculty Mentor reviews the log. The system evaluates the loop condition: if fewer than 14 weeks have elapsed (<code>[Week &lt; 14: Continue Patrol Loop]</code>), the loop iterates; once 14 weeks are satisfied (<code>[Week = 14: Patrol Complete]</code>), control transitions to harbor docking.</p>
+
+      <div class="flow-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 230" width="100%" height="auto" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arr4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arr4_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr4_amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <line x1="15" y1="90" x2="50" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr4)"/>
+
+  <!-- Priority Fix #3 & #4: Merge Node for Weekly Loop -->
+  <polygon points="65,90 80,75 95,90 80,105" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <line x1="95" y1="90" x2="125" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr4)"/>
+
+  <!-- Action: Submit Weekly Progress -->
+  <rect x="125" y="65" width="195" height="52" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="222" y="88" font-size="12" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Weekly Patrol Log</text>
+  <text x="222" y="104" font-size="11" fill="#0369a1" text-anchor="middle">(Plastic Tonnage &amp; Telemetry)</text>
+
+  <line x1="320" y1="90" x2="355" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr4)"/>
+
+  <!-- Action: Record Telemetry & Increment Week -->
+  <rect x="355" y="65" width="195" height="52" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="452" y="88" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">Record Weekly Telemetry</text>
+  <text x="452" y="104" font-size="11" fill="#334155" text-anchor="middle">&amp; Increment Week Counter</text>
+
+  <line x1="550" y1="90" x2="585" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr4)"/>
+
+  <!-- Action: Review Weekly Progress -->
+  <rect x="585" y="65" width="195" height="52" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="682" y="88" font-size="12" font-weight="bold" fill="#92400e" text-anchor="middle">Review Weekly Progress Log</text>
+  <text x="682" y="104" font-size="11" fill="#92400e" text-anchor="middle">&amp; Sign Off Wildlife Safety</text>
+
+  <line x1="780" y1="90" x2="815" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr4)"/>
+
+  <!-- Decision: 14 Weeks Completed? -->
+  <polygon points="835,90 855,70 875,90 855,110" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="855" y="94" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">14 Wks?</text>
+
+  <!-- Deterministic Loop back path [Week < 14] -->
+  <path d="M 855,110 L 855,158 L 80,158 L 80,105" fill="none" stroke="#d97706" stroke-width="2.2" marker-end="url(#arr4_amber)"/>
+  <text x="460" y="150" font-size="11" font-weight="bold" fill="#d97706">[Week &lt; 14: Continue Patrol Loop]</text>
+
+  <!-- Deterministic Exit loop path [Week = 14] -->
+  <line x1="875" y1="90" x2="915" y2="90" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr4_green)"/>
+  <text x="895" y="82" font-size="9" font-weight="bold" fill="#16a34a">[= 14]</text>
+
+  <!-- Proceed to Docking -->
+  <circle cx="940" cy="90" r="14" fill="#15803d"/>
+  <text x="940" y="94" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Dock</text>
+
+  <text x="490" y="212" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Figure 6.4: Iterative 14-Week Patrol Progress Tracking &amp; Milestone Verification Loop</text>
+</svg>
+      </div>
+
+      <h3>6.5 Mission Completion, Recycling Verification &amp; Closeout</h3>
+      <p>At the conclusion of the 14-week patrol, the vessel docks at the harbor recycling slipway. The operator uploads certified weighbridge slips and polymer manifests. The Faculty Mentor audits physical slips against onboard bin load-cell logs. If variance exceeds 2%, control returns directly to the Manifest Merge Node for resubmission. Upon successful verification, the mission is marked completed, the digital completion certificate is issued, and the operator completes debriefing feedback.</p>
+
+      <div class="flow-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 240" width="100%" height="auto" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arr5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arr5_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr5_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <line x1="15" y1="85" x2="35" y2="85" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr5)"/>
+
+  <!-- Priority Fix #7: Merge Node for Manifest Resubmission -->
+  <polygon points="45,85 58,73 71,85 58,97" fill="#f1f5f9" stroke="#475569" stroke-width="1.6"/>
+  <line x1="71" y1="85" x2="95" y2="85" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr5)"/>
+
+  <!-- Action: Upload Final Waste Manifest -->
+  <rect x="95" y="60" width="180" height="50" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="185" y="82" font-size="11.5" font-weight="bold" fill="#0369a1" text-anchor="middle">Upload Final Waste Manifest</text>
+  <text x="185" y="98" font-size="10.5" fill="#0369a1" text-anchor="middle">&amp; Shore Weighbridge Receipts</text>
+
+  <line x1="275" y1="85" x2="305" y2="85" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr5)"/>
+
+  <!-- Action: Audit Weighbridge Receipts & Records -->
+  <rect x="305" y="60" width="185" height="50" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="397" y="82" font-size="11.5" font-weight="bold" fill="#92400e" text-anchor="middle">Audit Weighbridge Receipts</text>
+  <text x="397" y="98" font-size="10.5" fill="#92400e" text-anchor="middle">&amp; NIR Polymer Sorting Records</text>
+
+  <line x1="490" y1="85" x2="520" y2="85" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr5)"/>
+
+  <!-- Decision: Manifest Verified? -->
+  <polygon points="535,85 555,65 575,85 555,105" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="555" y="89" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Verified?</text>
+
+  <!-- Priority Fix #7: Discrepancy > 2%: Resubmit Manifest directly loops back to Manifest Merge Node! -->
+  <path d="M 555,65 L 555,25 L 58,25 L 58,73" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr5_red)"/>
+  <text x="305" y="19" font-size="10" font-weight="bold" fill="#dc2626">[Discrepancy &gt; 2%: Resubmit Manifest &amp; Reconcile Weight]</text>
+
+  <!-- Yes branch -> Mark Completed -->
+  <line x1="575" y1="85" x2="610" y2="85" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr5_green)"/>
+  <text x="592" y="77" font-size="10" font-weight="bold" fill="#16a34a">[Verified]</text>
+
+  <rect x="610" y="60" width="165" height="50" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="692" y="82" font-size="11.5" font-weight="bold" fill="#334155" text-anchor="middle">Mark Mission COMPLETED</text>
+  <text x="692" y="98" font-size="10.5" fill="#334155" text-anchor="middle">&amp; Lock Persistent Logbooks</text>
+
+  <line x1="775" y1="85" x2="805" y2="85" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr5)"/>
+
+  <!-- Action: Record Diverted Plastic Mass & Issue Digital Certificate (Priority Fix #5, #12) -->
+  <rect x="805" y="60" width="165" height="50" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+  <text x="887" y="82" font-size="11" font-weight="bold" fill="#14532d" text-anchor="middle">Record Diverted Plastic Mass</text>
+  <text x="887" y="98" font-size="10" fill="#14532d" text-anchor="middle">&amp; Issue Digital Certificate</text>
+
+  <!-- Downwards to feedback and final -->
+  <path d="M 887,110 L 887,155 L 755,155" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arr5)"/>
+
+  <rect x="540" y="132" width="215" height="46" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="647" y="152" font-size="11.5" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Final Debriefing</text>
+  <text x="647" y="167" font-size="10.5" fill="#0369a1" text-anchor="middle">&amp; Platform Feedback Survey</text>
+
+  <line x1="540" y1="155" x2="480" y2="155" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr5)"/>
+
+  <!-- Activity Final Node -->
+  <circle cx="450" cy="155" r="16" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+  <circle cx="450" cy="155" r="10" fill="#0f172a"/>
+  <text x="450" y="188" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">Activity Final</text>
+
+  <text x="490" y="222" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Figure 6.5: Mission Completion, Recycling Verification &amp; Closeout Settlement</text>
+</svg>
+      </div>
+
+      <h2>Dockside Offload Reconciliation &amp; Closeout Protocol</h2>
+      <p>When the Faculty Mentor verifies dockside offload receipts, the system executes an automated four-stage software engineering verification protocol:</p>
+
+      <div class="protocol-grid">
+        <div class="protocol-card">
+          <div class="title">1. Weighbridge Telemetry Intake</div>
+          <div class="desc">Harbor slipway digital weighbridge transmits gross tare and net payload weight slips directly to the OceanCleanFlow intake API.</div>
+        </div>
+        <div class="protocol-card">
+          <div class="title">2. Load-Cell Cross Reconciliation</div>
+          <div class="desc">System cross-compares weighbridge slips against cumulative vessel bin load-cell logs, verifying variance is within acceptable &le; 2.0% tolerance.</div>
+        </div>
+        <div class="protocol-card">
+          <div class="title">3. Polymer Sorting Certification</div>
+          <div class="desc">External recycling facility issues Near-Infrared (NIR) spectroscopic classification certificate for PET, HDPE, and recovered ghost net nylon.</div>
+        </div>
+        <div class="protocol-card">
+          <div class="title">4. Tamper-Proof State Locking</div>
+          <div class="desc">System sets lifecycle state to <code>COMPLETED</code>, cryptographically seals 14-week telemetry logs, and issues official academic internship signoff.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 9: MASTER UML 2.0 ACTIVITY DIAGRAM VISUALIZATION (100% INLINE & VISIBLE)
+         ========================================================================== -->
+    <div class="page">
+      <h2>Master UML 2.0 Activity Diagram &mdash; Full System View</h2>
+      <p>The complete end-to-end activity model unites all five swimlanes, decision nodes, parallel synchronization, weekly iteration loops, and exception correction paths into a cohesive, non-blocking operational workflow:</p>
+
+      <div style="text-align: center; margin: 4px 0 8px 0;">
+        <a href="Activity_Diagram_Assignment_7.html" class="interactive-link" contenteditable="false" target="_blank">
+          &#x1F517; Launch Full Screen Pan &amp; Zoom Interactive Canvas (Activity_Diagram_Assignment_7.html)
+        </a>
+      </div>
+
+      <!-- Completely visible master diagram rendered directly inline for zero loading failures -->
+      <div class="master-diagram-card">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1580" width="1400" height="1580" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arrow_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrow_amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="25" y="14" width="1350" height="42" rx="6" fill="#0f172a"/>
+  <text x="700" y="40" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    UML 2.0 Activity Diagram &#8212; OceanCleanFlow Department Marine Cleanup Management System
+  </text>
+
+  <!-- ==================== 5 SWIMLANE COLUMNS (Each 270px wide) ==================== -->
+  <!-- Col 1: Operator / Player (Student) -->
+  <rect x="25" y="62" width="270" height="1500" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="25" y="62" width="270" height="38" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+  <text x="160" y="86" font-size="12" font-weight="bold" fill="#0369a1" text-anchor="middle">1. Operator / Player (Student)</text>
+
+  <!-- Col 2: OceanCleanFlow System -->
+  <rect x="295" y="62" width="270" height="1500" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="295" y="62" width="270" height="38" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+  <text x="430" y="86" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">2. OceanCleanFlow System</text>
+
+  <!-- Col 3: External Recycling Auditor -->
+  <rect x="565" y="62" width="270" height="1500" fill="#f0fdfa" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="565" y="62" width="270" height="38" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.5"/>
+  <text x="700" y="86" font-size="12" font-weight="bold" fill="#0f766e" text-anchor="middle">3. External Recycling Auditor</text>
+
+  <!-- Col 4: Faculty Mentor (Supervisor) -->
+  <rect x="835" y="62" width="270" height="1500" fill="#fefce8" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="835" y="62" width="270" height="38" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="970" y="86" font-size="12" font-weight="bold" fill="#92400e" text-anchor="middle">4. Faculty Mentor (Supervisor)</text>
+
+  <!-- Col 5: Harbor Director (HOD) -->
+  <rect x="1105" y="62" width="270" height="1500" fill="#faf5ff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="1105" y="62" width="270" height="38" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="1240" y="86" font-size="12" font-weight="bold" fill="#6b21a8" text-anchor="middle">5. Harbor Director (HOD)</text>
+
+  <!-- ==================== PHASE 1: OPERATOR AUTHENTICATION & PROPOSAL ==================== -->
+  <!-- Initial Node (Col 1) -->
+  <circle cx="160" cy="125" r="12" fill="#0f172a"/>
+  <line x1="160" y1="137" x2="160" y2="155" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Merge Node for Login Retry (Point 8) -->
+  <polygon points="160,155 172,165 160,175 148,165" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+  <line x1="160" y1="175" x2="160" y2="195" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Login to OceanCleanFlow Portal (Col 1) -->
+  <rect x="65" y="195" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="213" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Login to</text>
+  <text x="160" y="227" font-size="10" fill="#0369a1" text-anchor="middle">OceanCleanFlow Portal</text>
+
+  <!-- Arrow to System: Verify Login -->
+  <path d="M 255,216 L 335,216" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Verify Login Credentials (Col 2) -->
+  <rect x="335" y="195" width="190" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <text x="430" y="213" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Verify Login</text>
+  <text x="430" y="227" font-size="10" fill="#334155" text-anchor="middle">Credentials &amp; Session</text>
+
+  <line x1="430" y1="237" x2="430" y2="258" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Credentials Valid? (Col 2) (Point 1, 8) -->
+  <polygon points="430,258 450,272 430,286 410,272" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="430" y="275" font-size="8.5" font-weight="bold" fill="#854d0e" text-anchor="middle">Valid?</text>
+
+  <!-- [Invalid Credentials] -> Clean Loop back to Login Merge (Point 8) -->
+  <path d="M 410,272 L 280,272 L 280,165 L 172,165" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="345" y="265" font-size="9" font-weight="bold" fill="#dc2626">[Invalid Credentials]</text>
+
+  <!-- [Valid Credentials] -> Operator Submit Mission -->
+  <path d="M 430,286 L 430,318 L 255,318" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="435" y="306" font-size="9" font-weight="bold" fill="#16a34a">[Valid Credentials]</text>
+
+  <!-- Merge Node for Proposal Resubmission (Col 1) -->
+  <polygon points="160,306 170,314 160,322 150,314" fill="#f1f5f9" stroke="#475569" stroke-width="1.4"/>
+  <line x1="160" y1="322" x2="160" y2="338" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Submit Mission Request & Sector Details (Col 1) -->
+  <rect x="60" y="338" width="200" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="355" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Mission Request</text>
+  <text x="160" y="369" font-size="10" fill="#0369a1" text-anchor="middle">&amp; Vessel / Sector Specs</text>
+
+  <!-- Merge Node for Document Re-upload (Col 1) -->
+  <line x1="160" y1="380" x2="160" y2="395" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+  <polygon points="160,395 170,403 160,411 150,403" fill="#f1f5f9" stroke="#475569" stroke-width="1.4"/>
+  <line x1="160" y1="411" x2="160" y2="425" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Upload Compliance Documents (Col 1) -->
+  <rect x="60" y="425" width="200" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="442" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Upload Seaworthiness</text>
+  <text x="160" y="456" font-size="10" fill="#0369a1" text-anchor="middle">Permits &amp; Insurance PDFs</text>
+
+  <!-- ==================== PHASE 2: AUTOMATED PRE-AUDIT & EXTERNAL AUDITOR ==================== -->
+  <path d="M 260,446 L 335,446" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Execute Automated Pre-Audit Diagnostics (Col 2) -->
+  <rect x="335" y="425" width="190" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <text x="430" y="442" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Execute Automated</text>
+  <text x="430" y="456" font-size="10" fill="#334155" text-anchor="middle">Pre-Audit Diagnostics</text>
+
+  <line x1="430" y1="467" x2="430" y2="490" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Pre-Audit Passed? (Col 2) (Point 2) -->
+  <polygon points="430,490 450,504 430,518 410,504" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="430" y="507" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Pre-Audit?</text>
+
+  <!-- [Pre-Audit Failed] -> Re-upload Document Loop (Point 2) -->
+  <path d="M 410,504 L 275,504 L 275,403 L 170,403" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="335" y="497" font-size="8.5" font-weight="bold" fill="#dc2626">[Pre-Audit Failed: Re-upload]</text>
+
+  <!-- [Pre-Audit Passed] -> Forward to External Auditor (Point 9) -->
+  <path d="M 450,504 L 605,504" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="480" y="497" font-size="8.5" font-weight="bold" fill="#16a34a">[Pre-Audit Passed]</text>
+
+  <!-- Action: Verify Environmental Compliance (Col 3: External Auditor) (Point 9) -->
+  <rect x="605" y="483" width="190" height="42" rx="8" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.8"/>
+  <text x="700" y="500" font-size="11" font-weight="bold" fill="#0f766e" text-anchor="middle">Verify Recycling Partner</text>
+  <text x="700" y="514" font-size="10" fill="#0f766e" text-anchor="middle">&amp; Marine Sanctuaries</text>
+
+  <line x1="700" y1="525" x2="700" y2="548" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Compliance Approved? (Col 3) (Point 1, 9) -->
+  <polygon points="700,548 720,562 700,576 680,562" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="700" y="565" font-size="7.5" font-weight="bold" fill="#854d0e" text-anchor="middle">Compliant?</text>
+
+  <!-- [Compliance Rejected: Hazard Flagged] -> Loop back to Proposal (Point 2) -->
+  <path d="M 680,562 L 285,562 L 285,314 L 170,314" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="460" y="555" font-size="8.5" font-weight="bold" fill="#dc2626">[Hazard Flagged: Adjust Boundaries]</text>
+
+  <!-- [Compliance Certified] -> Forward to Faculty Review Merge (Point 9) -->
+  <path d="M 720,562 L 875,562" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="740" y="555" font-size="8.5" font-weight="bold" fill="#16a34a">[Compliance Certified]</text>
+
+  <!-- ==================== PHASE 3: FACULTY & HARBOR INSTITUTIONAL APPROVALS ==================== -->
+  <!-- Merge Node for Faculty Review (Col 4) (Priority Fix #6) -->
+  <polygon points="875,562 885,554 895,562 885,570" fill="#f1f5f9" stroke="#475569" stroke-width="1.4"/>
+  <line x1="895" y1="562" x2="970" y2="562" stroke="#0f172a" stroke-width="2"/>
+  <line x1="970" y1="562" x2="970" y2="585" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Review Mission Proposal & Route Safety (Col 4: Faculty Mentor) -->
+  <rect x="875" y="585" width="190" height="42" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+  <text x="970" y="602" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Review Mission Proposal</text>
+  <text x="970" y="616" font-size="10" fill="#92400e" text-anchor="middle">&amp; Route Safety Dossier</text>
+
+  <line x1="970" y1="627" x2="970" y2="650" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Faculty Endorsed? (Col 4) (Point 1, 6) -->
+  <polygon points="970,650 990,664 970,678 950,664" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="970" y="667" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Endorsed?</text>
+
+  <!-- [Faculty Rejected] -> Loop back to Proposal Intake (Point 2) -->
+  <path d="M 950,664 L 40,664 L 40,359 L 60,359" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="620" y="657" font-size="8.5" font-weight="bold" fill="#dc2626">[Faculty Rejected: Revise Proposal]</text>
+
+  <!-- [Faculty Approved] -> Forward to Harbor Director HOD -->
+  <path d="M 990,664 L 1145,664" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="1015" y="657" font-size="8.5" font-weight="bold" fill="#16a34a">[Faculty Approved]</text>
+
+  <!-- Action: Review Departmental Mission & Berth Clearance (Col 5: Harbor Director) -->
+  <rect x="1145" y="643" width="190" height="42" rx="8" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.8"/>
+  <text x="1240" y="660" font-size="11" font-weight="bold" fill="#6b21a8" text-anchor="middle">Review Berth Allocation</text>
+  <text x="1240" y="674" font-size="10" fill="#6b21a8" text-anchor="middle">&amp; Harbor Traffic Clearance</text>
+
+  <line x1="1240" y1="685" x2="1240" y2="708" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Harbor Cleared? (Col 5) (Point 1, 6) -->
+  <polygon points="1240,708 1260,722 1240,736 1220,722" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="1240" y="725" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Cleared?</text>
+
+  <!-- PRIORITY FIX #6: HOD Rejection loops back into Faculty Review Merge Node (NOT into the decision diamond!) -->
+  <path d="M 1220,722 L 885,722 L 885,570" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="1060" y="715" font-size="8.5" font-weight="bold" fill="#dc2626">[Clearance Denied: Re-evaluate Route]</text>
+
+  <!-- [Harbor Cleared] -> System Activates Schedule -->
+  <path d="M 1240,736 L 1240,775 L 525,775" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="1245" y="755" font-size="8.5" font-weight="bold" fill="#16a34a">[Harbor Cleared]</text>
+
+  <!-- Action: Activate Vessel Schedule & Clearance Token (Col 2: System) -->
+  <rect x="335" y="754" width="190" height="42" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="430" y="771" font-size="11" font-weight="bold" fill="#14532d" text-anchor="middle">Activate Vessel Schedule</text>
+  <text x="430" y="785" font-size="10" fill="#14532d" text-anchor="middle">&amp; Issue Departure Token</text>
+
+  <!-- ==================== PHASE 4: AUTONOMOUS DEPLOYMENT & 14-WEEK PATROL LOOP ==================== -->
+  <path d="M 335,775 L 255,775" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Start Autonomous Mission (Col 1: Operator) -->
+  <rect x="65" y="754" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="771" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Start Ocean Cleanup Mission</text>
+  <text x="160" y="785" font-size="10" fill="#0369a1" text-anchor="middle">(Vessel Enters Active Sector)</text>
+
+  <line x1="160" y1="796" x2="160" y2="822" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Priority Fix #3 & #4: Merge Node for Weekly Patrol Loop (Col 1) -->
+  <polygon points="160,822 170,832 160,842 150,832" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+  <line x1="160" y1="842" x2="160" y2="865" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Submit Weekly Patrol Log (Col 1: Operator) -->
+  <rect x="65" y="865" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="882" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Weekly Patrol Log</text>
+  <text x="160" y="896" font-size="10" fill="#0369a1" text-anchor="middle">(Plastic Tonnage &amp; Telemetry)</text>
+
+  <line x1="255" y1="886" x2="335" y2="886" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Record Telemetry Stream & Update Patrol Week (Col 2: System) -->
+  <rect x="335" y="865" width="190" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <text x="430" y="882" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Record Weekly Telemetry</text>
+  <text x="430" y="896" font-size="10" fill="#334155" text-anchor="middle">&amp; Increment Week Counter</text>
+
+  <line x1="525" y1="886" x2="875" y2="886" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Review Weekly Progress Log & Safety (Col 4: Faculty Mentor) -->
+  <rect x="875" y="865" width="190" height="42" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+  <text x="970" y="882" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Review Weekly Progress Log</text>
+  <text x="970" y="896" font-size="10" fill="#92400e" text-anchor="middle">&amp; Sign Off Wildlife Safety</text>
+
+  <!-- Line from Faculty back to System Milestone Check -->
+  <path d="M 970,907 L 970,950 L 430,950 L 430,975" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: 14 Weeks Completed? (Col 2: System) (Point 3, 4) -->
+  <polygon points="430,975 450,990 430,1005 410,990" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="430" y="993" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">14 Weeks?</text>
+
+  <!-- [Week < 14: Continue Patrol] -> Clear loop to Weekly Patrol Merge (Point 3, 4) -->
+  <path d="M 410,990 L 50,990 L 50,832 L 150,832" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrow_amber)"/>
+  <text x="215" y="982" font-size="9" font-weight="bold" fill="#d97706">[Week &lt; 14: Continue Patrol Loop]</text>
+
+  <!-- [Week = 14: Patrol Complete] -> Exit loop to Docking (Point 3, 4) -->
+  <path d="M 430,1005 L 430,1050 L 255,1050" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="435" y="1030" font-size="9" font-weight="bold" fill="#16a34a">[Week = 14: Patrol Complete]</text>
+
+  <!-- ==================== PHASE 5: HARBOR DOCKING, RECYCLING AUDIT & CLOSEOUT ==================== -->
+  <!-- Action: Dock Vessel at Harbor Recycling Slipway (Col 1: Operator) -->
+  <rect x="65" y="1029" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="1046" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Dock Vessel at Harbor</text>
+  <text x="160" y="1060" font-size="10" fill="#0369a1" text-anchor="middle">Dedicated Recycling Slipway</text>
+
+  <line x1="160" y1="1071" x2="160" y2="1098" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Priority Fix #7: Dedicated Merge Node for Manifest Resubmission -->
+  <polygon points="160,1098 170,1108 160,1118 150,1108" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+  <line x1="160" y1="1118" x2="160" y2="1140" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Upload Final Waste Manifest & Receipts (Col 1: Operator) -->
+  <rect x="65" y="1140" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="1157" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Upload Final Waste Manifest</text>
+  <text x="160" y="1171" font-size="10" fill="#0369a1" text-anchor="middle">&amp; Shore Weighbridge Receipts</text>
+
+  <!-- Forward to Faculty Mentor for Audit -->
+  <path d="M 255,1161 L 875,1161" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Audit Physical Weighbridge Receipts & NIR Records (Col 4: Faculty Mentor) -->
+  <rect x="875" y="1140" width="190" height="42" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+  <text x="970" y="1157" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Audit Weighbridge Receipts</text>
+  <text x="970" y="1171" font-size="10" fill="#92400e" text-anchor="middle">&amp; NIR Polymer Sorting Records</text>
+
+  <line x1="970" y1="1182" x2="970" y2="1205" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decision: Manifest Verified? (Col 4: Faculty Mentor) (Point 5, 7) -->
+  <polygon points="970,1205 990,1220 970,1235 950,1220" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="970" y="1223" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Verified?</text>
+
+  <!-- PRIORITY FIX #7: Resubmit Manifest returns directly to the Manifest Merge Node above Action 15 -->
+  <path d="M 950,1220 L 275,1220 L 275,1108 L 170,1108" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow_red)"/>
+  <text x="540" y="1212" font-size="9" font-weight="bold" fill="#dc2626">[Discrepancy &gt; 2%: Resubmit Manifest]</text>
+
+  <!-- [Manifest Verified] -> System Marks Completed (Point 5, 12) -->
+  <path d="M 970,1235 L 970,1275 L 525,1275" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow_green)"/>
+  <text x="975" y="1255" font-size="8.5" font-weight="bold" fill="#16a34a">[Manifest Verified: Balance Matches]</text>
+
+  <!-- Action: Mark Mission Status COMPLETED & Lock Logbook (Col 2: System) -->
+  <rect x="335" y="1254" width="190" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+  <text x="430" y="1271" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Mark Mission COMPLETED</text>
+  <text x="430" y="1285" font-size="10" fill="#334155" text-anchor="middle">&amp; Lock Persistent Logbooks</text>
+
+  <line x1="430" y1="1296" x2="430" y2="1328" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Priority Fix #5 & #12: Action: Record Diverted Plastic Mass & Issue Digital Certificate (Col 2: System) -->
+  <rect x="335" y="1328" width="190" height="42" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="430" y="1345" font-size="11" font-weight="bold" fill="#14532d" text-anchor="middle">Record Diverted Plastic Mass</text>
+  <text x="430" y="1359" font-size="10" fill="#14532d" text-anchor="middle">&amp; Issue Completion Certificate</text>
+
+  <!-- Arrow left to Operator Final Feedback (Point 12) -->
+  <path d="M 335,1349 L 255,1349" fill="none" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Action: Submit Final Debriefing & Feedback Survey (Col 1: Operator) -->
+  <rect x="65" y="1328" width="190" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="160" y="1345" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">Submit Final Debriefing</text>
+  <text x="160" y="1359" font-size="10" fill="#0369a1" text-anchor="middle">&amp; Platform Feedback Survey</text>
+
+  <line x1="160" y1="1370" x2="160" y2="1415" stroke="#0f172a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Activity Final Node (Col 1) (Point 12) -->
+  <circle cx="160" cy="1432" r="16" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+  <circle cx="160" cy="1432" r="10" fill="#0f172a"/>
+  <text x="160" y="1464" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">Activity Final</text>
+
+</svg>
+      </div>
+
+      <div style="font-size: 8.5pt; color: #475569; text-align: center; margin-top: 4px;">
+        <strong>Figure 7.0:</strong> Complete 5-Swimlane UML 2.0 Activity Diagram for OceanCleanFlow System (Partitions: Operator, System, External Auditor, Faculty Mentor, Harbor HOD).
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 10: EXCEPTION HANDLING, VERIFICATION CHECKLIST & CONCLUSION
+         ========================================================================== -->
+    <div class="page">
+      <h2>Alternative Flows, Exception Handling &amp; Verification</h2>
+      <p>A robust software engineering model must systematically account for operational anomalies, sensor faults, document discrepancies, and administrative rejections without reaching permanent deadlock:</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Failure Scenario</th>
+            <th style="width: 32%;">System Detection Mechanism</th>
+            <th style="width: 43%;">Alternative Control Flow &amp; Recovery Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>Invalid Authentication</strong><br>
+              <span class="badge-status status-alert">Security Error</span>
+            </td>
+            <td>Credential hash mismatch, expired token, or unregistered PRN.</td>
+            <td>System routes flow to error action, clears password buffer, and returns to login merge node.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Pre-Audit Doc Failure</strong><br>
+              <span class="badge-status status-warn">Data Error</span>
+            </td>
+            <td>Corrupted file, missing insurance certificate, or expired seaworthiness permit.</td>
+            <td>System generates error report, highlights defective file, and loops back to upload action.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Environmental Hazard</strong><br>
+              <span class="badge-status status-warn">Compliance Alert</span>
+            </td>
+            <td>External auditor detects proximity to protected coral reef or breeding ground.</td>
+            <td>Request flagged with high priority; returned to operator proposal merge node for boundary adjustment.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Faculty / HOD Rejection</strong><br>
+              <span class="badge-status status-alert">Rejection</span>
+            </td>
+            <td>Adverse weather forecast, harbor channel congestion, or unapproved sector.</td>
+            <td>HOD rejection returns directly to Faculty Review Merge Node for route re-evaluation; Faculty rejection returns to proposal merge.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Mid-Patrol Link Loss</strong><br>
+              <span class="badge-status status-warn">Telemetry Alert</span>
+            </td>
+            <td>Satellite telemetry packet timeout &gt; 15 minutes during patrol.</td>
+            <td>Vessel switches to autonomous station-keeping and emergency beacon until link is re-established.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Manifest Discrepancy</strong><br>
+              <span class="badge-status status-alert">Audit Discrepancy</span>
+            </td>
+            <td>Harbor weighbridge certificate differs from boat load-cell logs by &gt; 2%.</td>
+            <td>Supervisor rejects manifest; flow returns directly to Manifest Merge Node for document correction and weight reconciliation.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>UML 2.0 Formal Verification Checklist</h2>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th style="width: 28%;">Formal Modeling Criterion</th>
+            <th style="width: 20%;">Verification Status</th>
+            <th style="width: 52%;">Compliance Justification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Deadlock Prevention</strong></td>
+            <td><span class="badge-status status-pass">&#10004; Verified</span></td>
+            <td>Every conditional branch either rejoins a valid merge node or reaches the Activity Final Node.</td>
+          </tr>
+          <tr>
+            <td><strong>Guard Mutex Property</strong></td>
+            <td><span class="badge-status status-pass">&#10004; Verified</span></td>
+            <td>All decision node outputs evaluate mutually exclusive conditions (e.g., <code>[Valid]</code> vs <code>[Invalid]</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>Partition Isolation</strong></td>
+            <td><span class="badge-status status-pass">&#10004; Verified</span></td>
+            <td>Actions and decision diamonds are strictly localized within their designated swimlane column across all 5 partitions.</td>
+          </tr>
+          <tr>
+            <td><strong>Cyclic Termination</strong></td>
+            <td><span class="badge-status status-pass">&#10004; Verified</span></td>
+            <td>The 14-week patrol loop is governed by an incrementing counter ensuring deterministic exit (<code>[Week = 14]</code>).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Conclusion</h2>
+      <p>Through this assignment, we successfully architected, modeled, and verified a comprehensive <strong>UML 2.0 Activity Diagram</strong> with five structured swimlanes for the <strong>OceanCleanFlow &ndash; Department Marine Cleanup Management System</strong>. The model captures the complete operational lifecycle from initial operator authentication, proposal submission, and automated pre-audit diagnostics, through external environmental compliance review, faculty mentor supervision, and institutional HOD harbor clearance. Furthermore, the 14-week iterative patrol tracking loop, dockside weighbridge verification, automated offload reconciliation, and exception recovery paths were thoroughly formalized. This delivers a robust, unambiguous behavioral blueprint for engineering the platform's backend workflow and autonomous marine vessel operations.</p>
+
+      <h3 style="margin-top: 15px;">Signatures and Verification</h3>
+      <table style="width: 100%; margin-top: 18px; border-collapse: collapse; font-family: 'Plus Jakarta Sans', Arial, sans-serif;">
+        <tr>
+          <td style="width: 50%; text-align: left; vertical-align: bottom;">
+            <strong>Student Signature:</strong> Aditya Chandrajit Deore<br>
+            <strong>Date:</strong> 17th October 2026<br>
+            <strong>PRN:</strong> 124B1F116 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Batch:</strong> B3
+          </td>
+          <td style="width: 50%; text-align: right; vertical-align: bottom;">
+            <strong>Faculty Assessment:</strong> _______________________<br>
+            <strong>Marks / Grade:</strong> _______________________<br>
+            <strong>Signature with Seal:</strong> _______________________
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</body>
+</html>

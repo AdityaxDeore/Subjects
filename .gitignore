@@ -1,0 +1,42 @@
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+
+# Datasets & Large Model Caches
+.sklearn_data/
+scikit_learn_data/
+nltk_data/
+
+# Large 3D Model Assets & Bundles (>50MB)
+*.glb
+*.fbx
+*.bin
+**/OceanCleanup2/public/**/*.zip
+
+# Node & Build Outputs
+node_modules/
+dist/
+dist-ssr/
+
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Editor Settings
+.vscode/
+.idea/
+
+# Logs & Temporary Files
+*.log
+*.tmp

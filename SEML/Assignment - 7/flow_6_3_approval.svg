@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 240" width="100%" height="auto" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+    </marker>
+    <marker id="arr3_red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arr3_green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <line x1="15" y1="90" x2="45" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr3)"/>
+
+  <!-- Priority Fix #6: Merge Node for Faculty Review -->
+  <polygon points="55,90 68,78 81,90 68,102" fill="#f1f5f9" stroke="#475569" stroke-width="1.6"/>
+  <line x1="81" y1="90" x2="105" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr3)"/>
+
+  <!-- Action: Faculty Supervisor Review -->
+  <rect x="105" y="65" width="185" height="52" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="197" y="88" font-size="12" font-weight="bold" fill="#92400e" text-anchor="middle">Review Mission Proposal</text>
+  <text x="197" y="104" font-size="11" fill="#92400e" text-anchor="middle">&amp; Route Safety Dossier</text>
+
+  <line x1="290" y1="90" x2="325" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr3)"/>
+
+  <!-- Decision: Faculty Endorsed? -->
+  <polygon points="345,90 365,70 385,90 365,110" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="365" y="94" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Endorsed?</text>
+
+  <!-- Faculty No -> Return to Proposal Resubmission -->
+  <path d="M 365,70 L 365,30 L 450,30" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr3_red)"/>
+  <text x="375" y="48" font-size="9.5" font-weight="bold" fill="#dc2626">[Faculty Rejected]</text>
+  <rect x="450" y="14" width="175" height="34" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1.4"/>
+  <text x="537" y="35" font-size="10.5" font-weight="bold" fill="#b91c1c" text-anchor="middle">Return to Operator Proposal</text>
+
+  <!-- Faculty Yes -> Forward to Harbor Director HOD -->
+  <line x1="385" y1="90" x2="435" y2="90" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr3_green)"/>
+  <text x="410" y="82" font-size="10" font-weight="bold" fill="#16a34a">[Approved]</text>
+
+  <!-- Action: Harbor Director Berth & Traffic Clearance -->
+  <rect x="435" y="65" width="185" height="52" rx="10" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="527" y="88" font-size="12" font-weight="bold" fill="#6b21a8" text-anchor="middle">Review Berth Allocation</text>
+  <text x="527" y="104" font-size="11" fill="#6b21a8" text-anchor="middle">&amp; Harbor Traffic Clearance</text>
+
+  <line x1="620" y1="90" x2="655" y2="90" stroke="#0f172a" stroke-width="2.2" marker-end="url(#arr3)"/>
+
+  <!-- Decision: Harbor Cleared? -->
+  <polygon points="675,90 695,70 715,90 695,110" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="695" y="94" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Cleared?</text>
+
+  <!-- Priority Fix #6: HOD Clearance Denied -> Loops back directly to Faculty Review Merge Node! -->
+  <path d="M 695,110 L 695,160 L 68,160 L 68,102" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arr3_red)"/>
+  <text x="400" y="152" font-size="10" font-weight="bold" fill="#dc2626">[Clearance Denied: Re-evaluate Route via Faculty Review]</text>
+
+  <!-- HOD Yes -> Activate Vessel -->
+  <line x1="715" y1="90" x2="770" y2="90" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr3_green)"/>
+  <text x="740" y="82" font-size="10" font-weight="bold" fill="#16a34a">[Approved]</text>
+
+  <rect x="770" y="65" width="195" height="52" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+  <text x="867" y="88" font-size="12" font-weight="bold" fill="#14532d" text-anchor="middle">Activate Vessel Schedule</text>
+  <text x="867" y="104" font-size="11" fill="#14532d" text-anchor="middle">&amp; Issue Departure Token</text>
+
+  <text x="490" y="220" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Figure 6.3: Institutional Faculty Mentor &amp; Harbor Director Authorization Hierarchy</text>
+</svg>
