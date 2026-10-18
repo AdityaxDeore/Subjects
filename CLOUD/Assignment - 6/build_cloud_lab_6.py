@@ -82,25 +82,50 @@ html = f"""<!DOCTYPE html>
     outline: 2px dashed #0284c7;
   }}
 
+  @page {{
+    size: letter;
+    margin: 0.4in 0.5in;
+  }}
+
   @media print {{
-    body {{
-      background: #ffffff;
-      padding: 0;
+    html, body {{
+      background: #ffffff !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }}
     .container {{
-      max-width: 100%;
-      margin: 0;
-      box-shadow: none;
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+      padding: 0 !important;
     }}
     .page {{
-      width: 100%;
-      min-height: auto;
-      margin: 0;
-      padding: 0.45in 0.5in;
-      box-shadow: none;
-      border: none;
-      page-break-after: always;
-      border-radius: 0;
+      width: 100% !important;
+      min-height: auto !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      border: none !important;
+      page-break-after: always !important;
+      break-after: page !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      border-radius: 0 !important;
+      box-sizing: border-box !important;
+    }}
+    .page:last-child {{
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }}
+    table, pre, .info-box, .free-img {{
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
     }}
   }}
 
@@ -405,16 +430,16 @@ html = f"""<!DOCTYPE html>
       To understand, configure, and evaluate cloud security governance mechanisms using Identity and Access Management (IAM), including multi-tenant digital identity creation, group-based access administration, granular JSON policy formulation adhering to the Principle of Least Privilege (PoLP), policy simulation verification across Administrator, Read-Only, and Custom roles, and Multi-Factor Authentication (MFA) enforcement.
     </p>
 
-    <h2>Objectives</h2>
-    <ol>
-      <li>To define the architectural role of Identity and Access Management (IAM) as the centralized authentication and authorization control plane in modern cloud computing.</li>
-      <li>To analyze the critical security justifications for IAM, focusing on eliminating shared root credentials, maintaining non-repudiable audit trails, and shrinking attack blast radiuses.</li>
-      <li>To delineate the architectural differences, credential lifecycles, and delegation mechanics between IAM Users, Groups, and Roles.</li>
-      <li>To deconstruct JSON policy grammar (<code>Effect</code>, <code>Action</code>, <code>Resource</code>, <code>Condition</code>) and master deterministic policy evaluation rules (Explicit Deny vs. Explicit Allow vs. Default Deny).</li>
-      <li>To implement the Principle of Least Privilege (PoLP) by designing customized, laser-scoped policies restricting cloud actions to strictly required operational subsets.</li>
-      <li>To investigate Multi-Factor Authentication (MFA) paradigms (TOTP, FIDO2/WebAuthn) and evaluate policy-driven conditional access mechanisms.</li>
-      <li>To compare the security posture, operational velocity, and governance overhead of Administrator, Read-Only, and Custom role tiers.</li>
-      <li>To provision IAM users (<code>lab6-admin</code>, <code>lab6-viewer</code>, <code>lab6-operator</code>), assign managed and custom policies, and empirically validate access boundaries using the AWS IAM Policy Simulator.</li>
+    <h2 style="margin-top: 14px; margin-bottom: 6px;">Objectives</h2>
+    <ol style="margin-bottom: 8px;">
+      <li style="margin-bottom: 4px; line-height: 1.5; font-size: 9.3pt;">To define the architectural role of Identity and Access Management (IAM) as the centralized authentication and authorization control plane in modern cloud computing.</li>
+      <li style="margin-bottom: 4px; line-height: 1.5; font-size: 9.3pt;">To analyze the critical security justifications for IAM, focusing on eliminating shared root credentials, maintaining non-repudiable audit trails, and shrinking attack blast radiuses.</li>
+      <li style="margin-bottom: 4px; line-height: 1.5; font-size: 9.3pt;">To delineate the architectural differences, credential lifecycles, and delegation mechanics between IAM Users, Groups, and Roles.</li>
+      <li style="margin-bottom: 4px; line-height: 1.5; font-size: 9.3pt;">To deconstruct JSON policy grammar (<code>Effect</code>, <code>Action</code>, <code>Resource</code>, <code>Condition</code>) and master deterministic policy evaluation rules (Explicit Deny vs. Explicit Allow vs. Default Deny).</li>
+      <li style="margin-bottom: 4px; line-height: 1.5; font-size: 9.3pt;">To implement the Principle of Least Privilege (PoLP) by designing customized, laser-scoped policies restricting cloud actions to strictly required operational subsets.</li>
+      <li style="margin-bottom: 4px; line-height: 1.5; font-size: 9.3pt;">To investigate Multi-Factor Authentication (MFA) paradigms (TOTP, FIDO2/WebAuthn) and evaluate policy-driven conditional access mechanisms.</li>
+      <li style="margin-bottom: 4px; line-height: 1.5; font-size: 9.3pt;">To compare the security posture, operational velocity, and governance overhead of Administrator, Read-Only, and Custom role tiers.</li>
+      <li style="margin-bottom: 4px; line-height: 1.5; font-size: 9.3pt;">To provision IAM users (<code>lab6-admin</code>, <code>lab6-viewer</code>, <code>lab6-operator</code>), assign managed and custom policies, and empirically validate access boundaries using the AWS IAM Policy Simulator.</li>
     </ol>
   </div>
 
@@ -560,38 +585,32 @@ html = f"""<!DOCTYPE html>
     </p>
 
     <h4>Anatomy of an IAM Policy Document:</h4>
-    <pre><code>{{
+    <pre style="margin: 6px 0; padding: 6px 12px; font-size: 8pt; line-height: 1.35;"><code>{{
   "Version": "2012-10-17",
   "Statement": [
     {{
       "Sid": "AllowEC2StartStopReadOnly",
       "Effect": "Allow",
-      "Action": [
-        "ec2:Describe*",
-        "ec2:StartInstances",
-        "ec2:StopInstances"
-      ],
+      "Action": ["ec2:Describe*", "ec2:StartInstances", "ec2:StopInstances"],
       "Resource": "*",
-      "Condition": {{
-        "Bool": {{ "aws:MultiFactorAuthPresent": "true" }}
-      }}
+      "Condition": {{ "Bool": {{ "aws:MultiFactorAuthPresent": "true" }} }}
     }}
   ]
 }}</code></pre>
 
-    <ul>
-      <li><strong>Effect:</strong> Must be explicitly set to either <code>"Allow"</code> or <code>"Deny"</code>.</li>
-      <li><strong>Action:</strong> The specific API method calls governed by the statement (e.g., <code>s3:ListBucket</code>, <code>ec2:RunInstances</code>). Supports wildcards (<code>*</code>).</li>
-      <li><strong>Resource:</strong> The target Amazon Resource Name (ARN) upon which the actions are permitted or denied (e.g., <code>arn:aws:s3:::my-secure-bucket/*</code> or <code>*</code>).</li>
-      <li><strong>Condition (Optional):</strong> Granular context keys restricting execution (e.g., requiring MFA, limiting client IP CIDR, enforcing TLS versions, or evaluating resource tags).</li>
+    <ul style="margin-bottom: 8px;">
+      <li style="margin-bottom: 3px; line-height: 1.5; font-size: 9.3pt;"><strong>Effect:</strong> Must be explicitly set to either <code>"Allow"</code> or <code>"Deny"</code>.</li>
+      <li style="margin-bottom: 3px; line-height: 1.5; font-size: 9.3pt;"><strong>Action:</strong> The specific API method calls governed by the statement (e.g., <code>ec2:RunInstances</code>).</li>
+      <li style="margin-bottom: 3px; line-height: 1.5; font-size: 9.3pt;"><strong>Resource:</strong> The target Amazon Resource Name (ARN) upon which actions are permitted or denied.</li>
+      <li style="margin-bottom: 3px; line-height: 1.5; font-size: 9.3pt;"><strong>Condition (Optional):</strong> Granular context keys restricting execution (e.g., requiring MFA).</li>
     </ul>
 
     <h4>The IAM Policy Evaluation Logic:</h4>
-    <p>When an incoming API request reaches AWS, the IAM Policy Engine processes all applicable identity-based and resource-based policies using strict deterministic rules:</p>
-    <ol>
-      <li><strong>Default Deny:</strong> By default, all requests are implicitly denied.</li>
-      <li><strong>Explicit Deny Overrides Everything:</strong> If any applicable policy statement evaluates to <code>Deny</code>, the request is immediately rejected, regardless of any other allows.</li>
-      <li><strong>Explicit Allow Required:</strong> In the absence of an explicit Deny, the request must have at least one applicable explicit <code>Allow</code> statement to proceed.</li>
+    <p style="margin-bottom: 6px;">When an incoming API request reaches AWS, the IAM Policy Engine processes policies using strict deterministic rules:</p>
+    <ol style="margin-bottom: 8px;">
+      <li style="margin-bottom: 3px; line-height: 1.5; font-size: 9.3pt;"><strong>Default Deny:</strong> By default, all requests are implicitly denied.</li>
+      <li style="margin-bottom: 3px; line-height: 1.5; font-size: 9.3pt;"><strong>Explicit Deny Overrides Everything:</strong> If any policy statement evaluates to <code>Deny</code>, the request is immediately rejected.</li>
+      <li style="margin-bottom: 3px; line-height: 1.5; font-size: 9.3pt;"><strong>Explicit Allow Required:</strong> In the absence of an explicit Deny, the request must have at least one explicit <code>Allow</code> statement.</li>
     </ol>
   </div>
 
@@ -770,31 +789,23 @@ html = f"""<!DOCTYPE html>
     <p>
       To demonstrate the Principle of Least Privilege (PoLP), a bespoke customer-managed JSON policy was authored to restrict <code>lab6-operator</code> to only starting, stopping, and describing EC2 compute instances:
     </p>
-    <ol>
-      <li>Navigated to <strong>IAM &rarr; Policies &rarr; Create policy</strong>.</li>
-      <li>Switched to the JSON editor and specified the following policy document:
-        <pre><code>{{
+    <ol style="margin-bottom: 8px;">
+      <li style="margin-bottom: 3px; line-height: 1.45; font-size: 9.3pt;">Navigated to <strong>IAM &rarr; Policies &rarr; Create policy</strong>.</li>
+      <li style="margin-bottom: 3px; line-height: 1.45; font-size: 9.3pt;">Switched to JSON editor and specified the custom policy:
+        <pre style="margin: 4px 0; padding: 5px 10px; font-size: 7.8pt; line-height: 1.35;"><code>{{
   "Version": "2012-10-17",
-  "Statement": [
-    {{
-      "Sid": "VisualEditor0",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:Describe*",
-        "ec2:StartInstances",
-        "ec2:StopInstances"
-      ],
-      "Resource": "*"
-    }}
-  ]
+  "Statement": [{{
+    "Sid": "VisualEditor0", "Effect": "Allow",
+    "Action": ["ec2:Describe*", "ec2:StartInstances", "ec2:StopInstances"], "Resource": "*"
+  }}]
 }}</code></pre>
       </li>
-      <li>Named the policy <code>lab6-ec2-operator</code> and added description: <em>Allows EC2 describe, start, and stop only.</em></li>
-      <li>Attached this policy directly to user <code>lab6-operator</code>.</li>
+      <li style="margin-bottom: 3px; line-height: 1.45; font-size: 9.3pt;">Named the policy <code>lab6-ec2-operator</code> (allows EC2 describe, start, and stop only).</li>
+      <li style="margin-bottom: 3px; line-height: 1.45; font-size: 9.3pt;">Attached this policy directly to user <code>lab6-operator</code>.</li>
     </ol>
 
     <div class="free-img">
-      <img src="{step4_b64}" alt="Step 4 - Custom Policy Created">
+      <img src="{step4_b64}" alt="Step 4 - Custom Policy Created" style="max-height: 310px;">
     </div>
     <p class="caption">Figure 4: Creation and summary of custom policy <code>lab6-ec2-operator</code> restricting actions strictly to EC2 Describe, Start, and Stop.</p>
   </div>

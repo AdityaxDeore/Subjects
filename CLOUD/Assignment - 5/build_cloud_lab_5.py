@@ -168,36 +168,34 @@ steps_data = [
     }
 ]
 
-# Generate Practical Pages (2 steps per page, clean free images without outer cards/boxes)
+# Generate Practical Pages (1 Step Per Page to guarantee 100% spill-free printing)
 step_pages_html = ""
-for i in range(0, len(steps_data), 2):
-    batch = steps_data[i:i+2]
-    step_pages_html += """
-  <!-- ==========================================================================
-       PRACTICAL IMPLEMENTATION PAGE
-       ========================================================================== -->
-  <div class="page">
-"""
+for i, s in enumerate(steps_data):
+    b64 = get_base64_image(os.path.join(images_dir, s["img"]))
+    header_block = ""
     if i == 0:
-        step_pages_html += """    <h2>Part B &mdash; Practical Implementation Workflow</h2>
-    <p style="margin-bottom: 24px;">
+        header_block = """    <h2>Part B &mdash; Practical Implementation Workflow</h2>
+    <p style="margin-bottom: 20px;">
       The following step-by-step reproducible workflow demonstrates launching a single AWS EC2 virtual machine, configuring network ingress firewalls, installing the Apache HTTP web server, and deploying two independent websites (<em>Aditya's Portfolio</em> at <code>/site1/</code> and <em>Campus Eats</em> at <code>/site2/</code>) on the same instance.
     </p>
 """
-    for s in batch:
-        b64 = get_base64_image(os.path.join(images_dir, s["img"]))
-        step_pages_html += f"""
-    <div class="step-card">
+    step_pages_html += f"""
+  <!-- ==========================================================================
+       PAGE {i + 6}: STEP {s["num"]}
+       ========================================================================== -->
+  <div class="page">
+{header_block}    <div class="step-card">
       <h3>Step {s["num"]} &mdash; {s["title"]}</h3>
       <p>{s["desc"]}</p>
-      <img src="{b64}" alt="{s["title"]}" class="free-screenshot">
-      <div class="image-caption">{s["caption"]}</div>
+      <div class="free-img">
+        <img src="{b64}" alt="{s["title"]}">
+      </div>
+      <p class="caption">{s["caption"]}</p>
     </div>
-"""
-    step_pages_html += """  </div>
+  </div>
 """
 
-# Assemble Full Clean, Spacious Document
+# Assemble Full Clean, Spacious Document matching Assignment 6 standard
 html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -216,10 +214,10 @@ html = f"""<!DOCTYPE html>
 
   body {{
     font-family: 'Plus Jakarta Sans', Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 10.6pt;
-    line-height: 1.85;
-    word-spacing: 0.12em;
-    letter-spacing: 0.02em;
+    font-size: 10.5pt;
+    line-height: 1.78;
+    word-spacing: 0.08em;
+    letter-spacing: 0.015em;
     color: #1e293b;
     background: #e2e8f0;
     padding: 36px 16px;
@@ -234,13 +232,20 @@ html = f"""<!DOCTYPE html>
   .page {{
     min-height: 11in;
     width: 8.5in;
-    padding: 0.8in 0.9in;
+    padding: 0.75in 0.85in;
     background: #ffffff;
     margin: 0 auto 36px auto;
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 8px 12px -6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 8px 12px -6px rgba(0, 0, 0, 0.04);
     position: relative;
     box-sizing: border-box;
     border-radius: 4px;
+    page-break-after: always;
+    break-after: page;
+  }}
+
+  .page:last-child {{
+    page-break-after: avoid;
+    break-after: avoid;
   }}
 
   .page:focus-within {{
@@ -251,6 +256,7 @@ html = f"""<!DOCTYPE html>
     body {{
       background: #ffffff !important;
       padding: 0 !important;
+      margin: 0 !important;
     }}
     .container {{
       max-width: 100% !important;
@@ -261,14 +267,18 @@ html = f"""<!DOCTYPE html>
       width: 100% !important;
       min-height: auto !important;
       margin: 0 !important;
-      padding: 0.48in 0.55in !important;
+      padding: 0.45in 0.5in !important;
       box-shadow: none !important;
       border: none !important;
       page-break-after: always !important;
       break-after: page !important;
       border-radius: 0 !important;
     }}
-    .step-card, .free-screenshot, .image-caption, .styled-table, .info-box {{
+    .page:last-child {{
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }}
+    .step-card, .free-img, .caption, .styled-table, .info-box {{
       break-inside: avoid !important;
       page-break-inside: avoid !important;
     }}
@@ -278,31 +288,31 @@ html = f"""<!DOCTYPE html>
   .cover-table {{
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 26px;
+    margin-bottom: 24px;
     font-family: 'Times New Roman', Times, serif;
   }}
   .cover-table td {{
     border: 1px solid #000;
-    padding: 9px 15px;
+    padding: 8px 14px;
   }}
   .cover-table .college-info {{
     text-align: center;
     font-weight: bold;
     font-size: 15.5pt;
-    line-height: 1.45;
+    line-height: 1.4;
     letter-spacing: 0.02em;
   }}
   .cover-table .row-centered {{
     text-align: center;
     font-weight: bold;
     font-size: 13.8pt;
-    padding: 9px 15px;
+    padding: 8px 14px;
   }}
   .cover-table .row-left {{
     text-align: left;
     font-weight: bold;
     font-size: 12.8pt;
-    padding: 8px 15px;
+    padding: 7px 14px;
   }}
   .logo-container {{
     text-align: center;
@@ -318,51 +328,49 @@ html = f"""<!DOCTYPE html>
 
   /* Typography */
   h2 {{
-    font-size: 13.8pt;
+    font-size: 13.5pt;
     font-weight: 800;
-    color: #0f172a;
-    margin-top: 28px;
-    margin-bottom: 16px;
-    border-bottom: 2.5px solid #0284c7;
-    padding-bottom: 6px;
-    letter-spacing: 0.025em;
-    text-transform: uppercase;
-  }}
-  h3 {{
-    font-size: 11.8pt;
-    font-weight: 700;
     color: #0f172a;
     margin-top: 24px;
     margin-bottom: 12px;
-    line-height: 1.55;
+    border-bottom: 2.5px solid #0284c7;
+    padding-bottom: 5px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }}
+  h3 {{
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    line-height: 1.5;
     letter-spacing: 0.015em;
   }}
   h4 {{
-    font-size: 10.8pt;
+    font-size: 10.5pt;
     font-weight: 700;
     color: #1e293b;
-    margin-top: 18px;
-    margin-bottom: 10px;
-    line-height: 1.55;
+    margin-top: 14px;
+    margin-bottom: 8px;
+    line-height: 1.5;
   }}
   p {{
     text-align: justify;
-    line-height: 1.85;
-    margin-bottom: 18px;
+    line-height: 1.78;
+    margin-bottom: 16px;
     color: #334155;
-    word-spacing: 0.12em;
-    letter-spacing: 0.02em;
+    word-spacing: 0.08em;
   }}
   ol, ul {{
     margin-left: 28px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     color: #334155;
   }}
   li {{
-    margin-bottom: 12px;
-    line-height: 1.8;
-    word-spacing: 0.1em;
-    letter-spacing: 0.015em;
+    margin-bottom: 10px;
+    line-height: 1.72;
+    word-spacing: 0.07em;
   }}
 
   code {{
@@ -370,7 +378,7 @@ html = f"""<!DOCTYPE html>
     font-size: 9pt;
     background: #f1f5f9;
     color: #0369a1;
-    padding: 2px 7px;
+    padding: 2px 6px;
     border-radius: 4px;
     border: 1px solid #e2e8f0;
     letter-spacing: 0;
@@ -381,20 +389,20 @@ html = f"""<!DOCTYPE html>
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    margin: 20px 0 24px 0;
-    font-size: 9.4pt;
+    margin: 16px 0 20px 0;
+    font-size: 9.3pt;
     background: #ffffff;
     border-radius: 6px;
     overflow: hidden;
     border: 1px solid #cbd5e1;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   }}
   .styled-table thead th {{
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     color: #ffffff;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 8.4pt;
+    font-size: 8.3pt;
     letter-spacing: 0.06em;
     padding: 10px 14px;
     border: none;
@@ -406,8 +414,8 @@ html = f"""<!DOCTYPE html>
     border-right: 1px solid #f1f5f9;
     color: #1e293b;
     vertical-align: top;
-    line-height: 1.65;
-    word-spacing: 0.06em;
+    line-height: 1.6;
+    word-spacing: 0.05em;
   }}
   .styled-table tbody tr:last-child td {{
     border-bottom: none;
@@ -419,12 +427,12 @@ html = f"""<!DOCTYPE html>
   /* Info Callouts */
   .info-box {{
     border-radius: 8px;
-    padding: 14px 18px;
-    margin: 20px 0;
-    font-size: 9.8pt;
-    line-height: 1.75;
+    padding: 13px 18px;
+    margin: 18px 0;
+    font-size: 9.7pt;
+    line-height: 1.68;
     border-left: 4.5px solid;
-    word-spacing: 0.08em;
+    word-spacing: 0.06em;
   }}
   .info-box.blue {{
     background: #f0f9ff;
@@ -439,36 +447,45 @@ html = f"""<!DOCTYPE html>
 
   /* Step Card Container */
   .step-card {{
-    margin-bottom: 28px;
+    margin-bottom: 16px;
     break-inside: avoid;
   }}
   .step-card h3 {{
-    margin-top: 14px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 8px;
   }}
   .step-card p {{
     margin-bottom: 12px;
   }}
 
-  /* FREE SCREENSHOT STYLING (NO OUTER BOX / NO CANVAS / BIG & CLEAN) */
-  .free-screenshot {{
+  /* FREE SCREENSHOT STYLING (MATCHING ASSIGNMENT 6 STANDARD) */
+  .free-img {{
+    margin: 18px 0 10px 0;
+    text-align: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }}
+  .free-img img {{
     width: 100%;
     max-width: 100%;
+    max-height: 500px;
     height: auto;
-    max-height: 295px;
     display: block;
-    margin: 10px auto 6px auto;
-    border-radius: 4px;
-    border: 1px solid #cbd5e1;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin: 0 auto;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    border-radius: 0;
+    background: transparent;
   }}
 
-  .image-caption {{
-    font-size: 8.8pt;
+  .caption {{
+    font-size: 9pt;
     color: #475569;
     text-align: center;
-    margin-top: 6px;
-    margin-bottom: 20px;
+    margin-top: 8px;
+    margin-bottom: 18px;
     font-style: italic;
     line-height: 1.5;
   }}
@@ -534,10 +551,10 @@ html = f"""<!DOCTYPE html>
     </table>
 
     <h2>Title</h2>
-    <p style="font-size: 11.2pt; margin-bottom: 10px;">
+    <p style="font-size: 11pt; margin-bottom: 8px;">
       <strong>Lab 5:</strong> Deploy Two Different Websites on a Single Cloud-Based Virtual Machine Instance.
     </p>
-    <p style="margin-bottom: 22px;">
+    <p style="margin-bottom: 18px;">
       <span class="badge badge-aws">Cloud Platform: Amazon Web Services (AWS)</span> &bull; 
       <strong>Region:</strong> <code>ap-south-1</code> (Mumbai) &bull; 
       <strong>Compute Service:</strong> Amazon Elastic Compute Cloud (EC2)
@@ -650,7 +667,7 @@ html = f"""<!DOCTYPE html>
   </div>
 
   <!-- ==========================================================================
-       PAGE 4: Q4 (WEB HOSTING IN CLOUD) & ARCHITECTURE DIAGRAM
+       PAGE 4: Q4 (WEB HOSTING IN CLOUD) & ARCHITECTURE LIFECYCLE
        ========================================================================== -->
   <div class="page">
     <h3>4. Define Web Hosting. How Does It Work in a Cloud Setup?</h3>
@@ -709,7 +726,7 @@ html = f"""<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- INJECT ALL PRACTICAL STEP PAGES (21 STEPS WITH SCREENSHOTS & DESCRIPTIONS) -->
+  <!-- INJECT ALL PRACTICAL STEP PAGES (EACH STEP GETS ITS OWN DEDICATED PAGE) -->
 {step_pages_html}
 
   <!-- ==========================================================================
@@ -767,12 +784,12 @@ html = f"""<!DOCTYPE html>
       Furthermore, I studied the three primary multi-hosting strategies &mdash; port-based, name-based, and directory-based virtual hosting. Practically, I launched a single AWS EC2 instance (<code>lab5-web-2</code>, Instance ID: <code>i-0ff8aef326439e30c</code>, <code>t3.micro</code>, Amazon Linux 2023) in the Mumbai <code>ap-south-1b</code> region, configured an Apache web server, and successfully deployed two distinct web applications (<em>Aditya's Portfolio</em> at <code>/site1/</code> and <em>Campus Eats</em> at <code>/site2/</code>) alongside a master landing hub. Both websites were independently verified live from a web browser over standard Port 80, proving how multi-hosting maximizes compute efficiency and lowers cloud infrastructure costs.
     </p>
 
-    <div style="margin-top: 40px; border-top: 1px solid #cbd5e1; padding-top: 18px;">
+    <div style="margin-top: 36px; border-top: 1px solid #cbd5e1; padding-top: 16px;">
       <table style="width: 100%; border-collapse: collapse; font-family: 'Times New Roman', Times, serif;">
         <tr>
           <td style="width: 50%; text-align: left; vertical-align: bottom;">
             <strong>Student Signature:</strong> Aditya Chandrajit Deore<br>
-            <strong>Date:</strong> 17th October 2026<br>
+            <strong>Date:</strong> 18th October 2026<br>
             <strong>PRN:</strong> 124B1F116 &nbsp;&nbsp;&nbsp;&nbsp; <strong>Batch:</strong> B3
           </td>
           <td style="width: 50%; text-align: right; vertical-align: bottom;">

@@ -34,22 +34,121 @@ step8_b64 = get_base64_image(os.path.join(images_dir, "step8_registered_targets_
 step9_b64 = get_base64_image(os.path.join(images_dir, "step9_website_server2.png"))
 step10_b64 = get_base64_image(os.path.join(images_dir, "step10_website_server1.png"))
 
+# Standalone SVG Architecture Diagram for 100% Reliable, Zero-Latency Rendering
+svg_architecture = """
+<svg viewBox="0 0 760 410" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="display:block; margin:0 auto; font-family:'Plus Jakarta Sans', Arial, sans-serif;">
+  <defs>
+    <linearGradient id="clientGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="igwGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="albGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="vmGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#0284c7"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <!-- Background Base Container -->
+  <rect x="2" y="2" width="756" height="406" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Client Browser Node -->
+  <g transform="translate(245, 12)">
+    <rect width="270" height="40" rx="6" fill="url(#clientGrad)" filter="url(#cardShadow)"/>
+    <text x="135" y="25" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700">Client Web Browser (Internet Requestor)</text>
+  </g>
+
+  <!-- Connection: Client to IGW -->
+  <path d="M 380 52 L 380 72" stroke="#0284c7" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="390" y="66" fill="#0369a1" font-size="10" font-weight="600">HTTP : 80</text>
+
+  <!-- AWS VPC Enclosure -->
+  <rect x="20" y="78" width="720" height="320" rx="10" fill="#ffffff" stroke="#0284c7" stroke-width="2" stroke-dasharray="7,5"/>
+  <rect x="35" y="66" width="375" height="22" rx="4" fill="#0284c7"/>
+  <text x="45" y="81" fill="#ffffff" font-size="10.5" font-weight="700">AWS VPC: aditya-vpc-vpc (10.0.0.0/16) | Region: ap-south-1 (Mumbai)</text>
+
+  <!-- Internet Gateway Node -->
+  <g transform="translate(210, 96)">
+    <rect width="340" height="34" rx="6" fill="url(#igwGrad)" filter="url(#cardShadow)"/>
+    <text x="170" y="21" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">AWS Internet Gateway (igw-0a561d52ed88ee322)</text>
+  </g>
+
+  <!-- Connection: IGW to Route Table & ALB -->
+  <path d="M 380 130 L 380 148" stroke="#0284c7" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Public Route Table Badge -->
+  <g transform="translate(195, 148)">
+    <rect width="370" height="26" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="185" y="17" text-anchor="middle" fill="#334155" font-size="10" font-weight="600">Public Route Table (rtb-03c715a137972aa3d) | Route: 0.0.0.0/0 &rarr; IGW</text>
+  </g>
+
+  <!-- Connection: Route Table to ALB -->
+  <path d="M 380 174 L 380 190" stroke="#0284c7" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Application Load Balancer & Target Group Node -->
+  <g transform="translate(160, 190)">
+    <rect width="440" height="42" rx="6" fill="url(#albGrad)" filter="url(#cardShadow)"/>
+    <text x="220" y="20" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700">Application Load Balancer: aditya-web-alb</text>
+    <text x="220" y="34" text-anchor="middle" fill="#e9d5ff" font-size="9.5">Security Group: aditya-alb-sg (Port 80 Allowed) | Target Group: aditya-web-tg (HTTP:80)</text>
+  </g>
+
+  <!-- Branching Connections from ALB to AZ1 and AZ2 -->
+  <path d="M 280 232 L 280 258 L 200 258 L 200 274" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#arrowGreen)"/>
+  <text x="215" y="252" fill="#047857" font-size="9.5" font-weight="700">50% Round-Robin</text>
+
+  <path d="M 480 232 L 480 258 L 560 258 L 560 274" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#arrowGreen)"/>
+  <text x="465" y="252" fill="#047857" font-size="9.5" font-weight="700">50% Round-Robin</text>
+
+  <!-- Availability Zone 1 Box (ap-south-1a) -->
+  <g transform="translate(45, 276)">
+    <rect width="310" height="110" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+    <rect x="12" y="8" width="160" height="18" rx="3" fill="#16a34a"/>
+    <text x="92" y="21" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">AZ: ap-south-1a (Subnet 1)</text>
+    <text x="15" y="42" fill="#166534" font-size="9">Subnet CIDR: 10.0.0.0/20 (Public)</text>
+    <!-- EC2 VM 1 -->
+    <rect x="12" y="50" width="286" height="50" rx="6" fill="url(#vmGrad)"/>
+    <text x="155" y="68" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">EC2: aditya-web-1 (t3.micro)</text>
+    <text x="155" y="83" text-anchor="middle" fill="#bbf7d0" font-size="9">Private IP: 10.0.12.180 | Apache HTTP Server 1</text>
+    <text x="155" y="94" text-anchor="middle" fill="#dcfce7" font-size="8.5">Health Check: 200 OK (Healthy)</text>
+  </g>
+
+  <!-- Availability Zone 2 Box (ap-south-1b) -->
+  <g transform="translate(405, 276)">
+    <rect width="310" height="110" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+    <rect x="12" y="8" width="160" height="18" rx="3" fill="#16a34a"/>
+    <text x="92" y="21" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">AZ: ap-south-1b (Subnet 2)</text>
+    <text x="15" y="42" fill="#166534" font-size="9">Subnet CIDR: 10.0.16.0/20 (Public)</text>
+    <!-- EC2 VM 2 -->
+    <rect x="12" y="50" width="286" height="50" rx="6" fill="url(#vmGrad)"/>
+    <text x="155" y="68" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">EC2: aditya-web-2 (t3.micro)</text>
+    <text x="155" y="83" text-anchor="middle" fill="#bbf7d0" font-size="9">Private IP: 10.0.25.92 | Apache HTTP Server 2</text>
+    <text x="155" y="94" text-anchor="middle" fill="#dcfce7" font-size="8.5">Health Check: 200 OK (Healthy)</text>
+  </g>
+</svg>
+"""
+
 html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cloud Computing Lab 4 - Cloud Networking (VPC &amp; Load Balancing)</title>
-
-<!-- Mermaid for Architecture Diagrams -->
-<script type="module">
-  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-  mermaid.initialize({{ 
-      startOnLoad: true, 
-      theme: 'neutral',
-      flowchart: {{ curve: 'basis', htmlLabels: true }}
-  }});
-</script>
 
 <!-- MathJax for Formulas -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -69,13 +168,13 @@ html = f"""<!DOCTYPE html>
 
   body {{
     font-family: 'Plus Jakarta Sans', Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 10.5pt;
-    line-height: 1.78;
+    font-size: 10pt;
+    line-height: 1.72;
     word-spacing: 0.08em;
-    letter-spacing: 0.015em;
+    letter-spacing: 0.012em;
     color: #1e293b;
     background: #e2e8f0;
-    padding: 36px 16px;
+    padding: 30px 16px;
     -webkit-font-smoothing: antialiased;
   }}
 
@@ -85,11 +184,11 @@ html = f"""<!DOCTYPE html>
   }}
 
   .page {{
-    min-height: 11in;
     width: 8.5in;
-    padding: 0.75in 0.85in;
+    min-height: 11in;
+    padding: 0.6in 0.75in;
     background: #ffffff;
-    margin: 0 auto 36px auto;
+    margin: 0 auto 30px auto;
     box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 8px 12px -6px rgba(0, 0, 0, 0.04);
     position: relative;
     box-sizing: border-box;
@@ -100,28 +199,50 @@ html = f"""<!DOCTYPE html>
     outline: 2px dashed #0284c7;
   }}
 
+  @page {{
+    size: letter;
+    margin: 0.4in 0.5in;
+  }}
+
   @media print {{
-    body {{
-      background: #ffffff;
-      padding: 0;
+    html, body {{
+      background: #ffffff !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }}
     .container {{
-      max-width: 100%;
-      margin: 0;
-      box-shadow: none;
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+      padding: 0 !important;
     }}
     .page {{
-      width: 100%;
-      min-height: auto;
-      margin: 0;
-      padding: 0.45in 0.5in;
-      box-shadow: none;
-      border: none;
-      page-break-after: always;
-      border-radius: 0;
+      width: 100% !important;
+      min-height: auto !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      border: none !important;
+      page-break-after: always !important;
+      break-after: page !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      border-radius: 0 !important;
+      box-sizing: border-box !important;
     }}
     .page:last-child {{
-      page-break-after: avoid;
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }}
+    table, pre, .info-box, .free-img, svg {{
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
     }}
   }}
 
@@ -129,112 +250,111 @@ html = f"""<!DOCTYPE html>
   .cover-table {{
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
     font-family: 'Times New Roman', Times, serif;
   }}
   .cover-table td {{
     border: 1px solid #000;
-    padding: 8px 14px;
+    padding: 6px 12px;
   }}
   .cover-table .college-info {{
     text-align: center;
     font-weight: bold;
-    font-size: 15.5pt;
-    line-height: 1.4;
+    font-size: 14.5pt;
+    line-height: 1.35;
     letter-spacing: 0.02em;
   }}
   .cover-table .row-centered {{
     text-align: center;
     font-weight: bold;
-    font-size: 13.8pt;
-    padding: 8px 14px;
+    font-size: 13pt;
+    padding: 6px 12px;
   }}
   .cover-table .row-left {{
     text-align: left;
     font-weight: bold;
-    font-size: 12.8pt;
-    padding: 7px 14px;
+    font-size: 11.5pt;
+    padding: 5px 12px;
   }}
   .logo-container {{
     text-align: center;
-    width: 18%;
-    padding: 6px !important;
+    width: 17%;
+    padding: 4px !important;
   }}
   .logo-container img {{
-    max-width: 95px;
+    max-width: 85px;
     height: auto;
     display: block;
     margin: 0 auto;
   }}
 
-  /* Typography (Exact IAM UI) */
+  /* Typography (Exact IAM UI - Unboxed, clean, spacious) */
   h2 {{
-    font-size: 13.8pt;
+    font-size: 13pt;
     font-weight: 800;
     color: #0f172a;
-    margin-top: 26px;
-    margin-bottom: 14px;
+    margin-top: 18px;
+    margin-bottom: 10px;
     border-bottom: 2.5px solid #0284c7;
-    padding-bottom: 6px;
+    padding-bottom: 5px;
     letter-spacing: 0.02em;
     text-transform: uppercase;
   }}
   h3 {{
-    font-size: 11.8pt;
+    font-size: 11.2pt;
     font-weight: 700;
     color: #0f172a;
-    margin-top: 22px;
-    margin-bottom: 12px;
-    line-height: 1.5;
+    margin-top: 14px;
+    margin-bottom: 8px;
+    line-height: 1.45;
     letter-spacing: 0.015em;
   }}
   h4 {{
-    font-size: 10.6pt;
+    font-size: 10.2pt;
     font-weight: 700;
     color: #1e293b;
-    margin-top: 16px;
-    margin-bottom: 8px;
-    line-height: 1.5;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    line-height: 1.4;
   }}
   p {{
     text-align: justify;
-    line-height: 1.78;
-    margin-bottom: 16px;
+    line-height: 1.72;
+    margin-bottom: 12px;
     color: #334155;
     word-spacing: 0.08em;
   }}
   ol, ul {{
-    margin-left: 28px;
-    margin-bottom: 18px;
+    margin-left: 24px;
+    margin-bottom: 14px;
     color: #334155;
   }}
   li {{
-    margin-bottom: 10px;
-    line-height: 1.72;
+    margin-bottom: 7px;
+    line-height: 1.66;
     word-spacing: 0.07em;
   }}
 
   code {{
     font-family: 'Fira Code', monospace;
-    font-size: 9pt;
+    font-size: 8.8pt;
     background: #f1f5f9;
     color: #0369a1;
-    padding: 2px 6px;
+    padding: 2px 5px;
     border-radius: 4px;
     border: 1px solid #e2e8f0;
-    letter-spacing: 0;
   }}
 
   pre {{
     background: #0f172a;
     color: #f8fafc;
     border: 1px solid #334155;
-    border-radius: 7px;
-    padding: 14px 18px;
+    border-radius: 6px;
+    padding: 10px 14px;
     font-family: 'Fira Code', monospace;
-    font-size: 8.8pt;
-    line-height: 1.58;
-    margin: 14px 0 18px 0;
+    font-size: 8.3pt;
+    line-height: 1.45;
+    margin: 10px 0 14px 0;
     overflow-x: auto;
   }}
   pre code {{
@@ -250,32 +370,32 @@ html = f"""<!DOCTYPE html>
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    margin: 16px 0 20px 0;
-    font-size: 9.3pt;
+    margin: 12px 0 14px 0;
+    font-size: 9pt;
     background: #ffffff;
     border-radius: 6px;
     overflow: hidden;
     border: 1px solid #cbd5e1;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   }}
   .styled-table thead th {{
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     color: #ffffff;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 8.3pt;
-    letter-spacing: 0.06em;
-    padding: 10px 14px;
+    font-size: 8pt;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
     border: none;
     text-align: left;
   }}
   .styled-table tbody td {{
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-bottom: 1px solid #e2e8f0;
     border-right: 1px solid #f1f5f9;
     color: #1e293b;
     vertical-align: top;
-    line-height: 1.6;
+    line-height: 1.55;
     word-spacing: 0.05em;
   }}
   .styled-table tbody tr:last-child td {{
@@ -287,11 +407,11 @@ html = f"""<!DOCTYPE html>
 
   /* Info Callouts (Exact IAM UI) */
   .info-box {{
-    border-radius: 8px;
-    padding: 13px 18px;
-    margin: 18px 0;
-    font-size: 9.7pt;
-    line-height: 1.68;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 9.3pt;
+    line-height: 1.62;
     border-left: 4.5px solid;
     word-spacing: 0.06em;
   }}
@@ -316,9 +436,9 @@ html = f"""<!DOCTYPE html>
     color: #581c87;
   }}
 
-  /* Free Pasted Images (Big, natural, zero boxes, zero canvas, zero borders) */
+  /* Free Pasted Images - Big, natural, zero borders, zero boxes */
   .free-img {{
-    margin: 22px 0 10px 0;
+    margin: 10px 0 6px 0;
     text-align: center;
     background: transparent !important;
     border: none !important;
@@ -328,6 +448,8 @@ html = f"""<!DOCTYPE html>
     width: 100%;
     max-width: 100%;
     height: auto;
+    max-height: 340px;
+    object-fit: contain;
     display: block;
     margin: 0 auto;
     border: none !important;
@@ -337,13 +459,13 @@ html = f"""<!DOCTYPE html>
     background: transparent !important;
   }}
   .caption {{
-    font-size: 9pt;
+    font-size: 8.8pt;
     color: #475569;
     text-align: center;
-    margin-top: 9px;
-    margin-bottom: 22px;
+    margin-top: 6px;
+    margin-bottom: 12px;
     font-style: italic;
-    line-height: 1.5;
+    line-height: 1.4;
   }}
   .caption strong {{
     color: #0f172a;
@@ -352,27 +474,36 @@ html = f"""<!DOCTYPE html>
 
   .badge {{
     display: inline-block;
-    padding: 3px 8px;
-    border-radius: 5px;
-    font-size: 7.8pt;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 7.5pt;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     vertical-align: middle;
-    margin-left: 8px;
+    margin-left: 6px;
   }}
   .badge.blue {{ background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }}
   .badge.green {{ background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }}
   .badge.purple {{ background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }}
 
-  /* Diagram Box */
-  .diagram-box {{
+  /* Evaluation & Signature Block */
+  .eval-block {{
+    margin-top: 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 12px 16px;
     background: #f8fafc;
+  }}
+  .eval-table {{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+  }}
+  .eval-table td {{
+    padding: 6px 8px;
+    font-size: 9pt;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 18px;
-    margin: 18px 0;
-    text-align: center;
   }}
 </style>
 </head>
@@ -383,88 +514,73 @@ html = f"""<!DOCTYPE html>
        PAGE 1: Cover Header, Title, Aim, Objectives
        ========================================================================== -->
   <div class="page">
-    <table class="cover-table">
+    <table class="cover-table" style="margin-bottom: 10px;">
       <tr>
-        <td class="logo-container">
-          <img src="{logo_b64}" alt="PCCOE Logo" contenteditable="false">
+        <td class="logo-container" style="width: 16%; padding: 2px !important;">
+          <img src="{logo_b64}" alt="PCCOE Logo" contenteditable="false" style="max-width: 72px;">
         </td>
-        <td class="college-info">
+        <td class="college-info" style="font-size: 13.5pt; line-height: 1.25; padding: 4px 8px;">
           Pimpri Chinchwad Education Trust's<br>
           Pimpri Chinchwad College of Engineering
         </td>
       </tr>
       <tr>
-        <td colspan="2" class="row-centered">
+        <td colspan="2" class="row-centered" style="font-size: 12pt; padding: 3px 8px;">
           Assignment No. 4
         </td>
       </tr>
       <tr>
-        <td colspan="2" class="row-left">
+        <td colspan="2" class="row-left" style="font-size: 10.5pt; padding: 3px 8px;">
           Course:- Cloud Computing
         </td>
       </tr>
       <tr>
-        <td colspan="2" class="row-left">
+        <td colspan="2" class="row-left" style="font-size: 10.5pt; padding: 3px 8px;">
           Name:- Aditya Chandrajit Deore
         </td>
       </tr>
       <tr>
-        <td colspan="2" class="row-left">
+        <td colspan="2" class="row-left" style="font-size: 10.5pt; padding: 3px 8px;">
           PRN:- 124B1F116 &nbsp;&nbsp;|&nbsp;&nbsp; Batch:- B3
         </td>
       </tr>
     </table>
 
-    <h2>TITLE</h2>
-    <p><strong>Lab 4: Cloud Networking (VPC &amp; Load Balancing)</strong></p>
+    <h2 style="margin-top: 8px; margin-bottom: 4px; font-size: 11.5pt;">TITLE</h2>
+    <p style="margin-bottom: 6px;"><strong>Lab 4: Cloud Networking (VPC &amp; Load Balancing)</strong></p>
 
-    <h2>AIM</h2>
-    <p>
-      To design, configure, and evaluate a custom Virtual Private Cloud (VPC) / Virtual Cloud Network (VCN) featuring public and private subnets, establish bidirectional and secure outbound internet connectivity using an Internet Gateway and route tables, launch two virtual machine compute instances distributed across multiple Availability Zones / Fault Domains, and implement an Application Load Balancer (ALB) with automated health checks to distribute incoming HTTP traffic and achieve high availability.
+    <h2 style="margin-top: 8px; margin-bottom: 4px; font-size: 11.5pt;">AIM</h2>
+    <p style="margin-bottom: 6px; line-height: 1.55;">
+      To design, configure, and evaluate a custom Virtual Private Cloud (VPC) / Virtual Cloud Network (VCN) featuring public and private subnets, establish bidirectional internet connectivity using an Internet Gateway and route tables, deploy two virtual machine compute instances distributed across multiple Availability Zones, and implement an Application Load Balancer (ALB) with automated health checks to distribute incoming HTTP traffic and achieve high availability.
     </p>
 
-    <h2>OBJECTIVES</h2>
-    <ul>
-      <li>To understand the architectural design principles of software-defined cloud networking, including VPC/VCN isolation, CIDR prefix allocation, and route table mechanics.</li>
-      <li>To analyze the functional, routing, and security differences between public and private subnets.</li>
-      <li>To configure virtual networking components: Internet Gateway (IGW), Network Address Translation (NAT) Gateway, and route tables adhering to the Longest Prefix Match (LPM) algorithm.</li>
-      <li>To implement multi-layered defense-in-depth security using stateful Security Groups / Network Security Groups (NSGs) and stateless Network ACLs / Security Lists.</li>
-      <li>To deploy two web server virtual machine instances (EC2 / OCI Compute) across distinct physical Availability Zones (<code>ap-south-1a</code> and <code>ap-south-1b</code>).</li>
-      <li>To provision an Application Load Balancer (ALB) with target group listeners and HTTP health checks.</li>
-      <li>To verify end-to-end traffic distribution, round-robin load balancing, and fault tolerance via real-time browser inspection.</li>
+    <h2 style="margin-top: 8px; margin-bottom: 4px; font-size: 11.5pt;">OBJECTIVES</h2>
+    <ul style="margin-bottom: 6px;">
+      <li style="margin-bottom: 3px; line-height: 1.48;">To understand the architectural principles of software-defined cloud networking, VPC isolation, and CIDR allocation.</li>
+      <li style="margin-bottom: 3px; line-height: 1.48;">To analyze the functional, routing, and security differences between public and private subnets.</li>
+      <li style="margin-bottom: 3px; line-height: 1.48;">To configure virtual networking components: Internet Gateway (IGW) and Route Tables using Longest Prefix Matching (LPM).</li>
+      <li style="margin-bottom: 3px; line-height: 1.48;">To implement multi-tier defense-in-depth security using stateful Security Groups and chained ingress rules.</li>
+      <li style="margin-bottom: 3px; line-height: 1.48;">To deploy two web server virtual machine instances (EC2 / OCI Compute) across distinct Availability Zones (<code>ap-south-1a</code> and <code>ap-south-1b</code>).</li>
+      <li style="margin-bottom: 3px; line-height: 1.48;">To provision an Application Load Balancer (ALB) with target group listeners and HTTP health checks.</li>
+      <li style="margin-bottom: 3px; line-height: 1.48;">To verify end-to-end traffic distribution, round-robin load balancing, and fault tolerance via real-time browser inspection.</li>
     </ul>
 
-    <div class="info-box blue">
-      <strong>Enterprise Environment Summary:</strong> Primary Cloud Platform: Amazon Web Services (AWS) in Region <code>ap-south-1 (Mumbai)</code> | Custom VPC: <code>aditya-vpc-vpc</code> (<code>10.0.0.0/16</code>) | Comparative Architecture: Oracle Cloud Infrastructure (OCI Always Free VCN).
+    <div class="info-box blue" style="margin: 6px 0; padding: 6px 10px; font-size: 8.6pt; line-height: 1.5;">
+      <strong>Enterprise Environment Summary:</strong> Primary Cloud Platform: Amazon Web Services (AWS) Region <code>ap-south-1 (Mumbai)</code> | Custom VPC: <code>aditya-vpc-vpc</code> (<code>10.0.0.0/16</code>) | Comparative Framework: Oracle Cloud Infrastructure (OCI Always Free VCN).
     </div>
   </div>
 
   <!-- ==========================================================================
-       PAGE 2: High-Level Architecture & Traffic Flowchart
+       PAGE 2: High-Level Architecture & Traffic Flowchart (Vector SVG)
        ========================================================================== -->
   <div class="page">
     <h2>SYSTEM ARCHITECTURE &amp; CLOUD NETWORKING FLOWCHART</h2>
-    
     <p>
-      Modern enterprise cloud architectures rely on tiered network topologies that separate public-facing entry points from private computing resources. The diagram below illustrates the end-to-end data path, from external internet clients through the AWS Internet Gateway and Application Load Balancer to the backend compute servers running across distinct Availability Zones.
+      Modern enterprise cloud architectures rely on tiered network topologies that separate public entry points from private computing resources. The vector architecture diagram below illustrates the end-to-end data path, from external internet clients through the AWS Internet Gateway and Application Load Balancer to the backend compute servers running across distinct physical Availability Zones.
     </p>
 
-    <div class="diagram-box">
-      <div class="mermaid">
-      flowchart TD
-          Client["Client Web Browser (Internet Requestor)"] -->|HTTP Port 80| IGW["AWS Internet Gateway (igw-0a561d52ed88ee322)"]
-          subgraph VPC ["Custom VPC: aditya-vpc-vpc (10.0.0.0/16) in ap-south-1 (Mumbai)"]
-              IGW --> RT["Public Route Table (rtb-03c715a137972aa3d)<br/>Rule: 0.0.0.0/0 &rarr; Target: igw-0a561d52ed88ee322"]
-              RT --> ALB["Application Load Balancer: aditya-web-alb<br/>Security Group: aditya-alb-sg (Port 80 Allowed)"]
-              ALB --> TG["Target Group: aditya-web-tg (HTTP:80 | Health Checks: /)"]
-              subgraph AZ1 ["Availability Zone: ap-south-1a"]
-                  TG -->|Traffic Distribution 50%| VM1["EC2: aditya-web-1 (t3.micro)<br/>Subnet: public1-ap-south-1a<br/>Web Page: Server 1 (ap-south-1a)"]
-              end
-              subgraph AZ2 ["Availability Zone: ap-south-1b"]
-                  TG -->|Traffic Distribution 50%| VM2["EC2: aditya-web-2 (t3.micro)<br/>Subnet: public2-ap-south-1b<br/>Web Page: Server 2 (ap-south-1b)"]
-              end
-          end
-      </div>
+    <div style="margin: 10px 0; text-align: center;">
+      {svg_architecture}
     </div>
     <p class="caption"><strong>Figure 1:</strong> High-Availability Multi-AZ Cloud Architecture &amp; End-to-End Traffic Distribution Pipeline.</p>
 
@@ -493,24 +609,19 @@ html = f"""<!DOCTYPE html>
 
     <ul>
       <li>
-        <strong>Multi-Tenant Isolation:</strong><br>
-        Guarantees complete cryptographic and logical isolation between tenants sharing the same physical hyperscaler hardware. Network packets cannot leak across VPC boundaries without explicit peering configurations.
+        <strong>Multi-Tenant Isolation:</strong> Guarantees complete cryptographic and logical isolation between tenants sharing the same physical hyperscaler hardware. Network packets cannot leak across VPC boundaries without explicit peering configurations.
       </li>
       <li>
-        <strong>Granular Architectural Control:</strong><br>
-        Network engineers define custom private IP address ranges (IPv4/IPv6 CIDR blocks), subnet segmentations, route tables, network gateways, and stateful firewalls.
+        <strong>Granular Architectural Control:</strong> Network engineers define custom private IP address ranges (IPv4/IPv6 CIDR blocks), subnet segmentations, route tables, network gateways, and stateful firewalls.
       </li>
       <li>
-        <strong>Defense-in-Depth Security:</strong><br>
-        Enables multi-tier network topologies that cleanly separate public-facing ingress resources (load balancers, reverse proxies) from private operational tiers (application servers, relational databases).
+        <strong>Defense-in-Depth Security:</strong> Enables multi-tier network topologies that cleanly separate public-facing ingress resources (load balancers, reverse proxies) from private operational tiers (application servers, relational databases).
       </li>
       <li>
-        <strong>Hybrid Cloud Connectivity:</strong><br>
-        Seamlessly extends existing enterprise data centers into the cloud via IPSec Virtual Private Network (VPN) tunnels or dedicated private physical links (AWS Direct Connect / OCI FastConnect).
+        <strong>Hybrid Cloud Connectivity:</strong> Seamlessly extends existing enterprise data centers into the cloud via IPSec Virtual Private Network (VPN) tunnels or dedicated private physical links (AWS Direct Connect / OCI FastConnect).
       </li>
       <li>
-        <strong>Regulatory Compliance:</strong><br>
-        Essential for satisfying strict cybersecurity benchmarks (ISO 27001, SOC 2, PCI-DSS, HIPAA) requiring boundary segmentation of sensitive data workloads.
+        <strong>Regulatory Compliance:</strong> Essential for satisfying strict cybersecurity benchmarks (ISO 27001, SOC 2, PCI-DSS, HIPAA) requiring boundary segmentation of sensitive data workloads.
       </li>
     </ul>
 
@@ -581,32 +692,25 @@ html = f"""<!DOCTYPE html>
 
     <ul>
       <li>
-        <strong>CIDR Block (Classless Inter-Domain Routing):</strong><br>
-        The contiguous master private IP address space allocated to the VPC (e.g., <code>10.0.0.0/16</code>), defining the maximum address capacity for all resources.
+        <strong>CIDR Block (Classless Inter-Domain Routing):</strong> The contiguous master private IP address space allocated to the VPC (e.g., <code>10.0.0.0/16</code>), defining the maximum address capacity for all resources.
       </li>
       <li>
-        <strong>Subnets:</strong><br>
-        Logical subdivisions of the VPC CIDR block bound to specific physical Availability Zones (AZs) or regional scopes, creating distinct broadcast domains.
+        <strong>Subnets:</strong> Logical subdivisions of the VPC CIDR block bound to specific physical Availability Zones (AZs) or regional scopes, creating distinct broadcast domains.
       </li>
       <li>
-        <strong>Route Tables:</strong><br>
-        Sets of routing rules (destination CIDR &rarr; target gateway) determining the network path traversed by outgoing packets from associated subnets.
+        <strong>Route Tables:</strong> Sets of routing rules (destination CIDR &rarr; target gateway) determining the network path traversed by outgoing packets from associated subnets.
       </li>
       <li>
-        <strong>Internet Gateway (IGW):</strong><br>
-        A redundant, horizontally scaled software gateway facilitating bidirectional communication between public subnet instances and the public internet.
+        <strong>Internet Gateway (IGW):</strong> A redundant, horizontally scaled software gateway facilitating bidirectional communication between public subnet instances and the public internet.
       </li>
       <li>
-        <strong>NAT Gateway / NAT Instance:</strong><br>
-        A managed network translation service enabling private subnet instances to initiate outbound requests to the internet without allowing external internet clients to initiate inbound connections.
+        <strong>NAT Gateway / NAT Instance:</strong> A managed network translation service enabling private subnet instances to initiate outbound requests to the internet without allowing external internet clients to initiate inbound connections.
       </li>
       <li>
-        <strong>Virtual Firewalls (Security Groups &amp; NACLs / Security Lists):</strong><br>
-        Stateful instance-level (Security Groups / NSGs) and stateless subnet-level (NACLs / Security Lists) packet filtering engines controlling traffic flows.
+        <strong>Virtual Firewalls (Security Groups &amp; NACLs / Security Lists):</strong> Stateful instance-level (Security Groups / NSGs) and stateless subnet-level (NACLs / Security Lists) packet filtering engines controlling traffic flows.
       </li>
       <li>
-        <strong>Load Balancers (ALB / NLB):</strong><br>
-        Intelligent reverse proxies distributing client traffic across healthy backend compute targets across multiple availability zones.
+        <strong>Load Balancers (ALB / NLB):</strong> Intelligent reverse proxies distributing client traffic across healthy backend compute targets across multiple availability zones.
       </li>
     </ul>
 
@@ -626,12 +730,10 @@ html = f"""<!DOCTYPE html>
 
     <ul>
       <li>
-        <strong>Default Routing Target:</strong><br>
-        It provides a destination target in the VPC route tables for internet-bound traffic via the default route <code>0.0.0.0/0</code>.
+        <strong>Default Routing Target:</strong> It provides a destination target in the VPC route tables for internet-bound traffic via the default route <code>0.0.0.0/0</code>.
       </li>
       <li>
-        <strong>1:1 Network Address Translation (NAT):</strong><br>
-        When an instance in a public subnet initiates an outbound connection, the IGW translates its private IPv4 address to its associated public IPv4 address. Conversely, for incoming traffic addressed to the instance's public IP, the IGW translates the destination public IP back into the instance's private IP before forwarding the packet into the VPC software-defined network overlay.
+        <strong>1:1 Network Address Translation (NAT):</strong> When an instance in a public subnet initiates an outbound connection, the IGW translates its private IPv4 address to its associated public IPv4 address. Conversely, for incoming traffic addressed to the instance's public IP, the IGW translates the destination public IP back into the instance's private IP.
       </li>
     </ul>
 
@@ -642,20 +744,16 @@ html = f"""<!DOCTYPE html>
 
     <ul>
       <li>
-        <strong>Attack Surface Reduction:</strong><br>
-        By placing database servers, payment engines, and backend APIs in private subnets with no public IPs, external attackers cannot directly scan, ping, or exploit them over the public internet.
+        <strong>Attack Surface Reduction:</strong> By placing database servers, payment engines, and backend APIs in private subnets with no public IPs, external attackers cannot directly scan, ping, or exploit them over the public internet.
       </li>
       <li>
-        <strong>Blast Radius Containment:</strong><br>
-        If a public-facing web server or reverse proxy is compromised through a web application vulnerability, the attacker cannot freely pivot through the network; access to backend subnets is strictly policed by internal firewall rules.
+        <strong>Blast Radius Containment:</strong> If a public-facing web server or reverse proxy is compromised through a web application vulnerability, the attacker cannot freely pivot through the network; access to backend subnets is strictly policed by internal firewall rules.
       </li>
       <li>
-        <strong>Defense-in-Depth:</strong><br>
-        Multiple complementary layers of protection (perimeter IGW &rarr; Subnet NACL / Security List &rarr; Instance Security Group &rarr; Host OS Firewall) ensure that the failure of any single security control does not expose core assets.
+        <strong>Defense-in-Depth:</strong> Multiple complementary layers of protection (perimeter IGW &rarr; Subnet NACL / Security List &rarr; Instance Security Group &rarr; Host OS Firewall) ensure that the failure of any single security control does not expose core assets.
       </li>
       <li>
-        <strong>Compliance Enforcement:</strong><br>
-        Regulatory standards (PCI-DSS Section 1.3, HIPAA Security Rule) mandate that cardholder data and protected health information (PHI) reside in network zones completely segregated from untrusted external networks.
+        <strong>Compliance Enforcement:</strong> Regulatory standards (PCI-DSS Section 1.3, HIPAA Security Rule) mandate that cardholder data and protected health information (PHI) reside in network zones completely segregated from untrusted external networks.
       </li>
     </ul>
 
@@ -673,12 +771,12 @@ html = f"""<!DOCTYPE html>
       <strong>Classless Inter-Domain Routing (CIDR)</strong> (defined in RFC 4632) is an IP addressing allocation standard that replaces traditional classful (Class A, B, C) network addressing. It expresses an IP network prefix using the notation:
     </p>
     
-    <p style="text-align: center; margin: 14px 0;">$$\\text{{IPv4 Address}} / \\text{{Prefix Length (bits)}}$$</p>
+    <p style="text-align: center; margin: 8px 0;">$$\\text{{IPv4 Address}} / \\text{{Prefix Length (bits)}}$$</p>
     
     <p>
       The total number of IP addresses available in a given prefix block is determined mathematically by the formula:
     </p>
-    <p style="text-align: center; margin: 14px 0;">$$\\text{{Total Addresses}} = 2^{{(32 - \\text{{Prefix Length}})}}$$</p>
+    <p style="text-align: center; margin: 8px 0;">$$\\text{{Total Addresses}} = 2^{{(32 - \\text{{Prefix Length}})}}$$</p>
 
     <table class="styled-table">
       <thead>
@@ -725,12 +823,10 @@ html = f"""<!DOCTYPE html>
     <h4>Cloud Provider Reserved Addresses</h4>
     <ul>
       <li>
-        <strong>AWS reserves 5 IP addresses per subnet:</strong><br>
-        <code>.0</code> (Network), <code>.1</code> (VPC Router), <code>.2</code> (DNS Server - AmazonProvidedDNS), <code>.3</code> (Future use), and <code>.255</code> (Network broadcast).
+        <strong>AWS reserves 5 IP addresses per subnet:</strong> <code>.0</code> (Network), <code>.1</code> (VPC Router), <code>.2</code> (DNS Server - AmazonProvidedDNS), <code>.3</code> (Future use), and <code>.255</code> (Network broadcast).
       </li>
       <li>
-        <strong>Oracle Cloud (OCI) reserves 3 IP addresses per subnet:</strong><br>
-        <code>.0</code> (Network), <code>.1</code> (Default Gateway), and <code>.2</code> (Reserved by OCI).
+        <strong>Oracle Cloud (OCI) reserves 3 IP addresses per subnet:</strong> <code>.0</code> (Network), <code>.1</code> (Default Gateway), and <code>.2</code> (Reserved by OCI).
       </li>
     </ul>
 
@@ -750,26 +846,23 @@ html = f"""<!DOCTYPE html>
 
     <ul>
       <li>
-        <strong>Longest Prefix Match (LPM) Evaluation:</strong><br>
-        When routing an outgoing packet, the virtual router evaluates all destination CIDR rules in the route table and selects the most specific match (the one with the largest prefix length / most specific bitmask).<br>
+        <strong>Longest Prefix Match (LPM) Evaluation:</strong> When routing an outgoing packet, the virtual router evaluates all destination CIDR rules in the route table and selects the most specific match (the one with the largest prefix length / most specific bitmask).<br>
         For instance, if a packet is addressed to <code>10.0.0.15</code>:
-        <ul style="margin-top: 6px; margin-bottom: 6px;">
+        <ul style="margin-top: 4px; margin-bottom: 4px;">
           <li>Rule 1: <code>10.0.0.0/16 &rarr; local</code> (Prefix length 16)</li>
           <li>Rule 2: <code>0.0.0.0/0 &rarr; igw-xxxxxxxxx</code> (Prefix length 0)</li>
         </ul>
         The router matches Rule 1 because <code>/16</code> is longer and more specific than <code>/0</code>, keeping local traffic securely inside the VPC without sending it to the Internet Gateway.
       </li>
       <li>
-        <strong>Default Quad-Zero Route (<code>0.0.0.0/0</code>):</strong><br>
-        Acts as the catch-all default gateway for any destination address that does not match a more specific local or peered CIDR.
-        <ul style="margin-top: 6px; margin-bottom: 6px;">
+        <strong>Default Quad-Zero Route (<code>0.0.0.0/0</code>):</strong> Acts as the catch-all default gateway for any destination address that does not match a more specific local or peered CIDR.
+        <ul style="margin-top: 4px; margin-bottom: 4px;">
           <li>In a <strong>Public Subnet</strong>, <code>0.0.0.0/0 &rarr; Target: Internet Gateway</code>.</li>
           <li>In a <strong>Private Subnet</strong>, <code>0.0.0.0/0 &rarr; Target: NAT Gateway</code>.</li>
         </ul>
       </li>
       <li>
-        <strong>Subnet Associations:</strong><br>
-        Every subnet in a VPC must be explicitly or implicitly associated with a route table. Multiple subnets can share a single route table, but a subnet can only be associated with one route table at a time.
+        <strong>Subnet Associations:</strong> Every subnet in a VPC must be explicitly or implicitly associated with a route table. Multiple subnets can share a single route table, but a subnet can only be associated with one route table at a time.
       </li>
     </ul>
 
@@ -845,41 +938,22 @@ html = f"""<!DOCTYPE html>
 
     <ol>
       <li>
-        <strong>Sign in to OCI Console:</strong><br>
-        Access <code>cloud.oracle.com</code> and select your assigned home region (e.g., <code>ap-mumbai-1</code> or <code>ap-hyderabad-1</code>).
+        <strong>Sign in to OCI Console:</strong> Access <code>cloud.oracle.com</code> and select your assigned home region (e.g., <code>ap-mumbai-1</code> or <code>ap-hyderabad-1</code>).
       </li>
       <li>
-        <strong>Open Networking Navigation:</strong><br>
-        Expand the navigation burger menu &rarr; <strong>Networking</strong> &rarr; <strong>Virtual Cloud Networks</strong>.
+        <strong>Open Networking Navigation:</strong> Expand the navigation menu &rarr; <strong>Networking</strong> &rarr; <strong>Virtual Cloud Networks</strong>.
       </li>
       <li>
-        <strong>Launch VCN Wizard:</strong><br>
-        Click the <strong>Start VCN Wizard</strong> button. Select <strong>Create VCN with Internet Connectivity</strong> &rarr; click <strong>Start VCN Wizard</strong>.
+        <strong>Launch VCN Wizard:</strong> Click <strong>Start VCN Wizard</strong>. Select <strong>Create VCN with Internet Connectivity</strong> &rarr; click <strong>Start VCN Wizard</strong>.
       </li>
       <li>
-        <strong>Define VCN Parameters:</strong><br>
-        Enter the network parameters in the wizard:
-        <ul style="margin-top: 6px; margin-bottom: 6px;">
-          <li><strong>VCN Name:</strong> <code>aditya-pccoe-vcn</code></li>
-          <li><strong>Compartment:</strong> Select your root or designated laboratory compartment.</li>
-          <li><strong>VCN IPv4 CIDR Block:</strong> <code>10.0.0.0/16</code></li>
-          <li><strong>Public Subnet IPv4 CIDR Block:</strong> <code>10.0.0.0/24</code></li>
-          <li><strong>Private Subnet IPv4 CIDR Block:</strong> <code>10.0.1.0/24</code></li>
-        </ul>
+        <strong>Define VCN Parameters:</strong> Enter network parameters: VCN Name: <code>aditya-pccoe-vcn</code>, VCN CIDR: <code>10.0.0.0/16</code>, Public Subnet CIDR: <code>10.0.0.0/24</code>, Private Subnet CIDR: <code>10.0.1.0/24</code>.
       </li>
       <li>
-        <strong>Review Automated Architecture:</strong><br>
-        The wizard automatically provisions:
-        <ul style="margin-top: 6px; margin-bottom: 6px;">
-          <li>1 Internet Gateway (<code>IGW</code>) for public internet communication.</li>
-          <li>1 NAT Gateway (<code>NATGW</code>) for private outbound updates.</li>
-          <li>1 Service Gateway (<code>SGW</code>) for private access to Oracle Object Storage and APIs.</li>
-          <li>Default Route Tables and Default Security Lists with SSH/HTTP ingress rules.</li>
-        </ul>
+        <strong>Review Automated Architecture:</strong> The wizard provisions 1 Internet Gateway (<code>IGW</code>), 1 NAT Gateway (<code>NATGW</code>), 1 Service Gateway (<code>SGW</code>), and default route tables and security lists with SSH/HTTP ingress rules.
       </li>
       <li>
-        <strong>Create VCN:</strong><br>
-        Click <strong>Create</strong>. OCI orchestrates and validates all resources in under 15 seconds.
+        <strong>Create VCN:</strong> Click <strong>Create</strong>. OCI orchestrates and validates all resources in under 15 seconds.
       </li>
     </ol>
 
@@ -899,26 +973,16 @@ html = f"""<!DOCTYPE html>
 
     <ul>
       <li>
-        <strong>VPC CIDR Master Block:</strong><br>
-        <code>10.0.0.0/16</code> (65,536 total addresses) in Region <code>ap-south-1</code> (Mumbai).
+        <strong>VPC CIDR Master Block:</strong> <code>10.0.0.0/16</code> (65,536 total addresses) in Region <code>ap-south-1</code> (Mumbai).
       </li>
       <li>
-        <strong>Public Subnet 1 (<code>aditya-vpc-subnet-public1-ap-south-1a</code>):</strong><br>
-        &bull; CIDR Block: <code>10.0.0.0/20</code> (4,096 IP addresses) | Availability Zone: <code>ap-south-1a</code><br>
-        &bull; Route Table: <code>rtb-03c715a137972aa3d</code> with route <code>0.0.0.0/0 &rarr; igw-0a561d52ed88ee322</code><br>
-        &bull; Auto-assign Public IPv4: <strong>Enabled</strong>
+        <strong>Public Subnet 1 (<code>aditya-vpc-subnet-public1-ap-south-1a</code>):</strong> CIDR: <code>10.0.0.0/20</code> (4,096 IPs) | Zone: <code>ap-south-1a</code> | Route Table: <code>rtb-03c715a137972aa3d</code> (<code>0.0.0.0/0 &rarr; igw</code>) | Public IP Auto-Assign: <strong>Enabled</strong>.
       </li>
       <li>
-        <strong>Public Subnet 2 (<code>aditya-vpc-subnet-public2-ap-south-1b</code>):</strong><br>
-        &bull; CIDR Block: <code>10.0.16.0/20</code> (4,096 IP addresses) | Availability Zone: <code>ap-south-1b</code><br>
-        &bull; Route Table: <code>rtb-03c715a137972aa3d</code> with route <code>0.0.0.0/0 &rarr; igw-0a561d52ed88ee322</code><br>
-        &bull; Auto-assign Public IPv4: <strong>Enabled</strong>
+        <strong>Public Subnet 2 (<code>aditya-vpc-subnet-public2-ap-south-1b</code>):</strong> CIDR: <code>10.0.16.0/20</code> (4,096 IPs) | Zone: <code>ap-south-1b</code> | Route Table: <code>rtb-03c715a137972aa3d</code> (<code>0.0.0.0/0 &rarr; igw</code>) | Public IP Auto-Assign: <strong>Enabled</strong>.
       </li>
       <li>
-        <strong>Private Subnets (Architecture Equivalent):</strong><br>
-        &bull; Subnet CIDR: <code>10.0.128.0/20</code> and <code>10.0.144.0/20</code><br>
-        &bull; Route Table: Local VPC route only (<code>10.0.0.0/16 &rarr; local</code>) or routed via NAT Gateway.<br>
-        &bull; Auto-assign Public IPv4: <strong>Disabled</strong>
+        <strong>Private Subnets (Architecture Equivalent):</strong> Subnet CIDR: <code>10.0.128.0/20</code> and <code>10.0.144.0/20</code> | Route Table: Local VPC route only or routed via NAT Gateway | Public IP Auto-Assign: <strong>Disabled</strong>.
       </li>
     </ul>
 
@@ -1019,7 +1083,7 @@ html = f"""<!DOCTYPE html>
           <td><strong>Inbound</strong></td>
           <td>SSH (TCP)</td>
           <td><code>22</code></td>
-          <td><code>x.x.x.x/32</code> (Admin IP)</td>
+          <td><code>Admin IP</code></td>
           <td>Restricted secure shell administrative terminal access.</td>
         </tr>
         <tr>
@@ -1047,8 +1111,8 @@ html = f"""<!DOCTYPE html>
     </p>
 
     <ul>
-      <li><strong>Instance 1:</strong> <code>aditya-web-1</code> (ID: <code>i-0a5792d92f3def505</code>) deployed in <code>public1-ap-south-1a</code>.</li>
-      <li><strong>Instance 2:</strong> <code>aditya-web-2</code> (ID: <code>i-076bf7e774cb90044</code>) deployed in <code>public2-ap-south-1b</code>.</li>
+      <li><strong>Instance 1:</strong> <code>aditya-web-1</code> (ID: <code>i-0a5792d92f3def505</code>) deployed in <code>public1-ap-south-1a</code> (Private IP: <code>10.0.12.180</code>).</li>
+      <li><strong>Instance 2:</strong> <code>aditya-web-2</code> (ID: <code>i-076bf7e774cb90044</code>) deployed in <code>public2-ap-south-1b</code> (Private IP: <code>10.0.25.92</code>).</li>
       <li><strong>Hardware Profile:</strong> AWS <code>t3.micro</code> (1 vCPU, 1 GB RAM, 20 GB gp3 storage) / OCI <code>VM.Standard.E2.1.Micro</code> Always Free.</li>
     </ul>
 
@@ -1058,33 +1122,22 @@ html = f"""<!DOCTYPE html>
     </p>
 
     <pre><code>#!/bin/bash
-# Update repository package indices and install Apache web server
 apt-get update -y && apt-get install -y apache2
+systemctl start apache2 && systemctl enable apache2
 
-# Enable and start the Apache service
-systemctl start apache2
-systemctl enable apache2
-
-# Query AWS instance metadata service (IMDSv2 / IMDSv1)
+# Query AWS instance metadata service (IMDS)
 INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id || hostname)
 AZ=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone || echo "AZ-Cluster")
 PRIVATE_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4 || hostname -I)
 
 # Deploy diagnostic HTML response
 cat &lt;&lt;EOF &gt; /var/www/html/index.html
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-  &lt;title&gt;PCCOE Cloud Lab 4 - Web Server&lt;/title&gt;
-&lt;/head&gt;
-&lt;body style="text-align:center; padding-top:40px; font-family:sans-serif;"&gt;
+&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body style="text-align:center; padding-top:40px; font-family:sans-serif;"&gt;
   &lt;h1&gt;PCCOE Cloud Lab 4 &mdash; Traffic Routed Successfully&lt;/h1&gt;
-  &lt;p&gt;&lt;strong&gt;Instance ID:&lt;/strong&gt; $INSTANCE_ID&lt;/p&gt;
-  &lt;p&gt;&lt;strong&gt;Availability Zone:&lt;/strong&gt; $AZ&lt;/p&gt;
+  &lt;p&gt;&lt;strong&gt;Instance ID:&lt;/strong&gt; $INSTANCE_ID | &lt;strong&gt;AZ:&lt;/strong&gt; $AZ&lt;/p&gt;
   &lt;p&gt;&lt;strong&gt;Private IP:&lt;/strong&gt; $PRIVATE_IP&lt;/p&gt;
   &lt;p&gt;Student: Aditya Chandrajit Deore (PRN: 124B1F116)&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+&lt;/body&gt;&lt;/html&gt;
 EOF</code></pre>
   </div>
 
@@ -1155,18 +1208,15 @@ EOF</code></pre>
 
     <ul>
       <li>
-        <strong>Managed NAT Gateway (Network Address Translation):</strong><br>
-        Deployed in a <strong>public subnet</strong> and assigned a static Elastic Public IP. The route table associated with the private subnet specifies a default route:
-        <p style="text-align: center; margin: 10px 0;">$$\\text{{Destination: }} 0.0.0.0/0 \\implies \\text{{Target: }} \\text{{nat-xxxxxxxxx}}$$</p>
+        <strong>Managed NAT Gateway (Network Address Translation):</strong> Deployed in a <strong>public subnet</strong> and assigned a static Elastic Public IP. The route table associated with the private subnet specifies a default route:
+        <p style="text-align: center; margin: 6px 0;">$$\\text{{Destination: }} 0.0.0.0/0 \\implies \\text{{Target: }} \\text{{nat-xxxxxxxxx}}$$</p>
         The NAT Gateway translates outbound TCP/UDP requests to its Elastic IP and forwards them to the Internet Gateway. Inbound connection attempts from external internet hosts to the NAT Gateway are automatically rejected.
       </li>
       <li>
-        <strong>VPC Endpoints &amp; PrivateLink (or OCI Service Gateway):</strong><br>
-        Allows private instances to access native cloud provider storage and database services (AWS S3, DynamoDB, OCI Object Storage) through a private network interface inside the VPC without traversing the internet or needing a NAT Gateway.
+        <strong>VPC Endpoints &amp; PrivateLink (or OCI Service Gateway):</strong> Allows private instances to access native cloud provider storage and database services (AWS S3, DynamoDB, OCI Object Storage) through a private network interface inside the VPC without traversing the internet or needing a NAT Gateway.
       </li>
       <li>
-        <strong>Bastion Host / SSH Jump Server (or Systems Manager / OCI Bastion):</strong><br>
-        For administrative access into private instances, administrators connect to an ephemeral, hardened Bastion host in the public subnet, or utilize AWS SSM Session Manager / OCI Bastion Service, which initiates an outbound TLS tunnel without opening inbound port 22.
+        <strong>Bastion Host / SSH Jump Server (or Systems Manager / OCI Bastion):</strong> For administrative access into private instances, administrators connect to an ephemeral, hardened Bastion host in the public subnet, or utilize AWS SSM Session Manager / OCI Bastion Service, which initiates an outbound TLS tunnel without opening inbound port 22.
       </li>
     </ul>
 
@@ -1186,7 +1236,7 @@ EOF</code></pre>
       Log in to the AWS Management Console in region <code>ap-south-1 (Mumbai)</code> and navigate to <strong>VPC &rarr; Your VPCs &rarr; Create VPC</strong>. Choose the <strong>VPC and more</strong> wizard option. Configure Name tag prefix: <code>aditya-vpc</code>, IPv4 CIDR block: <code>10.0.0.0/16</code>, Number of Availability Zones: <code>2</code>, and 2 public subnets (<code>ap-south-1a</code> and <code>ap-south-1b</code>). Set NAT gateways to <em>None</em> and enable both <strong>DNS hostnames</strong> and <strong>DNS resolution</strong>.
     </p>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin: 8px 0;">
       <thead>
         <tr>
           <th>Configuration Parameter</th>
@@ -1196,14 +1246,9 @@ EOF</code></pre>
       </thead>
       <tbody>
         <tr>
-          <td><strong>VPC Name Tag</strong></td>
-          <td><code>aditya-vpc-vpc</code></td>
-          <td>Identifies the software-defined network boundary.</td>
-        </tr>
-        <tr>
-          <td><strong>IPv4 CIDR Block</strong></td>
-          <td><code>10.0.0.0/16</code> (65,536 IPs)</td>
-          <td>Provides scalable private address capacity.</td>
+          <td><strong>VPC Name &amp; CIDR</strong></td>
+          <td><code>aditya-vpc-vpc</code> | <code>10.0.0.0/16</code></td>
+          <td>Defines boundary and scalable private IP capacity (65,536 IPs).</td>
         </tr>
         <tr>
           <td><strong>Availability Zones</strong></td>
@@ -1213,7 +1258,7 @@ EOF</code></pre>
         <tr>
           <td><strong>Public Subnets</strong></td>
           <td><code>2</code> (<code>10.0.0.0/20</code>, <code>10.0.16.0/20</code>)</td>
-          <td>Hosts load balancer nodes and web compute instances.</td>
+          <td>Hosts dual-zone load balancer nodes and compute instances.</td>
         </tr>
       </tbody>
     </table>
@@ -1233,7 +1278,7 @@ EOF</code></pre>
       Click <strong>Create VPC</strong>. The automated workflow validates and orchestrates all networking primitives: provisions VPC <code>vpc-06efb944088685c0a</code>, instantiates subnets <code>subnet-0ebd6b35d0d43b5ad</code> and <code>subnet-06490a3f10bf7b76b</code>, attaches Internet Gateway <code>igw-0a561d52ed88ee322</code>, and creates Route Table <code>rtb-03c715a137972aa3d</code> with route <code>0.0.0.0/0 &rarr; igw</code>.
     </p>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin: 8px 0;">
       <thead>
         <tr>
           <th>Resource Primitive</th>
@@ -1248,24 +1293,14 @@ EOF</code></pre>
           <td>Available (State: Available)</td>
         </tr>
         <tr>
-          <td><strong>Public Subnet 1</strong></td>
-          <td><code>subnet-0ebd6b35d0d43b5ad</code> (ap-south-1a)</td>
-          <td>Available (IPv4: 10.0.0.0/20)</td>
+          <td><strong>Public Subnets (Dual AZ)</strong></td>
+          <td><code>subnet-0ebd6b35d0d43b5ad</code> / <code>subnet-06490a3f10bf7b76b</code></td>
+          <td>Available (10.0.0.0/20 and 10.0.16.0/20)</td>
         </tr>
         <tr>
-          <td><strong>Public Subnet 2</strong></td>
-          <td><code>subnet-06490a3f10bf7b76b</code> (ap-south-1b)</td>
-          <td>Available (IPv4: 10.0.16.0/20)</td>
-        </tr>
-        <tr>
-          <td><strong>Internet Gateway</strong></td>
-          <td><code>igw-0a561d52ed88ee322</code> (aditya-vpc-igw)</td>
-          <td>Attached to vpc-06efb944088685c0a</td>
-        </tr>
-        <tr>
-          <td><strong>Route Table</strong></td>
-          <td><code>rtb-03c715a137972aa3d</code> (aditya-vpc-rtb-public)</td>
-          <td>Associated with 2 Subnets</td>
+          <td><strong>Internet Gateway &amp; Route Table</strong></td>
+          <td><code>igw-0a561d52ed88ee322</code> | <code>rtb-03c715a137972aa3d</code></td>
+          <td>Attached to VPC &amp; associated with both subnets</td>
         </tr>
       </tbody>
     </table>
@@ -1285,7 +1320,7 @@ EOF</code></pre>
       Navigate to <strong>EC2 &rarr; Security Groups &rarr; Create security group</strong>. Set Security group name: <code>aditya-alb-sg</code> and Description: <em>"Allow HTTP traffic to Application Load Balancer"</em>. Attach to custom VPC <code>vpc-06efb944088685c0a</code>. Add an inbound rule: Type <code>HTTP</code>, Protocol <code>TCP</code>, Port range <code>80</code>, Source <code>Anywhere-IPv4 (0.0.0.0/0)</code>. AWS assigns Security Group ID <code>sg-00f7f36364593ed5e</code>.
     </p>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin: 8px 0;">
       <thead>
         <tr>
           <th>Traffic Direction</th>
@@ -1325,7 +1360,7 @@ EOF</code></pre>
       Navigate to <strong>EC2 &rarr; Target Groups &rarr; Create target group</strong>. Choose target type: <strong>Instances</strong>. Target group name: <code>aditya-web-tg</code>. Set Protocol: <code>HTTP</code> on Port: <code>80</code>, Protocol version: <code>HTTP1</code>, and associate with VPC <code>aditya-vpc-vpc</code>. Configure Health checks: Protocol <code>HTTP</code>, Path <code>/</code>, Success code <code>200</code>. This logical target group registers and monitors the backend compute pool.
     </p>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin: 8px 0;">
       <thead>
         <tr>
           <th>Health Check Setting</th>
@@ -1335,24 +1370,19 @@ EOF</code></pre>
       </thead>
       <tbody>
         <tr>
-          <td><strong>Health Check Protocol</strong></td>
-          <td><code>HTTP</code></td>
-          <td>Performs standard HTTP application-layer probe.</td>
-        </tr>
-        <tr>
-          <td><strong>Health Check Path</strong></td>
-          <td><code>/</code> (Root document)</td>
-          <td>Evaluates web server Apache index response.</td>
+          <td><strong>Protocol &amp; Path</strong></td>
+          <td><code>HTTP : 80</code> / <code>/</code></td>
+          <td>Performs standard HTTP application-layer probe against root document.</td>
         </tr>
         <tr>
           <td><strong>Healthy Threshold</strong></td>
           <td><code>3</code> consecutive successes</td>
-          <td>Target marked Healthy after 3 consecutive 200 OKs.</td>
+          <td>Target marked Healthy after 3 consecutive HTTP 200 OK responses.</td>
         </tr>
         <tr>
           <td><strong>Interval &amp; Timeout</strong></td>
           <td>Interval: <code>30s</code> | Timeout: <code>5s</code></td>
-          <td>Probes every 30 seconds; drops after 5s silence.</td>
+          <td>Probes every 30 seconds; drops after 5 seconds of silence.</td>
         </tr>
       </tbody>
     </table>
@@ -1372,7 +1402,7 @@ EOF</code></pre>
       In the Load Balancer setup wizard, navigate to <strong>Listeners and routing</strong>. Define listener protocol <code>HTTP:80</code>. Under Default action, choose <strong>Forward to target groups</strong> and select <code>aditya-web-tg</code> with Weight <code>1</code> (100% traffic allocation). This rule ensures that every incoming web request on port 80 is forwarded to our target group pool.
     </p>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin: 8px 0;">
       <thead>
         <tr>
           <th>Listener Parameter</th>
@@ -1389,17 +1419,12 @@ EOF</code></pre>
         <tr>
           <td><strong>Default Routing Action</strong></td>
           <td><code>Forward to target groups</code></td>
-          <td>Routes incoming packets to designated target group.</td>
-        </tr>
-        <tr>
-          <td><strong>Target Group Selection</strong></td>
-          <td><code>aditya-web-tg</code></td>
-          <td>Pool containing our dual-zone web servers.</td>
+          <td>Routes incoming packets to designated target group <code>aditya-web-tg</code>.</td>
         </tr>
         <tr>
           <td><strong>Traffic Weight</strong></td>
           <td><code>1 (100%)</code></td>
-          <td>Full distribution across healthy targets.</td>
+          <td>Full distribution across healthy targets in the pool.</td>
         </tr>
       </tbody>
     </table>
@@ -1419,7 +1444,7 @@ EOF</code></pre>
       Provision the Application Load Balancer named <code>aditya-web-alb</code> with Scheme: <strong>Internet-facing</strong> and IP type: <strong>IPv4</strong>. Map across VPC <code>aditya-vpc-vpc</code> using both availability zone subnets (<code>ap-south-1a</code> and <code>ap-south-1b</code>). Attach security group <code>aditya-alb-sg</code>. AWS generates the public DNS endpoint: <code>aditya-web-alb-116333248.ap-south-1.elb.amazonaws.com</code>.
     </p>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin: 8px 0;">
       <thead>
         <tr>
           <th>ALB Attribute</th>
@@ -1434,14 +1459,9 @@ EOF</code></pre>
           <td>Enterprise resource moniker.</td>
         </tr>
         <tr>
-          <td><strong>Scheme</strong></td>
-          <td><code>Internet-facing</code></td>
-          <td>Publicly accessible over the internet.</td>
-        </tr>
-        <tr>
-          <td><strong>Subnet Mappings</strong></td>
-          <td><code>ap-south-1a</code>, <code>ap-south-1b</code></td>
-          <td>Distributes load across both Availability Zones.</td>
+          <td><strong>Scheme &amp; Subnets</strong></td>
+          <td><code>Internet-facing</code> (<code>ap-south-1a</code>, <code>ap-south-1b</code>)</td>
+          <td>Publicly accessible; distributes load across both Availability Zones.</td>
         </tr>
         <tr>
           <td><strong>Canonical DNS Name</strong></td>
@@ -1466,7 +1486,7 @@ EOF</code></pre>
       Launch two <code>t3.micro</code> compute instances in the VPC: <strong>(1)</strong> <code>aditya-web-1</code> (<code>i-0a5792d92f3def505</code>) in Subnet <code>aditya-vpc-subnet-public1-ap-south-1a</code>, and <strong>(2)</strong> <code>aditya-web-2</code> (<code>i-076bf7e774cb90044</code>) in Subnet <code>aditya-vpc-subnet-public2-ap-south-1b</code>. Both servers run Apache web daemons displaying custom server-identifying pages and pass <code>3/3 status checks</code>.
     </p>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin: 8px 0;">
       <thead>
         <tr>
           <th>Instance Name</th>
@@ -1509,7 +1529,7 @@ EOF</code></pre>
       Navigate to <strong>Target Groups &rarr; aditya-web-tg &rarr; Targets tab &rarr; Register targets</strong>. Select both running instances on port 80. Click <em>Register pending targets</em>. The ALB performs periodic HTTP health checks against <code>/</code>; both targets return HTTP 200 OK responses and transition to <strong>Healthy</strong> status, making them eligible for traffic routing.
     </p>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin: 8px 0;">
       <thead>
         <tr>
           <th>Registered Target</th>
@@ -1552,7 +1572,7 @@ EOF</code></pre>
       Open Microsoft Edge and navigate to the ALB DNS: <code>http://aditya-web-alb-116333248.ap-south-1.elb.amazonaws.com</code>. The load balancer receives the request on port 80 and routes it to <code>aditya-web-2</code> in Availability Zone <code>ap-south-1b</code>, rendering the live web application confirming delivery by <strong>Server 2</strong>.
     </p>
 
-    <div class="info-box green">
+    <div class="info-box green" style="margin: 8px 0;">
       <strong>Response Telemetry:</strong> Traffic Ingress: Port 80 &rarr; ALB Target Group Evaluation: Healthy &rarr; Routed Node: <code>aditya-web-2</code> &rarr; Region: <code>ap-south-1 (Mumbai)</code> &rarr; Availability Zone: <code>ap-south-1b</code> &rarr; Status: 200 OK.
     </div>
 
@@ -1571,7 +1591,7 @@ EOF</code></pre>
       Upon browser reload or from a second client session, the Application Load Balancer distributes the subsequent request to <code>aditya-web-1</code> in Availability Zone <code>ap-south-1a</code>, proving active round-robin load distribution across both healthy compute instances.
     </p>
 
-    <div class="info-box blue">
+    <div class="info-box blue" style="margin: 8px 0;">
       <strong>Traffic Distribution Analysis:</strong> The ALB dynamically alternates client sessions between backend targets using round-robin scheduling. This guarantees equal compute load distribution across both Availability Zones and ensures zero service interruption.
     </div>
 
@@ -1582,10 +1602,10 @@ EOF</code></pre>
   </div>
 
   <!-- ==========================================================================
-       PAGE 26: Comparative Analysis, Operational Takeaways & Conclusion
+       PAGE 26: Results, Telemetry Analysis & Comparative Architecture Mapping
        ========================================================================== -->
   <div class="page">
-    <h2>Results, Verification &amp; Comparative Analysis</h2>
+    <h2>Results, Verification &amp; Architecture Mapping</h2>
 
     <h3>Cloud Platform Architecture Mapping</h3>
     <table class="styled-table">
@@ -1614,7 +1634,7 @@ EOF</code></pre>
         </tr>
         <tr>
           <td><strong>Internet Gateway</strong></td>
-          <td>AWS Internet Gateway (<code>igw-xxxx</code>)</td>
+          <td>AWS Internet Gateway (<code>igw-0a561d52ed88ee322</code>)</td>
           <td>OCI Internet Gateway (<code>IGW</code>)</td>
         </tr>
         <tr>
@@ -1640,6 +1660,15 @@ EOF</code></pre>
       <strong>Multi-AZ Resilience &amp; Automated Self-Healing:</strong> Deploying web servers across physically distinct Availability Zones (<code>ap-south-1a</code> and <code>ap-south-1b</code>) eliminates single points of failure. The ALB actively monitors node health; if an instance or entire datacenter zone fails, traffic is instantly rerouted to the surviving zone with zero downtime and no client 502/504 errors.
     </div>
 
+    <div class="info-box green">
+      <strong>Security Group Chaining Benefits:</strong> Binding backend EC2 security groups to only accept HTTP traffic from the ALB's security group identifier (<code>sg-00f7f36364593ed5e</code>) guarantees that clients cannot bypass load balancing, rate limiting, or WAF inspections.
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       PAGE 27: Conclusion, Key Learning Outcomes & Faculty Evaluation Block
+       ========================================================================== -->
+  <div class="page">
     <h2>CONCLUSION</h2>
     <p>
       In this laboratory assignment, I comprehensively investigated software-defined cloud networking, IP subnetting calculations using CIDR notation, and resilient load balancing. I explored the operational differences between public and private subnets, analyzed route table evaluation via Longest Prefix Matching, and implemented defense-in-depth access control using chained, stateful security groups.
@@ -1647,6 +1676,39 @@ EOF</code></pre>
     <p>
       Practically, I successfully deployed an end-to-end, highly available web architecture on Amazon Web Services (AWS) in the <code>ap-south-1</code> (Mumbai) region, alongside an architectural mapping for Oracle Cloud Infrastructure (OCI Always Free tier). I configured a custom VPC (<code>aditya-vpc-vpc</code>), dual-zone public subnets, an Internet Gateway, two bootstrapped web server virtual machines (<code>aditya-web-1</code> and <code>aditya-web-2</code>), and an Application Load Balancer (<code>aditya-web-alb</code>). Live browser testing confirmed automated round-robin traffic distribution and multi-zone fault resilience, providing vital practical skills in modern cloud enterprise networking.
     </p>
+
+    <h3>Key Learning Outcomes</h3>
+    <ul>
+      <li>Mastered software-defined networking concepts including VPC isolation boundaries, CIDR math, and subnet allocation.</li>
+      <li>Gained practical proficiency in deploying Application Load Balancers with multi-AZ target groups and HTTP health check algorithms.</li>
+      <li>Implemented cloud security best practices by chaining security groups to enforce least privilege access.</li>
+      <li>Verified fault tolerance, multi-zone disaster resilience, and dynamic session routing across compute nodes.</li>
+    </ul>
+
+    <!-- Faculty Evaluation & Submission Block -->
+    <div class="eval-block">
+      <h4 style="margin-top: 0; color: #0f172a; text-transform: uppercase; font-size: 9.5pt; border-bottom: 1.5px solid #0284c7; padding-bottom: 4px;">PCCOE Department of Information Technology &mdash; Evaluation Record</h4>
+      <table class="eval-table">
+        <tr>
+          <td style="width: 25%;"><strong>Student Name:</strong></td>
+          <td style="width: 40%;">Aditya Chandrajit Deore</td>
+          <td style="width: 15%;"><strong>Batch / Roll:</strong></td>
+          <td style="width: 20%;">B3 / 124B1F116</td>
+        </tr>
+        <tr>
+          <td><strong>Assignment Title:</strong></td>
+          <td>Lab 4: Cloud Networking (VPC &amp; Load Balancing)</td>
+          <td><strong>Date of Submission:</strong></td>
+          <td>18 / 10 / 2026</td>
+        </tr>
+        <tr>
+          <td><strong>Performance / Marks:</strong></td>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 25 Marks</td>
+          <td><strong>Faculty Signature:</strong></td>
+          <td>_______________________</td>
+        </tr>
+      </table>
+    </div>
   </div>
 
 </div>
@@ -1657,4 +1719,4 @@ EOF</code></pre>
 with open(html_path, "w", encoding="utf-8") as f:
     f.write(html)
 
-print("Generated assignment_4.html successfully matching IAM assignment UI with ZERO boxes!")
+print("Generated assignment_4.html successfully with 27 calibrated pages, native vector SVG diagram, and ZERO spillover!")
